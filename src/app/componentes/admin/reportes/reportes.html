@@ -1,97 +1,73 @@
-<div class="d-flex justify-content-between align-items-start mb-4">
-  <h4 class="fw-bold mb-0">Reportes de progreso y rendimiento</h4>
-  <!-- <div class="dropdown">
-    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+<div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+  <div>
+    <h4 class="fw-bold mb-0">Reportes de progreso y rendimiento</h4>
+    <p class="text-muted small mb-0">Resumen general de talleres, inscripciones y asistencia</p>
+  </div>
+  <div class="dropdown">
+    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" [disabled]="exportando">
+      @if (exportando) { <span class="spinner-border spinner-border-sm me-1"></span> }
       <i class="bi bi-download me-1"></i>Exportar
     </button>
     <ul class="dropdown-menu dropdown-menu-end">
-      <li><button class="dropdown-item" (click)="exportar('xlsx')">
-          <i class="bi bi-file-earmark-excel me-2 text-success"></i>Excel (.xlsx)
-        </button></li>
-      <li><button class="dropdown-item" (click)="exportar('pdf')">
-          <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>PDF
-        </button></li>
+      <li><button class="dropdown-item" (click)="exportar('xlsx')"><i class="bi bi-file-earmark-excel me-2 text-success"></i>Excel (.xlsx)</button></li>
+      <li><button class="dropdown-item" (click)="exportar('pdf')"><i class="bi bi-file-earmark-pdf me-2 text-danger"></i>PDF</button></li>
     </ul>
-  </div> -->
+  </div>
 </div>
 
-<!-- KPIs principales -->
+@if (error) { <div class="alert alert-danger small">{{ error }}</div> }
+
+@if (cargando) {
+<div class="text-center text-muted py-5"><span class="spinner-border spinner-border-sm me-2"></span>Cargando…</div>
+} @else {
+
+<!-- KPIs -->
 <div class="row g-3 mb-4">
   <div class="col-md-4">
-    <div
-      class="card border-0 shadow-sm rounded-3 p-3 d-flex flex-column flex-md-row align-items-center justify-content-center text-center text-md-start gap-3 h-100 report-kpi-card">
-      <div class="gu-admin-icon bg-primary-subtle">
-        <i class="bi bi-calendar3 text-primary fs-4"></i>
-      </div>
-      <div>
-        <h4 class="fw-bold mb-0">{{ totalEventos }}</h4>
-        <p class="text-muted small mb-0">Total eventos</p>
-      </div>
+    <div class="et-card p-3 d-flex align-items-center justify-content-center text-center gap-3 report-kpi-card">
+      <span class="et-icon-box bg-light-blue"><i class="bi bi-calendar3"></i></span>
+      <div><h4 class="fw-bold mb-0">{{ totalTalleres }}</h4><p class="text-muted small mb-0">Total talleres</p></div>
     </div>
   </div>
   <div class="col-md-4">
-    <div
-      class="card border-0 shadow-sm rounded-3 p-3 d-flex flex-column flex-md-row align-items-center justify-content-center text-center text-md-start gap-3 h-100 report-kpi-card">
-      <div class="gu-admin-icon bg-success-subtle">
-        <i class="bi bi-people-fill text-success fs-4"></i>
-      </div>
-      <div>
-        <h4 class="fw-bold mb-0">{{ totalInscritos }}</h4>
-        <p class="text-muted small mb-0">Total inscritos</p>
-      </div>
+    <div class="et-card p-3 d-flex align-items-center justify-content-center text-center gap-3 report-kpi-card">
+      <span class="et-icon-box bg-light-green"><i class="bi bi-people-fill"></i></span>
+      <div><h4 class="fw-bold mb-0">{{ totalInscritos }}</h4><p class="text-muted small mb-0">Total inscritos</p></div>
     </div>
   </div>
   <div class="col-md-4">
-    <div
-      class="card border-0 shadow-sm rounded-3 p-3 d-flex flex-column flex-md-row align-items-center justify-content-center text-center text-md-start gap-3 h-100 report-kpi-card">
-      <div class="gu-admin-icon bg-info-subtle">
-        <i class="bi bi-check2-circle text-info fs-4"></i>
-      </div>
-      <div>
-        <h4 class="fw-bold mb-0">{{ pctAsistencia }}%</h4>
-        <p class="text-muted small mb-0">Tasa de asistencia</p>
-      </div>
+    <div class="et-card p-3 d-flex align-items-center justify-content-center text-center gap-3 report-kpi-card">
+      <span class="et-icon-box bg-light-purple"><i class="bi bi-check-circle-fill"></i></span>
+      <div><h4 class="fw-bold mb-0">{{ pctAsistencia }}%</h4><p class="text-muted small mb-0">Tasa de asistencia</p></div>
     </div>
   </div>
 </div>
 
 <!-- Gráficas de barras -->
-<div class="row g-3 mb-4">
-  <!-- Gráfica: Eventos por tipo -->
+<div class="row g-3 mb-3">
   <div class="col-md-6">
-    <div class="card border-0 shadow-sm rounded-3 p-4 h-100">
-      <h6 class="fw-bold mb-4">Eventos por tipo de actividad</h6>
-      <div class="d-flex align-items-end gap-2 justify-content-around report-chart">
-        @for (b of tipoBarras; track $index) {
-        <div class="d-flex flex-column align-items-center gap-1 flex-fill">
-          <span class="fw-bold report-bar-value">{{ b.value }}</span>
-          <div class="w-100 rounded-top-2 d-flex align-items-end" style="transition:height .4s ease"
-            [style.height]="(b.pct * 1.4) + 'px'" [style.background-color]="b.color + '22'"
-            [style.border]="'2px solid ' + b.color">
-            <div class="w-100 rounded-top-2" [style.height]="(b.pct * 1.4) + 'px'" [style.background-color]="b.color"
-              style="opacity:0.85"></div>
-          </div>
-          <span class="text-muted text-center report-bar-label">{{ b.label }}</span>
+    <div class="et-card p-3">
+      <h6 class="fw-bold mb-3">Talleres por área</h6>
+      <div class="d-flex align-items-end gap-3 et-chart">
+        @for (b of areaBarras; track b.label) {
+        <div class="d-flex flex-column align-items-center flex-fill">
+          <span class="small fw-bold mb-1">{{ b.value }}</span>
+          <div class="et-bar" [style.height.%]="b.pct" [style.background]="b.color"></div>
+          <span class="text-muted mt-1 text-center" style="font-size:10.5px">{{ b.label }}</span>
         </div>
         }
       </div>
     </div>
   </div>
-
-  <!-- Gráfica: Top eventos por inscritos -->
   <div class="col-md-6">
-    <div class="card border-0 shadow-sm rounded-3 p-4 h-100">
-      <h6 class="fw-bold mb-4">Inscripción por evento (top 6)</h6>
-      <div class="d-flex align-items-end gap-2 justify-content-around report-chart">
-        @for (b of eventoBarras; track $index) {
-        <div class="d-flex flex-column align-items-center gap-1 flex-fill">
-          <span class="fw-bold report-bar-value">{{ b.value }}</span>
-          <div class="w-100 rounded-top-2 d-flex align-items-end" [style.height]="(b.pct * 1.4) + 'px'"
-            [style.background-color]="b.color + '22'" [style.border]="'2px solid ' + b.color">
-            <div class="w-100 rounded-top-2" [style.height]="(b.pct * 1.4) + 'px'" [style.background-color]="b.color"
-              style="opacity:0.85"></div>
-          </div>
-          <span class="text-muted text-center report-bar-label">{{ b.label }}</span>
+    <div class="et-card p-3">
+      <h6 class="fw-bold mb-3">Inscripción por taller (top 6)</h6>
+      <div class="d-flex align-items-end gap-3 et-chart">
+        @for (b of tallerBarras; track b.label) {
+        <div class="d-flex flex-column align-items-center flex-fill">
+          <span class="small fw-bold mb-1">{{ b.value }}</span>
+          <div class="et-bar" [style.height.%]="b.pct" [style.background]="b.color"></div>
+          <span class="text-muted mt-1 text-center text-truncate w-100" style="font-size:10px">{{ b.label }}</span>
         </div>
         }
       </div>
@@ -99,111 +75,71 @@
   </div>
 </div>
 
-<!-- Barras de ocupación y participación por tipo -->
-<div class="row g-3 mb-4">
-  <!-- Top eventos por ocupación -->
+<div class="row g-3 mb-3">
   <div class="col-md-6">
-    <div class="card border-0 shadow-sm rounded-3 p-4 h-100">
-      <h6 class="fw-bold mb-3">Top eventos por ocupación</h6>
-      @for (ev of topEventos; track $index) {
-      <div class="mb-3">
-        <div class="d-flex justify-content-between align-items-center mb-1">
-          <span class="small fw-medium text-truncate me-2" style="max-width:200px">
-            {{ ev.titulo }}
-          </span>
-          <span class="small text-muted shrink-0">
-            {{ ev.inscritos }} / {{ ev.capacidad }} · {{ ev.pct }}%
-          </span>
+    <div class="et-card p-3">
+      <h6 class="fw-bold mb-3">Top talleres por ocupación</h6>
+      @for (t of topTalleres; track t.titulo) {
+      <div class="mb-2">
+        <div class="d-flex justify-content-between small mb-1">
+          <span class="text-truncate">{{ t.titulo }}</span>
+          <span class="text-muted">{{ t.inscritos }}/{{ t.capacidad }} · {{ t.pct }}%</span>
         </div>
-        <div class="progress" style="height:6px;border-radius:99px">
-          <div class="progress-bar bg-success" style="border-radius:99px;transition:width .3s"
-            [style.width]="ev.pct + '%'"></div>
+        <div class="progress" style="height:6px">
+          <div class="progress-bar" [style.width.%]="t.pct" [style.background]="colorBorde(t.area)"></div>
+        </div>
+      </div>
+      } @empty { <p class="text-muted small">Sin datos todavía.</p> }
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="et-card p-3">
+      <h6 class="fw-bold mb-3">Participación por área</h6>
+      @for (a of areaStats; track a.area) {
+      <div class="mb-2">
+        <div class="d-flex justify-content-between small mb-1">
+          <span>{{ a.area }}</span><span class="text-muted">{{ a.count }}</span>
+        </div>
+        <div class="progress" style="height:6px">
+          <div class="progress-bar" [style.width.%]="a.pct" [style.background]="colorBorde(a.area)"></div>
         </div>
       </div>
       }
     </div>
   </div>
+</div>
 
-  <!-- Participación por tipo -->
-  <div class="col-md-6">
-    <div class="card border-0 shadow-sm rounded-3 p-4 h-100">
-      <h6 class="fw-bold mb-3">Participación por tipo de evento</h6>
-      @for (t of tipoStats; track $index) {
-      @if (t.count > 0) {
-      <div class="mb-3">
-        <div class="d-flex justify-content-between align-items-center mb-1">
-          <span class="small fw-medium">{{ t.tipo }}</span>
-          <span class="small text-muted fw-semibold">{{ t.count }}</span>
-        </div>
-        <div class="progress" style="height:6px;border-radius:99px">
-          <div class="progress-bar bg-primary" style="border-radius:99px;transition:width .3s"
-            [style.width]="t.pct + '%'"></div>
+<!-- Alumnos más activos -->
+<div class="et-card p-3 mb-3">
+  <h6 class="fw-bold mb-3">Alumnos más activos</h6>
+  @if (alumnosTop.length === 0) {
+  <p class="text-muted small mb-0">Todavía no hay asistencias registradas.</p>
+  } @else {
+  <div class="row g-2">
+    @for (a of alumnosTop; track a.nombre) {
+    <div class="col-md-6 col-lg-4">
+      <div class="d-flex align-items-center gap-2 p-2 rounded-3" style="background:#f8fafc">
+        <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0"
+          [style.background]="a.color" style="width:32px;height:32px;font-size:12px">{{ a.iniciales }}</div>
+        <div class="flex-grow-1 overflow-hidden">
+          <p class="fw-medium mb-0 small text-truncate">{{ a.nombre }}</p>
+          <p class="text-muted mb-0" style="font-size:11px">{{ a.talleres }} sesiones asistidas</p>
         </div>
       </div>
-      }
-      }
     </div>
+    }
   </div>
+  }
 </div>
 
-<!-- Voluntarios más activos -->
-<div class="card border-0 shadow-sm rounded-3 p-4">
-  <h6 class="fw-bold mb-3">Voluntarios más activos</h6>
-  <div class="table-responsive">
-    <table class="table align-middle mb-0" style="font-size:13px">
-      <thead class="table-light">
-        <tr>
-          <th>#</th>
-          <th>Voluntario</th>
-          <th>Eventos participados</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (v of voluntariosTop; track $index; let i = $index) {
-        <tr>
-          <td class="text-muted fw-bold">{{ i + 1 }}</td>
-          <td>
-            <div class="d-flex align-items-center gap-2">
-              <div class="rounded-circle d-flex align-items-center justify-content-center
-                            text-white fw-bold shrink-0" [style.background]="v.color"
-                style="width:32px;height:32px;font-size:12px">
-                {{ v.iniciales }}
-              </div>
-              <span class="fw-medium">{{ v.nombre }}</span>
-            </div>
-          </td>
-          <td>
-            <div class="d-flex align-items-center gap-2">
-              <span class="fw-semibold">{{ v.eventos }}</span>
-              <div class="progress grow" style="height:4px;border-radius:99px;max-width:80px">
-                <div class="progress-bar bg-success" [style.width]="(v.eventos / 25 * 100) + '%'"></div>
-              </div>
-            </div>
-          </td>
-        </tr>
-        }
-        @empty {
-        <tr>
-          <td colspan="3" class="text-center text-muted py-4">Sin datos de voluntarios.</td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ══ Reporte de participación por evento ══ -->
-<div class="card border-0 shadow-sm rounded-3 p-4 mt-4">
+<!-- Tabla detallada -->
+<div class="et-card p-3">
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-    <div>
-      <h6 class="fw-bold mb-1">Reporte de participación por evento</h6>
-      <p class="text-muted small mb-0">Historial completo · {{ reporteFiltrado().length }} evento{{
-        reporteFiltrado().length !== 1 ? 's' : '' }} · {{ totalParticipacion() }} participaciones totales</p>
-    </div>
-    <div class="d-flex gap-1">
-      @for (f of [{v:'todos',l:'Todos'},{v:'Finalizado',l:'Finalizados'},{v:'Próximo',l:'Próximos'}]; track f.v) {
-      <button class="btn btn-sm rounded-pill" [class.btn-success]="filtroReporte === f.v"
-        [class.btn-outline-secondary]="filtroReporte !== f.v" (click)="filtroReporte = $any(f.v)">{{ f.l }}</button>
+    <h6 class="fw-bold mb-0">Detalle por taller</h6>
+    <div class="btn-group btn-group-sm">
+      @for (f of [{v:'todos',l:'Todos'},{v:'Proximo',l:'Próximos'},{v:'En curso',l:'En curso'},{v:'Finalizado',l:'Finalizados'}]; track f.v) {
+      <button class="btn" [class.btn-success]="filtroReporte === f.v" [class.btn-outline-secondary]="filtroReporte !== f.v"
+        (click)="filtroReporte = $any(f.v)">{{ f.l }}</button>
       }
     </div>
   </div>
@@ -212,73 +148,29 @@
     <table class="table align-middle mb-0" style="font-size:13px">
       <thead class="table-light">
         <tr>
-          <th>Evento</th>
-          <th>Tipo</th>
-          <th>Fecha</th>
-          <th>Inscritos / Cap.</th>
-          <th>% Ocupación</th>
-          <th>Asistieron</th>
-          <th>% Asistencia</th>
+          <th>Taller</th><th>Área</th><th>Fecha</th><th>Estado</th><th>Ocupación</th><th>Asistencia</th>
         </tr>
       </thead>
       <tbody>
         @for (r of reporteFiltrado(); track r.id) {
         <tr>
-          <td class="fw-medium small" style="max-width:200px">
-            <div class="d-flex align-items-center gap-2">
-              <div class="rounded-2 hrink-0" [style.background]="r.color + '22'"
-                [style.border]="'1.5px solid ' + r.color" style="width:8px;height:32px"></div>
-              <span class="text-truncate" style="max-width:160px" [title]="r.titulo">{{ r.titulo }}</span>
-            </div>
-          </td>
+          <td class="fw-medium">{{ r.titulo }}</td>
+          <td><span class="badge" [style.background]="colorFondo(r.area)" [style.color]="colorBorde(r.area)">{{ r.area }}</span></td>
+          <td class="text-muted">{{ r.fecha | date:'dd MMM yyyy' }}</td>
+          <td><span class="badge rounded-pill" [class]="estadoClass(r.estado)">{{ r.estado }}</span></td>
+          <td>{{ r.inscritos }}/{{ r.capacidad }} <span class="text-muted">({{ r.pctOcupacion }}%)</span></td>
           <td>
-            <span class="badge rounded-pill" style="font-size:11px" [style.background]="r.color + '22'"
-              [style.color]="r.color" [style.border]="'1px solid ' + r.color">
-              {{ r.tipo }}
+            <span [class.text-success]="r.pctAsistencia >= 50" [class.text-danger]="r.pctAsistencia < 50">
+              {{ r.pctAsistencia }}%
             </span>
-          </td>
-          <td class="text-muted small">{{ r.fecha | date:'dd MMM yyyy' }}</td>
-          <td class="fw-medium small">
-            {{ r.inscritos }} / {{ r.capacidad }}
-          </td>
-          <td style="min-width:110px">
-            <div class="d-flex align-items-center gap-2">
-              <div class="progress grow" style="height:5px;border-radius:99px">
-                <div class="progress-bar" style="border-radius:99px" [style.width]="r.pctOcupacion + '%'"
-                  [style.background]="r.color"></div>
-              </div>
-              <span class="small fw-semibold" style="min-width:32px">{{ r.pctOcupacion }}%</span>
-            </div>
-          </td>
-          <td class="small">
-            @if (r.pctAsistencia > 0) {
-            <span class="fw-medium text-success">{{ r.asistieron }}</span>
-            <span class="text-muted"> / {{ r.inscritos }}</span>
-            } @else {
-            <span class="text-muted fst-italic">Pendiente</span>
-            }
-          </td>
-          <td style="min-width:110px">
-            @if (r.pctAsistencia > 0) {
-            <div class="d-flex align-items-center gap-2">
-              <div class="progress grow" style="height:5px;border-radius:99px">
-                <div class="progress-bar bg-success" style="border-radius:99px" [style.width]="r.pctAsistencia + '%'">
-                </div>
-              </div>
-              <span class="small fw-semibold text-success" style="min-width:32px">{{ r.pctAsistencia }}%</span>
-            </div>
-            } @else {
-            <span class="text-muted small">—</span>
-            }
+            <span class="text-muted small">({{ r.asistieron }} de {{ r.inscritos }})</span>
           </td>
         </tr>
-        }
-        @empty {
-        <tr>
-          <td colspan="7" class="text-center text-muted py-4">Sin eventos para este filtro.</td>
-        </tr>
+        } @empty {
+        <tr><td colspan="6" class="text-center text-muted py-4">Sin talleres para este filtro.</td></tr>
         }
       </tbody>
     </table>
   </div>
 </div>
+}

@@ -2,10 +2,11 @@
 @import "leaflet/dist/leaflet.css";
 
 :root {
-    --gu-green: #2d9e5f;
-    --gu-green-dark: #1e7a48;
-    --gu-navy: #12182C;
-    --gu-light: #f0f7f0;
+    --et-green: #2d9e5f;
+    --et-green-dark: #1e7a48;
+    --et-navy: #0d1b2a;
+    --et-navy-card: #1a2a3a;
+    --et-light: #f1f4f9;
 }
 
 html,
@@ -21,40 +22,27 @@ a {
     text-decoration: none;
 }
 
-main {
-    min-height: calc(100vh - 220px);
-    padding-top: 80px;
+/* Colores */
+.et-text-green {
+    color: var(--et-green) !important;
 }
 
-/* menu */
-.active-link {
-    color: var(--gu-green) !important;
-    font-weight: 600;
-    background: rgba(45, 158, 95, .08);
-    border-radius: 8px;
+.et-bg-green {
+    background: var(--et-green) !important;
 }
 
-/*  Colores */
-.gu-text-green {
-    color: var(--gu-green) !important;
+.et-bg-light {
+    background: var(--et-light);
 }
 
-.gu-bg-green {
-    background: var(--gu-green) !important;
-}
-
-.gu-bg-light {
-    background: var(--gu-light);
-}
-
-.gu-btn-green {
-    background: var(--gu-green);
+.et-btn-green {
+    background: var(--et-green);
     color: #fff;
     border: none;
 }
 
-.gu-btn-green:hover {
-    background: var(--gu-green-dark);
+.et-btn-green:hover {
+    background: var(--et-green-dark);
     color: #fff;
 }
 
@@ -66,306 +54,13 @@ main {
     cursor: pointer;
 }
 
-/*  Logo  */
-.gu-logo-icon {
+/* Logo */
+.et-logo-icon {
     width: 32px;
     height: 32px;
-    background: var(--gu-green);
+    background: var(--et-green);
     border-radius: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-}
-
-/* Badges de tipo  */
-.badge-limpieza {
-    background: #d1fae5;
-    color: #065f46;
-}
-
-.badge-reforestacion {
-    background: #dbeafe;
-    color: #1e40af;
-}
-
-.badge-taller {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.badge-reciclaje {
-    background: #ede9fe;
-    color: #5b21b6;
-}
-
-.badge-educacion {
-    background: #fce7f3;
-    color: #9d174d;
-}
-
-.badge-conservacion {
-    background: #ffedd5;
-    color: #9a3412;
-}
-
-.gu-badge {
-    display: inline-block;
-    padding: 3px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-}
-
-/*  Hero  */
-.gu-hero {
-    min-height: 560px;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #0a2e1a, #0d3b22);
-}
-
-.gu-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1600&q=70') center/cover no-repeat;
-    opacity: .35;
-    z-index: 0;
-}
-
-.gu-hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, .55);
-    z-index: 1;
-}
-
-.gu-hero-content {
-    position: relative;
-    z-index: 2;
-}
-
-/*  cards  */
-.gu-impact-card {
-    transition: border-color .2s;
-}
-
-.gu-impact-card:hover {
-    border-color: var(--gu-green) !important;
-}
-
-/*  Evento cards  */
-.gu-event-card {
-    transition: transform .2s, box-shadow .2s;
-}
-
-.gu-event-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, .12) !important;
-}
-
-/*  Stat card  */
-.gu-stat {
-    transition: border-color .2s;
-}
-
-.gu-stat:hover {
-    border-color: var(--gu-green) !important;
-}
-
-/* Footer */
-.footer {
-    background: var(--gu-navy) !important;
-    color: #fff !important;
-}
-
-.footer-soft,
-.footer-soft span,
-.footer-soft p {
-    color: rgba(255, 255, 255, .78) !important;
-}
-
-.footer-link {
-    color: #fff !important;
-}
-
-.footer i {
-    cursor: pointer;
-    transition: .2s;
-}
-
-.footer i:hover {
-    transform: scale(1.08);
-}
-
-/*  Mapa eventos  */
-.events-layout {
-    display: flex;
-    height: calc(100vh - 80px);
-    overflow: hidden;
-}
-
-.events-sidebar {
-    width: 370px;
-    min-width: 370px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 16px;
-    border-right: 1px solid #e5e7eb;
-    background: #fff;
-}
-
-.events-map-wrap {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Voluntario stats */
-.gu-stat-card {
-    transition: border-color .2s;
-}
-
-.gu-stat-card:hover {
-    border-color: var(--gu-green) !important;
-}
-
-.gu-cert-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Anuncios */
-.ann-item {
-    cursor: pointer;
-    transition: border-color .15s;
-    border: 1.5px solid transparent !important;
-}
-
-.ann-item:hover {
-    border-color: var(--gu-green) !important;
-}
-
-.ann-item.ann-selected {
-    border-color: var(--gu-green) !important;
-    background: #f0fdf4;
-}
-
-/* Admin login oscuro */
-.admin-login-page {
-    min-height: 100vh;
-    background: #0d1b2a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.admin-card {
-    background: #1a2a3a;
-    border: .5px solid rgba(255, 255, 255, .08);
-    border-radius: 20px;
-    padding: 32px;
-    width: 100%;
-    max-width: 400px;
-}
-
-.admin-input {
-    background: #243447 !important;
-    color: #ccc !important;
-    border-color: rgba(255, 255, 255, .1) !important;
-    border-radius: 10px;
-}
-
-.admin-input::placeholder {
-    color: #555;
-}
-
-/* Admin sidebar */
-.admin-sidebar {
-    width: 240px;
-    min-width: 240px;
-    background: #0d1b2a;
-}
-
-.admin-main {
-    flex: 1;
-    background: #f1f4f9;
-}
-
-.sidebar-link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px;
-    border-radius: 8px;
-    color: #aaa;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all .15s;
-    margin-bottom: 4px;
-}
-
-.sidebar-link:hover,
-.sidebar-link.active {
-    background: var(--gu-green);
-    color: #fff;
-}
-
-.top-bar {
-    background: white;
-    padding: 10px 20px;
-    border-bottom: .5px solid #e5e7eb;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-}
-
-/* Modal */
-.gu-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 1040;
-    background: rgba(0, 0, 0, .45);
-    backdrop-filter: blur(3px);
-}
-
-.gu-modal-panel {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #fff;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 560px;
-    max-height: 90vh;
-    overflow-y: auto;
-    z-index: 1050;
-    padding: 24px;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, .2);
-}
-
-.gu-admin-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-/* Admin barra de progreso */
-.progress-fill {
-    height: 100%;
-    background: var(--gu-green);
-    border-radius: 99px;
-    transition: width .3s;
 }

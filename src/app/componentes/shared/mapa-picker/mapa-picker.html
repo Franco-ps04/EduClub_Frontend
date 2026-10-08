@@ -1,0 +1,29 @@
+<div class="position-relative">
+  <label class="form-label small fw-semibold">Buscar ubicación en el mapa</label>
+  <input
+    type="text"
+    class="form-control form-control-sm mb-2"
+    placeholder="Busca ubicación..."
+    [(ngModel)]="query"
+    (ngModelChange)="onQueryChange()"
+    (focus)="mostrarSugerencias = sugerencias.length > 0"
+    autocomplete="off">
+
+  @if (mostrarSugerencias) {
+  <ul class="list-group et-sugerencias shadow-sm">
+    @if (buscando) {
+    <li class="list-group-item small text-muted">Buscando…</li>
+    }
+    @for (s of sugerencias; track s.displayName) {
+    <li class="list-group-item list-group-item-action small cursor-pointer" (click)="elegirSugerencia(s)">
+      <i class="bi bi-geo-alt me-1 text-success"></i>{{ s.displayName }}
+    </li>
+    }
+  </ul>
+  }
+</div>
+
+<div #mapaEl class="et-mapa-picker rounded-3 mt-1"></div>
+<p class="text-muted small mb-0 mt-1">
+  <i class="bi bi-info-circle me-1"></i>Haz clic en el mapa o mueve el marcador para ajustar la ubicación.
+</p>

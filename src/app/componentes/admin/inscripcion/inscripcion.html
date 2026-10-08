@@ -1,0 +1,278 @@
+<h4 class="fw-bold mb-1">Inscripciones por taller</h4>
+<p class="text-muted small mb-4">Visualiza los alumnos inscritos en cada taller</p>
+
+<div class="input-group mb-4" style="max-width:320px">
+  <span class="input-group-text bg-white border-end-0">
+    <i class="bi bi-search text-muted" style="font-size:12px"></i>
+  </span>
+  <input type="text" class="form-control border-start-0" placeholder="Buscar por nombre del taller"
+    [(ngModel)]="searchText" (ngModelChange)="onSearchChange()">
+</div>
+
+@if (error) { <div class="alert alert-danger small">{{ error }}</div> }
+
+@if (cargando) {
+<div class="text-center text-muted py-4"><span class="spinner-border spinner-border-sm me-2"></span>Cargando…</div>
+} @else {
+<div class="d-flex flex-column gap-3">
+  @for (t of paginatedTalleres(); track t.id_taller) {
+  <div class="card border-0 shadow-sm rounded-3 p-3">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+      <div>
+        <h6 class="fw-bold mb-1">{{ t.nombre }}</h6>
+        <p class="text-muted small mb-0">{{ t.fecha }} — {{ t.hora }}</p>
+        <p class="text-muted small mb-0">
+          Inscripciones registradas: <strong>{{ t.inscritos }}</strong>
+        </p>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button class="badge bg-success-subtle text-success px-3 py-2 border-0 cursor-pointer"
+          style="font-size:13px;font-weight:500" (click)="abrirInscritos(t)"
+          title="Ver alumnos y registrar asistencia">
+          {{ t.inscritos }} inscritos
+          <i class="bi bi-people ms-1"></i>
+        </button>
+
+        @if (isTerminal(t)) {
+        <span class="badge px-3 py-2" [class]="estadoBadge(t).clase" style="font-size:13px;font-weight:500">
+          {{ estadoBadge(t).texto }}
+        </span>
+        } @else {
+        <button class="btn btn-sm btn-outline-primary" (click)="openNotif(t.id_taller)">
+          <i class="bi bi-megaphone me-1"></i>Enviar notificación
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+  } @empty {
+  <p class="text-muted text-center">No hay talleres registrados.</p>
+  }
+</div>
+
+<div class="d-flex justify-content-between align-items-center mt-3 flex-wrap gap-2">
+  <p class="text-muted small mb-0">
+    Mostrando {{ pageEnd(filteredTalleres().length) }} de {{ filteredTalleres().length }} talleres
+  </p>
+  <nav>
+    <ul class="pagination pagination-sm mb-0">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="goPage(currentPage - 1)">&laquo;</button>
+      </li>
+      @for (p of paginationPages(); track p) {
+      <li class="page-item" [class.active]="currentPage === p">
+        <button class="page-link" (click)="goPage(p)">{{ p }}</button>
+      </li>
+      }
+      <li class="page-item" [class.disabled]="currentPage === totalPages()">
+        <button class="page-link" (click)="goPage(currentPage + 1)">&raquo;</button>
+      </li>
+    </ul>
+  </nav>
+</div>
+}
+
+<!-- MODAL: Resumen (talleres tipo Sesión, más de 1 sesión) -->
+@if (showResumenModal()) {
+<div class="et-modal-backdrop" (click)="showResumenModal.set(false)">
+  <div class="et-modal-panel et-resumen-panel" (click)="$event.stopPropagation()">
+    <div class="d-flex justify-content-between align-items-start p-3 border-bottom">
+      <div>
+        <p class="text-muted small mb-0">Resumen de asistencia</p>
+        <h6 class="fw-bold mb-0">{{ resumenTallerNombre }}</h6>
+        <p class="text-muted small mb-0">Selecciona una sesión para marcar asistencia individual</p>
+      </div>
+      <button class="btn-close" (click)="showResumenModal.set(false)"></button>
+    </div>
+
+    <div class="p-3 et-modal-body">
+      @if (cargandoResumen) {
+      <div class="text-center text-muted py-4"><span class="spinner-border spinner-border-sm me-2"></span>Cargando…</div>
+      } @else if (resumen && resumen.alumnos.length > 0) {
+      <div class="table-responsive">
+        <table class="table align-middle mb-0" style="font-size:13px">
+          <thead class="table-light">
+            <tr>
+              <th>Alumno</th>
+              @for (n of resumen.numerosSesion; track n) {
+              <th class="text-center cursor-pointer" (click)="abrirSesionDesdeResumen(n)" title="Registrar asistencia de esta sesión">
+                S{{ n }}
+              </th>
+              }
+              <th class="text-center">Total</th>
+              <th class="text-center">Constancia</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (al of resumen.alumnos; track al.id_inscripcion) {
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="rounded-circle bg-success-subtle text-success fw-bold d-flex align-items-center justify-content-center"
+                    style="width:28px;height:28px;font-size:11px">
+                    {{ al.nombres.charAt(0) }}
+                  </div>
+                  <span class="fw-medium">{{ al.nombres }}</span>
+                </div>
+              </td>
+              @for (s of al.sesiones; track s.numero_sesion) {
+              <td class="text-center">
+                @if (s.asistio === true) {
+                <span class="et-dot et-dot-ok"></span>
+                } @else if (s.asistio === false) {
+                <span class="et-dot et-dot-no"></span>
+                } @else {
+                <span class="et-dot et-dot-pend"></span>
+                }
+              </td>
+              }
+              <td class="text-center fw-bold" [class.text-success]="al.porcentaje >= 50" [class.text-danger]="al.porcentaje < 50">
+                {{ al.porcentaje }}%
+              </td>
+              <td class="text-center">
+                @if (al.constancia) {
+                <span class="badge bg-success-subtle text-success">{{ al.constancia }}</span>
+                } @else {
+                <span class="text-muted small">—</span>
+                }
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      } @else {
+      <p class="text-muted text-center py-4">No hay alumnos inscritos en este taller.</p>
+      }
+    </div>
+  </div>
+</div>
+}
+
+<!-- MODAL: Registro de asistencia (1 sesión puntual) -->
+@if (showAsistenciaModal()) {
+<div class="et-modal-backdrop" (click)="showAsistenciaModal.set(false)">
+  <div class="et-modal-panel" style="max-width:640px" (click)="$event.stopPropagation()">
+    <div class="p-3">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+          <p class="text-muted small mb-0">Registro de asistencia</p>
+          <h5 class="fw-bold mb-0">{{ asistenciaTitulo }}</h5>
+        </div>
+        <button class="btn-close" (click)="showAsistenciaModal.set(false)"></button>
+      </div>
+
+      @if (cargandoAsistencia) {
+      <div class="text-center text-muted py-4"><span class="spinner-border spinner-border-sm me-2"></span>Cargando…</div>
+      } @else {
+      <div class="d-flex gap-2 mb-3 flex-wrap">
+        <span class="badge bg-secondary-subtle text-secondary px-3 py-2">
+          <i class="bi bi-people me-1"></i>Total: {{ alumnosModal.length }}
+        </span>
+        <span class="badge bg-success-subtle text-success px-3 py-2">
+          <i class="bi bi-check-circle me-1"></i>Asistieron: {{ countAsistieron() }}
+        </span>
+        <span class="badge bg-danger-subtle text-danger px-3 py-2">
+          <i class="bi bi-x-circle me-1"></i>No asistieron: {{ countNoAsistieron() }}
+        </span>
+      </div>
+
+      <div class="table-responsive mb-4" style="max-height:380px;overflow-y:auto">
+        <table class="table align-middle mb-0" style="font-size:13px">
+          <thead class="table-light sticky-top">
+            <tr>
+              <th>Alumno</th>
+              <th class="text-center">Asistencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (a of alumnosModal; track a.id_inscripcion) {
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="rounded-circle bg-success-subtle text-success fw-bold d-flex align-items-center justify-content-center"
+                    style="width:32px;height:32px;font-size:12px">
+                    {{ a.nombres.charAt(0) }}
+                  </div>
+                  <span class="fw-medium">{{ a.nombres }}</span>
+                </div>
+              </td>
+              <td class="text-center">
+                <button class="btn btn-sm d-flex align-items-center gap-1 mx-auto" style="min-width:130px;justify-content:center"
+                  [class]="getAsistioClass(a)" (click)="toggleAsistencia(a)">
+                  <i class="bi" [class]="getAsistioIcon(a)"></i>{{ getAsistioLabel(a) }}
+                </button>
+              </td>
+            </tr>
+            } @empty {
+            <tr><td colspan="2" class="text-center text-muted py-4">Sin alumnos inscritos en este taller.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+        <p class="text-muted small mb-0">
+          <i class="bi bi-info-circle me-1"></i>Haz clic en el botón de cada alumno para cambiar su asistencia
+        </p>
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary px-4" (click)="showAsistenciaModal.set(false)">Cancelar</button>
+          <button class="btn px-4 fw-semibold" [class.btn-success]="!guardadoAsistencia"
+            [class.btn-light]="guardadoAsistencia" (click)="guardarAsistencia()" [disabled]="guardadoAsistencia">
+            @if (guardadoAsistencia) {
+            <i class="bi bi-check-circle-fill text-success me-1"></i>¡Guardado!
+            } @else {
+            <i class="bi bi-floppy me-1"></i>Guardar asistencia
+            }
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+}
+
+<!-- MODAL: Crear notificación -->
+@if (showNotifModal()) {
+<div class="et-modal-backdrop" (click)="showNotifModal.set(false)">
+  <div class="et-modal-panel" (click)="$event.stopPropagation()">
+    <div class="p-3">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+          <p class="text-muted small mb-0">Completa el formulario para publicar el mensaje</p>
+          <h5 class="fw-bold mb-0">Crear notificación</h5>
+        </div>
+        <button class="btn-close" (click)="showNotifModal.set(false)"></button>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small fw-medium">Título del mensaje</label>
+        <input type="text" class="form-control" [(ngModel)]="notifTitle" placeholder="Ej: Recordatorio del taller">
+      </div>
+      <div class="mb-4">
+        <label class="form-label small fw-medium">Mensaje</label>
+        <textarea class="form-control" rows="6" [(ngModel)]="notifMessage"
+          placeholder="Escribe el mensaje para los alumnos..."></textarea>
+      </div>
+
+      @if (notifError) {
+      <div class="alert alert-danger py-2 small mb-3"><i class="bi bi-exclamation-triangle-fill me-1"></i>{{ notifError }}</div>
+      }
+
+      <div class="d-flex justify-content-end gap-2">
+        <button class="btn btn-outline-secondary px-4" (click)="showNotifModal.set(false)">Cancelar</button>
+        <button class="btn px-4 fw-semibold" [class.btn-success]="!sent()" [class.btn-light]="sent()"
+          (click)="sendNotif()"
+          [disabled]="sent() || enviandoNotif || !notifTitle.trim() || !notifMessage.trim() || !selectedTallerId">
+          @if (sent()) {
+          <i class="bi bi-check-circle-fill text-success me-1"></i>¡Enviado!
+          } @else {
+          <i class="bi bi-send me-1"></i>Enviar
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}

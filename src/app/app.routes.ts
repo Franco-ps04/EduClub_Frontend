@@ -1,66 +1,58 @@
 import { Routes } from '@angular/router';
-import { Inicio } from './componentes/inicio/inicio';
-import { Eventos } from './componentes/eventos/eventos';
-import { Contacto } from './componentes/contacto/contacto';
-import { Ingresar } from './componentes/ingresar/ingresar';
-import { Registrarse } from './componentes/registrarse/registrarse';
 import { authGuard } from './core/guards/auth.guard';
-import { DashboardVoluntario } from './componentes/voluntario/dashboard-voluntario/dashboard-voluntario';
-import { AnunciosVoluntario } from './componentes/voluntario/anuncios-voluntario/anuncios-voluntario';
-import { VoluntarioMensajes } from './componentes/voluntario/voluntario-mensajes/voluntario-mensajes';
-import { IngresarAdmin } from './componentes/admin/ingresar/ingresar';
-import { AdminLayout } from './componentes/admin/layout/layout';
 import { roleGuard } from './core/guards/rol.guard';
-import { AdminEventos } from './componentes/admin/eventos/eventos';
-import { AdminInscripciones } from './componentes/admin/inscripciones/inscripciones';
-import { NoEncontrado } from './componentes/no-encontrado/no-encontrado';
-import { PublicLayout } from './componentes/public-layout/public-layout';
-import { AdminNotificacion } from './componentes/admin/admin-notificacion/admin-notificacion';
+
+import { IngresarAdmin } from './componentes/admin/ingresar/ingresar';
+import { Layout } from './componentes/admin/layout/layout';
+import { Talleres } from './componentes/admin/talleres/talleres';
+import { MisTalleres } from './componentes/admin/mis-talleres/mis-talleres';
+import { Inscripcion } from './componentes/admin/inscripcion/inscripcion';
+import { Mensajes } from './componentes/admin/mensajes/mensajes';
+import { Enrollar } from './componentes/admin/enrollar/enrollar';
 import { Usuarios } from './componentes/admin/usuarios/usuarios';
 import { Reportes } from './componentes/admin/reportes/reportes';
-import { RecuperarContrasena } from './componentes/recuperar-contrasenia/recuperar-contrasenia';
+import { NoEncontrado } from './componentes/no-encontrado/no-encontrado';
 
 export const routes: Routes = [
-    //Acceso publico
+    { path: '', redirectTo: 'admin/ingresar', pathMatch: 'full' },
+
+    // Login de administrador / docente
     {
-        path: '', component: PublicLayout, children: [
-            { path: '', component: Inicio },
-            { path: 'eventos', component: Eventos },
-            { path: 'contacto', component: Contacto },
-            { path: 'ingresar', component: Ingresar },
-            { path: 'registrarse', component: Registrarse },
-            { path: 'recuperar-contrasena', component: RecuperarContrasena},
-            //Voluntario
-            {
-                path: 'voluntario',
-                canActivate: [authGuard],
-                children: [
-                    { path: 'dashboard', component: DashboardVoluntario },
-                    { path: 'anuncios', component: AnunciosVoluntario },
-                    { path: 'mensajes', component: VoluntarioMensajes },
-                    { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
-                ]
-            }
-        ]
+        path: 'admin/ingresar',
+        component: IngresarAdmin
     },
-    //Admin login (separado del menu y footer general)
-    { path: 'admin/ingresar', component: IngresarAdmin },
-    //Admin panel
+
+    // Panel de administración (docente y administrador)
     {
         path: 'admin',
-        component: AdminLayout,
+        component: Layout,
         canActivate: [authGuard, roleGuard],
-        data: { roles: ['admin', 'organizador'] },
+        data: { roles: ['docente', 'administrador'] },
         children: [
-            { path: 'eventos', component: AdminEventos },
-            { path: 'inscripciones', component: AdminInscripciones },
-            { path: 'notificaciones', component: AdminNotificacion },
-            //ruta solo para admin
-            { path: 'usuarios', component: Usuarios, canActivate: [roleGuard], data: { roles: ['admin'] }},
-            {path: 'reportes', component: Reportes, canActivate: [roleGuard], data: {roles: ['admin']}},
-            { path: '', redirectTo: 'eventos', pathMatch: 'full' }
+            { path: '', redirectTo: 'talleres', pathMatch: 'full' },
+            { path: 'talleres', component: Talleres },
+            { path: 'mis-talleres', component: MisTalleres },
+            { path: 'inscripcion', component: Inscripcion },
+            { path: 'mensajes', component: Mensajes },
+            { path: 'enrollar', component: Enrollar },
+
+            // Solo administrador
+            {
+                path: 'usuarios',
+                component: Usuarios,
+                canActivate: [roleGuard],
+                data: { roles: ['administrador'] }
+            },
+            {
+                path: 'reportes',
+                component: Reportes,
+                canActivate: [roleGuard],
+                data: { roles: ['administrador'] }
+            },
         ]
     },
+
+    // TODO: sección pública / alumno (etapa siguiente del proyecto)
 
     { path: '**', component: NoEncontrado }
 ];
