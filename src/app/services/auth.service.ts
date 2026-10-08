@@ -9,9 +9,9 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly key = 'greenunity_user';
-  private readonly noticeKey = 'greenunity_login_notice';
-  private readonly logoutRouteKey = 'greenunity_logout_route';
+  private readonly key = 'edutaller_user';
+  private readonly noticeKey = 'edutaller_login_notice';
+  private readonly logoutRouteKey = 'edutaller_logout_route';
 
   private userSubject = new BehaviorSubject<AuthUser | null>(this.getUserFromStorage());
   user$ = this.userSubject.asObservable();
@@ -31,7 +31,7 @@ export class AuthService {
     });
   }
 
-  // LOGIN REAL
+  // LOGIN REAL (sirve para alumno, docente y administrador)
   login(email: string, password: string): Observable<AuthUser> {
     return this.http.post<AuthUser>(`${environment.apiUrl}/auth/login`, {
       email,
@@ -44,9 +44,9 @@ export class AuthService {
     );
   }
 
-  // REGISTRO REAL
+  // REGISTRO REAL (solo crea alumnos)
   register(data: {
-    nombre: string;
+    nombres: string;
     email: string;
     password: string;
     telefono: string;
@@ -66,8 +66,8 @@ export class AuthService {
   }
 
   /**
-   * Cierra sesión. Si se provee mensaje y/o ruta, se usa para expulsiones
-   * por cuenta suspendida o token inválido.
+   * Cierra sesion. Si se provee mensaje y/o ruta, se usa para expulsiones
+   * por cuenta suspendida o token invalido.
    */
   logout(message?: string, delayMs = 0, redirectTo?: string): void {
     const targetRoute = redirectTo ?? this.getLoginRoute();
@@ -115,8 +115,12 @@ export class AuthService {
     return !this.isTokenExpired(token);
   }
 
-  isAdmin(): boolean {
-    return this.currentUser?.rol === 'admin';
+  isAdministrador(): boolean {
+    return this.currentUser?.rol === 'administrador';
+  }
+
+  isDocente(): boolean {
+    return this.currentUser?.rol === 'docente';
   }
 
   hasRole(role: UserRole): boolean {
@@ -136,8 +140,9 @@ export class AuthService {
     this.clearNotice();
   }
 
+  // Alumno usa /ingresar, docente/administrador usan /admin/ingresar
   getLoginRouteForRole(role?: UserRole | null): string {
-    return role === 'admin' || role === 'organizador' ? '/admin/ingresar' : '/ingresar';
+    return role === 'administrador' || role === 'docente' ? '/admin/ingresar' : '/ingresar';
   }
 
   getLoginRoute(): string {
@@ -151,10 +156,10 @@ export class AuthService {
   }
 
   /**
-   * Actualiza los datos del usuario en sesión (ej. tras editar el propio
-   * perfil) sin necesidad de cerrar sesión y volver a entrar. Cualquier
-   * componente que muestre auth.currentUser (como la barra lateral) se
-   * refresca solo porque currentUser lee de userSubject reactivamente.
+   * Actualiza los datos del usuario en sesion (ej. tras editar el propio
+   * perfil) sin necesidad de cerrar sesion y volver a entrar. Cualquier
+   * componente que muestre auth.currentUser (como el sidebar) se refresca
+   * solo porque currentUser lee de userSubject reactivamente.
    */
   updateLocalUser(patch: Partial<AuthUser>): void {
     const current = this.currentUser;
@@ -170,7 +175,7 @@ export class AuthService {
 
   private onStorageEvent(event: StorageEvent): void {
     if (event.key === this.key && !event.newValue) {
-      // Otra pestaña cerró sesión
+      // Otra pestana cerro sesion
       this.userSubject.next(null);
       this.configureSessionMonitor(null);
       const route = localStorage.getItem(this.logoutRouteKey) || '/ingresar';
@@ -203,8 +208,8 @@ export class AuthService {
       const current = this.currentUser;
       if (!current) return;
 
-      // Validación silenciosa: si el backend responde 401/403, el interceptor
-      // cerrará la sesión y redirigirá automáticamente.
+      // Validacion silenciosa: si el backend responde 401/403, el
+      // interceptor cerrara la sesion y redirigira automaticamente.
       this.me().subscribe({
         next: () => void 0,
         error: () => void 0

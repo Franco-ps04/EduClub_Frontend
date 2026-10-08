@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-ingresar',
+  selector: 'app-ingresar-admin',
   imports: [FormsModule, RouterLink],
   templateUrl: './ingresar.html',
   styleUrl: './ingresar.css',
@@ -19,10 +19,10 @@ export class IngresarAdmin implements OnInit {
   constructor(private auth: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    // Si ya está autenticado como admin u organizador, redirigir al dashboard
+    // Si ya esta autenticado como docente o administrador, redirigir al panel
     const user = this.auth.currentUser;
-    if (user && (user.rol === 'admin' || user.rol === 'organizador')) {
-      this.router.navigate(['/admin/eventos']);
+    if (user && (user.rol === 'docente' || user.rol === 'administrador')) {
+      this.router.navigate(['/admin/talleres']);
     }
   }
 
@@ -33,19 +33,19 @@ export class IngresarAdmin implements OnInit {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!email) {
-      this.error = 'Ingresa el correo del administrador.';
+      this.error = 'Ingresa el correo del administrador o docente.';
       return;
     }
     if (!emailRegex.test(email)) {
-      this.error = 'Ingresa un correo válido.';
+      this.error = 'Ingresa un correo valido.';
       return;
     }
     if (!password) {
-      this.error = 'Ingresa la contraseña.';
+      this.error = 'Ingresa la contrasena.';
       return;
     }
     if (password.length < 8) {
-      this.error = 'La contraseña debe tener al menos 8 caracteres.';
+      this.error = 'La contrasena debe tener al menos 8 caracteres.';
       return;
     }
 
@@ -53,18 +53,18 @@ export class IngresarAdmin implements OnInit {
     this.auth.login(email, password).subscribe({
       next: (user) => {
         this.loading = false;
-        if (user.rol === 'admin' || user.rol === 'organizador') {
-          this.router.navigate(['/admin/eventos']);
+        if (user.rol === 'docente' || user.rol === 'administrador') {
+          this.router.navigate(['/admin/talleres']);
           return;
         }
-        this.error = 'No tienes permisos de administración.';
+        this.error = 'No tienes permisos de administracion.';
         this.auth.logout();
       },
       error: (err) => {
         this.loading = false;
         this.error =
           err.error?.message ||
-          'Credenciales inválidas.';
+          'Credenciales invalidas.';
       }
     });
   }

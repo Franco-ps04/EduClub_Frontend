@@ -1,0 +1,271 @@
+<div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+  <div>
+    <h2 class="mb-0 fw-bold">Mis talleres</h2>
+    <p class="text-muted mb-0">Gestiona tus talleres y materiales por cada taller</p>
+  </div>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-6 col-md-4">
+    <div class="et-card p-3 d-flex align-items-center gap-2">
+      <span class="et-icon-box bg-light-green"><i class="bi bi-people-fill"></i></span>
+      <div>
+        <div class="fw-bold fs-5">{{ resumen?.alumnosInscritos ?? 0 }}</div>
+        <div class="text-muted small">Alumnos inscritos</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4">
+    <div class="et-card p-3 d-flex align-items-center gap-2">
+      <span class="et-icon-box bg-light-blue"><i class="bi bi-calendar-check"></i></span>
+      <div>
+        <div class="fw-bold fs-5">{{ resumen?.sesionesRealizadas ?? 0 }}</div>
+        <div class="text-muted small">Sesiones realizadas</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4">
+    <div class="et-card p-3 d-flex align-items-center gap-2">
+      <span class="et-icon-box bg-light-purple"><i class="bi bi-bar-chart-fill"></i></span>
+      <div>
+        <div class="fw-bold fs-5">{{ resumen?.promedioAsistencia ?? 0 }}%</div>
+        <div class="text-muted small">Asistencia promedio</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="input-group et-search mb-3">
+  <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+  <input type="text" class="form-control border-start-0" placeholder="Buscar por taller o tipo" [(ngModel)]="buscar">
+</div>
+
+@if (error) { <div class="alert alert-danger small">{{ error }}</div> }
+
+@if (cargando) {
+<div class="p-4 text-center text-muted"><span class="spinner-border spinner-border-sm me-2"></span>Cargando…</div>
+} @else if (talleresFiltrados.length === 0) {
+<div class="et-card p-4 text-center text-muted">Todavía no tienes talleres asignados.</div>
+} @else {
+<div class="row g-3">
+  @for (t of talleresFiltrados; track t.id_taller) {
+  <div class="col-md-6">
+    <div class="et-card p-3 et-taller-card cursor-pointer" (click)="onCardClick(t)"
+      [style.border-left-color]="colorArea(t.area).border">
+      <div class="d-flex justify-content-between align-items-start mb-2">
+        <h6 class="fw-bold mb-0">{{ t.nombre }}</h6>
+        <span class="badge et-badge-tipo">{{ t.area }}</span>
+      </div>
+      <div class="small text-muted mb-1">{{ t.tipo_evento }} &nbsp; Horario: {{ t.hora }}</div>
+      <div class="small text-muted mb-2">Institución: {{ t.institucion }}</div>
+
+      <div class="row g-2 mb-3">
+        <div class="col-4">
+          <div class="et-mini-stat">
+            <div class="fw-bold">{{ t.stats.total_asistencias }}</div>
+            <div class="text-muted" style="font-size:11px">Asistencias</div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="et-mini-stat">
+            <div class="fw-bold">{{ t.stats.sesiones_con_registro }}/{{ t.stats.total_sesiones }}</div>
+            <div class="text-muted" style="font-size:11px">sesiones</div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="et-mini-stat">
+            <div class="fw-bold">{{ t.stats.promedio_asistencia }}%</div>
+            <div class="text-muted" style="font-size:11px">Prom. Asist.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm et-btn-green flex-fill" (click)="irAGestionarAsistencia(t, $event)">
+          <i class="bi bi-clipboard2-check me-1"></i>Gestionar Asistencia
+        </button>
+        <span class="small text-muted align-self-center"><i class="bi bi-hand-index-thumb me-1"></i>Clic en la tarjeta para ver materiales</span>
+      </div>
+
+      @if (tallerExpandidoId === t.id_taller) {
+      <div class="et-material-panel mt-3 pt-3 border-top" (click)="$event.stopPropagation()">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="small fw-semibold text-muted">Materiales del taller</span>
+          <button class="btn btn-sm et-btn-green" (click)="abrirSubirRecurso(t, $event)">
+            <i class="bi bi-cloud-arrow-up me-1"></i>Subir recurso
+          </button>
+        </div>
+
+        @if (cargandoRecursos) {
+        <div class="text-center text-muted small py-2"><span class="spinner-border spinner-border-sm me-2"></span>Cargando materiales…</div>
+        } @else if (sesionesDelTaller.length === 0) {
+        <div class="text-muted small">Este taller todavía no tiene sesiones.</div>
+        } @else {
+        @for (s of sesionesDelTaller; track s.id_sesion) {
+        <div class="mb-3">
+          <div class="fw-semibold small mb-2">
+            Sesión {{ s.numero_sesion }}{{ s.titulo ? ': ' + s.titulo : '' }}
+            <span class="text-muted fw-normal">— {{ s.fecha }}</span>
+          </div>
+          @if (s.recursos.length === 0) {
+          <div class="text-muted small ps-2">Sin recursos todavía.</div>
+          } @else {
+          <div class="row g-2">
+            @for (r of s.recursos; track r.id_recurso) {
+            <div class="col-6 col-lg-4">
+              <div class="et-recurso-card" (click)="abrirPreview(r, $event)">
+                <button class="et-recurso-del" (click)="pedirEliminar(r, $event)" title="Eliminar">
+                  <i class="bi bi-x-circle-fill"></i>
+                </button>
+                <div class="et-recurso-icon">
+                  <i class="bi {{ iconoRecurso(r.tipo) }}"></i>
+                </div>
+                <div class="et-recurso-titulo">{{ r.titulo }}</div>
+                <div class="et-recurso-fecha">{{ r.fecha_subida }}</div>
+              </div>
+            </div>
+            }
+          </div>
+          }
+        </div>
+        }
+        }
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>
+}
+
+<!-- MODAL: subir recurso -->
+@if (mostrarModalSubir) {
+<div class="et-modal-backdrop" (click)="cerrarSubirRecurso()">
+  <div class="et-modal-panel" (click)="$event.stopPropagation()">
+    <div class="d-flex justify-content-between align-items-start p-3 border-bottom">
+      <div>
+        <div class="small text-muted">Completa el formulario para publicar el recurso</div>
+        <h6 class="fw-bold mb-0">Crear nuevo recurso — {{ tallerParaSubir?.nombre }}</h6>
+      </div>
+      <button class="btn-close" (click)="cerrarSubirRecurso()"></button>
+    </div>
+    <div class="p-3 et-modal-body">
+      @if (formError) { <div class="alert alert-danger small py-2">{{ formError }}</div> }
+
+      <div class="row g-2">
+        <div class="col-6">
+          <label class="form-label small fw-semibold">Sesión relacionada</label>
+          <select class="form-select form-select-sm mb-2" [(ngModel)]="form.idSesion" (ngModelChange)="onSesionChange()">
+            <option [ngValue]="null">-Selecciona una sesión-</option>
+            @for (s of sesionesDelTaller; track s.id_sesion) {
+            <option [ngValue]="s.id_sesion">Sesión {{ s.numero_sesion }} ({{ s.fecha }})</option>
+            }
+          </select>
+        </div>
+        <div class="col-6">
+          <label class="form-label small fw-semibold">Tipo</label>
+          <select class="form-select form-select-sm mb-2" [(ngModel)]="form.tipo" (ngModelChange)="onTipoChange()">
+            <option [ngValue]="null">-Selecciona-</option>
+            <option value="word">Word</option>
+            <option value="pdf">PDF</option>
+            <option value="imagen">Imagen</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="form-label small fw-semibold">Título de la sesión</label>
+      @if (sesionYaTieneTitulo) {
+      <input type="text" class="form-control form-control-sm mb-2" [value]="form.tituloSesion" disabled>
+      <small class="text-muted d-block mb-2 mt-n1">Esta sesión ya tiene título; no se puede cambiar desde aquí.</small>
+      } @else {
+      <input type="text" class="form-control form-control-sm mb-2" placeholder="Solo se puede poner una vez"
+        [(ngModel)]="form.tituloSesion">
+      }
+
+      <label class="form-label small fw-semibold">Título del recurso</label>
+      <input type="text" class="form-control form-control-sm mb-2" [(ngModel)]="form.titulo">
+
+      <label class="form-label small fw-semibold">Descripción</label>
+      <textarea class="form-control form-control-sm mb-2" rows="2" [(ngModel)]="form.descripcion"></textarea>
+
+      <label class="form-label small fw-semibold">Documento del recurso</label>
+      <div class="et-drop-zone mb-2 text-center p-3 rounded-3"
+        [class.disabled]="!form.tipo" (click)="form.tipo && archivoInput.click()">
+        @if (form.archivoNombre) {
+        <i class="bi bi-file-earmark-check fs-4 text-success"></i>
+        <div class="small">{{ form.archivoNombre }}</div>
+        } @else if (!form.tipo) {
+        <i class="bi bi-arrow-up-circle fs-4 text-muted"></i>
+        <div class="small text-muted">Primero selecciona el tipo de recurso</div>
+        } @else {
+        <i class="bi bi-cloud-arrow-up fs-4 text-success"></i>
+        <div class="small text-muted">Arrastra un documento aquí</div>
+        <div class="text-muted" style="font-size:11px">o haz clic para seleccionar · solo {{ form.tipo }} · máx. 50 MB</div>
+        }
+      </div>
+      <input #archivoInput type="file" [attr.accept]="acceptActual" class="d-none" (change)="onArchivoSeleccionado($event)">
+
+      <label class="form-label small fw-semibold">Enlace <span class="text-muted fw-normal">(Zoom, video, opcional)</span></label>
+      <input type="text" class="form-control form-control-sm mb-2" placeholder="https://..." [(ngModel)]="form.enlace">
+    </div>
+    <div class="p-3 border-top d-flex justify-content-end gap-2">
+      <button class="btn btn-light btn-sm" (click)="cerrarSubirRecurso()">Cancelar</button>
+      <button class="btn et-btn-green btn-sm px-3" (click)="guardarRecurso()" [disabled]="guardandoRecurso">
+        @if (guardandoRecurso) { <span class="spinner-border spinner-border-sm me-1"></span> }
+        Publicar recurso
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- MODAL: confirmar eliminar recurso -->
+@if (recursoAEliminar) {
+<div class="et-modal-backdrop" (click)="recursoAEliminar = null">
+  <div class="et-modal-panel-sm p-4" (click)="$event.stopPropagation()">
+    <h6 class="fw-bold">Eliminar recurso</h6>
+    <p class="text-muted small">¿Seguro que deseas eliminar "{{ recursoAEliminar.titulo }}"? Esta acción no se puede deshacer.</p>
+    <div class="d-flex justify-content-end gap-2">
+      <button class="btn btn-light btn-sm" (click)="recursoAEliminar = null">Cancelar</button>
+      <button class="btn btn-danger btn-sm" (click)="confirmarEliminar()" [disabled]="eliminando">
+        @if (eliminando) { <span class="spinner-border spinner-border-sm me-1"></span> }
+        Eliminar
+      </button>
+    </div>
+  </div>
+</div>
+}
+
+<!-- MODAL: vista previa de recurso -->
+@if (recursoPreview) {
+<div class="et-modal-backdrop" (click)="cerrarPreview()">
+  <div class="et-modal-panel et-preview-panel" (click)="$event.stopPropagation()">
+    <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+      <h6 class="fw-bold mb-0 text-truncate">{{ recursoPreview.titulo }}</h6>
+      <button class="btn-close" (click)="cerrarPreview()"></button>
+    </div>
+    <div class="p-3 et-modal-body text-center">
+      @if (previewEsVisible && recursoPreview.tipo === 'pdf') {
+      <iframe [src]="previewUrlSegura" class="et-preview-frame"></iframe>
+      } @else if (previewEsVisible && recursoPreview.tipo === 'imagen') {
+      <img [src]="recursoPreview.archivo_url" class="img-fluid rounded-2">
+      } @else {
+      <div class="py-4">
+        <i class="bi bi-file-earmark-word-fill text-primary" style="font-size:48px"></i>
+        <p class="text-muted small mt-2">La vista previa no está disponible para documentos Word.<br>Descárgalo para abrirlo.</p>
+      </div>
+      }
+      @if (recursoPreview.enlace_url) {
+      <a [href]="recursoPreview.enlace_url" target="_blank" class="d-block small mt-2">
+        <i class="bi bi-camera-video me-1"></i>Enlace (Zoom/video)
+      </a>
+      }
+    </div>
+    <div class="p-3 border-top d-flex justify-content-end">
+      <a [href]="recursoPreview.archivo_descarga_url || recursoPreview.archivo_url" target="_blank" class="btn et-btn-green btn-sm px-3">
+        <i class="bi bi-download me-1"></i>Descargar
+      </a>
+    </div>
+  </div>
+</div>
+}

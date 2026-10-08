@@ -1,11 +1,89 @@
-.user-row {
-    transition: background .1s;
+.et-admin-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.user-row:hover {
-    background: #f8fafc;
+.et-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
-.text-white-75 {
-    color: rgba(255, 255, 255, .75);
+.badge-alumno {
+  background: #e3f8ec;
+  color: #1e7a48;
+}
+
+.badge-tutor {
+  background: #e7f0ff;
+  color: #2563eb;
+}
+
+.et-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 20px;
+}
+
+.et-modal-panel {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, .2);
+}
+
+.et-modal-panel-sm {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, .2);
+}
+
+.et-filter-toggle {
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+}
+
+.et-filter-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.et-filter-caret {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.et-modal-panel-sm .bi-shield-x {
+  font-size: 28px;
+}
+
+
+.et-you-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #e8f7ee;
+  color: #2d9e5f;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
 }

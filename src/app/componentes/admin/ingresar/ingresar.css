@@ -1,21 +1,28 @@
 :host {
-    display: block;
-    min-height: 100vh;
-    background: #0d1b2a;
+  display: block;
+  min-height: 100vh;
+  background: #0d1b2a;
 }
 
 .admin-card {
-    background: #1a2a3a;
-    border: 0.5px solid rgba(255, 255, 255, .08);
+  background: #16273a;
 }
 
-.admin-input,
-.admin-prefix {
-    background: #243447 !important;
-    color: #ccc !important;
-    border-color: rgba(255, 255, 255, .1) !important;
+.admin-input {
+  background: #1f3348 !important;
+  color: #fff !important;
 }
 
 .admin-input::placeholder {
-    color: #555;
+  color: #5f7185;
+}
+
+.admin-input:focus {
+  background: #1f3348 !important;
+  color: #fff !important;
+  box-shadow: none;
+}
+
+.admin-prefix {
+  background: #1f3348 !important;
 }

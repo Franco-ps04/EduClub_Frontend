@@ -1,0 +1,19 @@
+.et-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+}
+
+.et-drop-zone {
+  border: 2px dashed #bcd9c8;
+  background: #f4fbf7;
+  cursor: pointer;
+}
+
+.et-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 2px;
+}

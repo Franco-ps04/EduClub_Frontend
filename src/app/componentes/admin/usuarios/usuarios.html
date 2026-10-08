@@ -1,68 +1,57 @@
-<!-- Encabezado -->
 <div class="d-flex justify-content-between align-items-start mb-4">
     <div>
         <h4 class="fw-bold mb-0">Usuarios</h4>
         <p class="text-muted small mb-0">{{ total() }} usuarios registrados</p>
     </div>
-   <!--  <div class="dropdown">
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-            <i class="bi bi-download me-1"></i>Exportar
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
-            <li><button class="dropdown-item" (click)="exportarListado('xlsx')">
-                    <i class="bi bi-file-earmark-excel me-2 text-success"></i>Excel (.xlsx)
-                </button></li>
-            <li><button class="dropdown-item" (click)="exportarListado('pdf')">
-                    <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>PDF
-                </button></li>
-        </ul>
-    </div> -->
+    <div class="d-flex gap-2 align-items-start">
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="bi bi-download me-1"></i>Exportar
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><button class="dropdown-item" (click)="exportarListado('xlsx')">
+                        <i class="bi bi-file-earmark-excel me-2 text-success"></i>Excel (.xlsx)
+                    </button></li>
+                <li><button class="dropdown-item" (click)="exportarListado('pdf')">
+                        <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>PDF
+                    </button></li>
+            </ul>
+        </div>
+        <div class="d-flex flex-column align-items-end gap-1">
+            <button class="btn et-btn-green" (click)="abrirNuevo()">
+                <i class="bi bi-person-plus me-1"></i>Nuevo usuario
+            </button>
+            <span class="text-muted" style="font-size:11px"><i class="bi bi-mortarboard me-1"></i>Solo docentes</span>
+        </div>
+    </div>
 </div>
+
+@if (error) { <div class="alert alert-danger small">{{ error }}</div> }
 
 <!-- Métricas -->
 <div class="row g-3 mb-4">
     <div class="col-md-3">
         <div class="bg-white rounded-3 border p-3 d-flex align-items-center gap-3">
-            <div class="gu-admin-icon bg-secondary-subtle">
-                <i class="bi bi-people-fill text-secondary fs-5"></i>
-            </div>
-            <div>
-                <h4 class="fw-bold mb-0">{{ total() }}</h4>
-                <p class="text-muted small mb-0">Total</p>
-            </div>
+            <div class="et-admin-icon bg-secondary-subtle"><i class="bi bi-people-fill text-secondary fs-5"></i></div>
+            <div><h4 class="fw-bold mb-0">{{ total() }}</h4><p class="text-muted small mb-0">Total</p></div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="bg-white rounded-3 border p-3 d-flex align-items-center gap-3">
-            <div class="gu-admin-icon bg-success-subtle">
-                <i class="bi bi-person-check-fill text-success fs-5"></i>
-            </div>
-            <div>
-                <h4 class="fw-bold mb-0">{{ activos() }}</h4>
-                <p class="text-muted small mb-0">Activos</p>
-            </div>
+            <div class="et-admin-icon bg-success-subtle"><i class="bi bi-person-check-fill text-success fs-5"></i></div>
+            <div><h4 class="fw-bold mb-0">{{ activos() }}</h4><p class="text-muted small mb-0">Activos</p></div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="bg-white rounded-3 border p-3 d-flex align-items-center gap-3">
-            <div class="gu-admin-icon bg-primary-subtle">
-                <i class="bi bi-star-fill text-primary fs-5"></i>
-            </div>
-            <div>
-                <h4 class="fw-bold mb-0">{{ organizadores() }}</h4>
-                <p class="text-muted small mb-0">Organizadores</p>
-            </div>
+            <div class="et-admin-icon bg-primary-subtle"><i class="bi bi-star-fill text-primary fs-5"></i></div>
+            <div><h4 class="fw-bold mb-0">{{ tutores() }}</h4><p class="text-muted small mb-0">Tutores</p></div>
         </div>
     </div>
     <div class="col-md-3">
         <div class="bg-white rounded-3 border p-3 d-flex align-items-center gap-3">
-            <div class="gu-admin-icon bg-danger-subtle">
-                <i class="bi bi-person-x-fill text-danger fs-5"></i>
-            </div>
-            <div>
-                <h4 class="fw-bold mb-0">{{ suspendidos() }}</h4>
-                <p class="text-muted small mb-0">Suspendidos</p>
-            </div>
+            <div class="et-admin-icon bg-danger-subtle"><i class="bi bi-person-x-fill text-danger fs-5"></i></div>
+            <div><h4 class="fw-bold mb-0">{{ suspendidos() }}</h4><p class="text-muted small mb-0">Suspendidos</p></div>
         </div>
     </div>
 </div>
@@ -71,47 +60,33 @@
 <div class="mb-3">
     <div class="d-flex gap-2 mb-2">
         <div class="input-group" style="max-width:500px">
-            <span class="input-group-text bg-white border-end-0">
-                <i class="bi bi-search text-muted" style="font-size:12px"></i>
-            </span>
+            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted" style="font-size:12px"></i></span>
             <input class="form-control border-start-0" placeholder="Buscar por nombre o correo..." [(ngModel)]="search">
         </div>
-        <button class="btn d-flex align-items-center gap-2" [class.btn-success]="showFiltros"
+        <button class="btn d-flex align-items-center gap-2 et-filter-toggle" [class.btn-success]="showFiltros"
             [class.btn-outline-secondary]="!showFiltros" (click)="showFiltros = !showFiltros">
             <i class="bi bi-funnel-fill"></i>Filtros
-            @if (showFiltros) { <i class="bi bi-chevron-up" style="font-size:10px"></i> }
+            @if (showFiltros) { <i class="bi bi-chevron-up et-filter-caret"></i> } @else { <i class="bi bi-chevron-down et-filter-caret"></i> }
         </button>
     </div>
 
     @if (showFiltros) {
     <div class="bg-white rounded-3 border p-3 d-flex gap-4 flex-wrap">
-        <!-- Filtro Rol -->
         <div>
             <p class="small fw-semibold text-muted mb-2">Rol</p>
             <div class="d-flex gap-1 flex-wrap">
-                @for (r of [
-                {v:'todos', l:'Todos'},
-                {v:'voluntario', l:'Voluntario'},
-                {v:'organizador', l:'Organizador'}
-                ]; track r.v) {
+                @for (r of [{v:'todos', l:'Todos'},{v:'alumno', l:'Alumno'},{v:'docente', l:'Tutor'},{v:'administrador', l:'Admin'}]; track r.v) {
                 <button class="btn btn-sm rounded-pill" [class.btn-success]="filtroRol === r.v"
                     [class.btn-outline-secondary]="filtroRol !== r.v" (click)="filtroRol = $any(r.v)">{{ r.l }}</button>
                 }
             </div>
         </div>
-        <!-- Filtro Estado -->
         <div>
             <p class="small fw-semibold text-muted mb-2">Estado</p>
             <div class="d-flex gap-1 flex-wrap">
-                @for (e of [
-                {v:'todos', l:'Todos'},
-                {v:'activo', l:'Activo'},
-
-                {v:'suspendido', l:'Suspendido'}
-                ]; track e.v) {
+                @for (e of [{v:'todos', l:'Todos'},{v:'activo', l:'Activo'},{v:'suspendido', l:'Suspendido'}]; track e.v) {
                 <button class="btn btn-sm rounded-pill" [class.btn-success]="filtroEstado === e.v"
-                    [class.btn-outline-secondary]="filtroEstado !== e.v" (click)="filtroEstado = $any(e.v)">{{ e.l
-                    }}</button>
+                    [class.btn-outline-secondary]="filtroEstado !== e.v" (click)="filtroEstado = $any(e.v)">{{ e.l }}</button>
                 }
             </div>
         </div>
@@ -119,204 +94,180 @@
     }
 </div>
 
-<!-- Tabla de usuarios -->
+<!-- Tabla -->
 <div class="card border-0 shadow-sm rounded-3">
     <div class="table-responsive">
         <table class="table align-middle mb-0" style="font-size:13px">
             <thead>
                 <tr style="border-bottom:2px solid #f1f5f9">
-                    <th class="px-4 py-3 text-uppercase text-muted fw-semibold"
-                        style="font-size:11px;letter-spacing:.06em">Usuario</th>
-                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:11px;letter-spacing:.06em">
-                        Contacto</th>
-                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:11px;letter-spacing:.06em">
-                        Rol</th>
-                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:11px;letter-spacing:.06em">
-                        Estado</th>
-                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:11px;letter-spacing:.06em">
-                        Eventos</th>
-                    <th class="py-3 text-uppercase text-muted fw-semibold text-end pe-4"
-                        style="font-size:11px;letter-spacing:.06em">Acciones</th>
+                    <th class="px-4 py-3 text-uppercase text-muted fw-semibold" style="font-size:11px;letter-spacing:.06em">Usuario</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:11px;letter-spacing:.06em">Contacto</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:11px;letter-spacing:.06em">Rol</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:11px;letter-spacing:.06em">Estado</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:11px;letter-spacing:.06em">Talleres</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold text-end pe-4" style="font-size:11px;letter-spacing:.06em">Acción</th>
                 </tr>
             </thead>
             <tbody>
-                @for (u of filtrados(); track u.id) {
-                <tr style="border-bottom:1px solid #f8fafc" class="user-row">
-                    <!-- Avatar + Nombre -->
+                @if (loading) {
+                <tr><td colspan="6" class="text-center text-muted py-5"><span class="spinner-border spinner-border-sm"></span></td></tr>
+                } @else {
+                @for (u of filtrados(); track u.id_usuario) {
+                <tr style="border-bottom:1px solid #f8fafc">
                     <td class="px-4 py-3">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center
-                            text-white fw-bold shrink-0" [style.background]="getAvatarColor(u.nombre)"
-                                style="width:38px;height:38px;font-size:13px">
-                                {{ getInitials(u.nombre) }}
+                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0"
+                                [style.background]="getAvatarColor(u.nombres)" style="width:38px;height:38px;font-size:13px">
+                                {{ getInitials(u.nombres) }}
                             </div>
-                            <div>
-                                <p class="fw-semibold mb-0">{{ u.nombre }}</p>
-                                <p class="text-muted mb-0 d-flex align-items-center gap-1" style="font-size:11px">
-                                    <!--                                     <i class="bi bi-geo-alt" style="font-size:10px"></i>{{ u.distrito }}
- -->
-                                </p>
-                            </div>
+                            <p class="fw-semibold mb-0">{{ u.nombres }}</p>
                         </div>
                     </td>
-                    <!-- Contacto -->
                     <td>
                         <p class="mb-0 small">{{ u.email }}</p>
                         <p class="text-muted mb-0" style="font-size:11px">{{ u.telefono }}</p>
                     </td>
-                    <!-- Rol -->
+                    <td><span class="et-badge" [class]="rolClass(u.rol)">{{ rolLabel(u.rol) }}</span></td>
                     <td>
-                        <span class="gu-badge" [class]="rolClass(u.rol)">{{ u.rol }}</span>
-                    </td>
-                    <!-- Estado -->
-                    <td>
-                        <span class="d-flex align-items-center gap-1" [class]="estadoClass(u.estado)">
-                            <span class="rounded-circle d-inline-block" [style.background]="estadoDot(u.estado)"
-                                style="width:7px;height:7px;flex-shrink:0"></span>
-                            {{ u.estado }}
+                        <span class="d-flex align-items-center gap-1" [class]="estadoClass(estadoDe(u))">
+                            <span class="rounded-circle d-inline-block" [style.background]="estadoDot(estadoDe(u))" style="width:7px;height:7px;flex-shrink:0"></span>
+                            {{ estadoDe(u) }}
                         </span>
                     </td>
-                    <!-- Eventos -->
-                    <td class="fw-medium">{{ u.numEventos }}</td>
-                    <!-- Acciones -->
+                    <td class="fw-medium">{{ talleresDe(u) }}</td>
                     <td class="text-end pe-4">
-                        <button class="btn btn-sm btn-link text-muted p-1 me-1" title="Ver / Editar perfil"
-                            (click)="openModal(u)">
+                        <button class="btn btn-sm btn-link text-muted p-1 me-1" title="Ver / editar" (click)="openModal(u)">
                             <i class="bi bi-pencil" style="font-size:14px"></i>
                         </button>
-                        @if (!esUsuarioActual(u)) {
-                        <button class="btn btn-sm btn-link p-1" [class.text-warning]="u.estado === 'activo'"
-                            [class.text-success]="u.estado !== 'activo'"
-                            [title]="u.estado === 'activo' ? 'Suspender' : 'Activar'"
-                            (click)="pedirConfirm(u, u.estado === 'activo' ? 'suspender' : 'activar')">
-                            <i class="bi" style="font-size:14px" [class.bi-shield-x]="u.estado === 'activo'"
-                                [class.bi-shield-check]="u.estado !== 'activo'"></i>
-                        </button>
+                        @if (esUsuarioActual(u)) {
+                        <span class="et-you-badge">Tú</span>
                         } @else {
-                        <span class="badge rounded-pill text-bg-light text-muted" style="font-size:10px"
-                            title="No puedes suspenderte ni cambiar tu propio rol desde aquí">Tú</span>
+                        <button class="btn btn-sm btn-link p-1" [class.text-warning]="u.activo" [class.text-success]="!u.activo"
+                            [title]="u.activo ? 'Suspender' : 'Activar'" (click)="pedirConfirm(u, u.activo ? 'suspender' : 'activar')">
+                            <i class="bi" style="font-size:14px" [class.bi-shield-x]="u.activo" [class.bi-shield-check]="!u.activo"></i>
+                        </button>
                         }
                     </td>
                 </tr>
+                } @empty {
+                <tr><td colspan="6" class="text-center text-muted py-5">
+                    <i class="bi bi-people fs-1 d-block mb-2 opacity-50"></i>Sin usuarios para los filtros seleccionados.
+                </td></tr>
                 }
-                @empty {
-                <tr>
-                    <td colspan="6" class="text-center text-muted py-5">
-                        <i class="bi bi-people fs-1 d-block mb-2 opacity-50"></i>
-                        Sin usuarios para los filtros seleccionados.
-                    </td>
-                </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
 
-<!-- ══ MODAL: Ver / Editar usuario (igual imagen 3) ══ -->
-@if (modalUsuario) {
-<div class="gu-modal-backdrop" (click)="!editMode && closeModal()"></div>
-<div class="gu-modal-panel" style="max-width:460px;padding:0;overflow:hidden">
+<!-- MODAL: Nuevo docente -->
+@if (showNuevo) {
+<div class="et-modal-backdrop" (click)="showNuevo = false">
+<div class="et-modal-panel" style="max-width:420px" (click)="$event.stopPropagation()">
+    <div class="d-flex justify-content-between align-items-center p-3 border-bottom">
+        <h6 class="fw-bold mb-0">Nuevo usuario (docente)</h6>
+        <button class="btn-close" (click)="showNuevo = false"></button>
+    </div>
+    <div class="p-3">
+        @if (errorNuevo) { <div class="alert alert-danger small py-2">{{ errorNuevo }}</div> }
+        <label class="form-label small fw-medium">Nombre completo</label>
+        <input class="form-control mb-2" [(ngModel)]="nuevoForm.nombres">
+        <label class="form-label small fw-medium">Correo electrónico</label>
+        <input type="email" class="form-control mb-2" [(ngModel)]="nuevoForm.email">
+        <label class="form-label small fw-medium">Teléfono</label>
+        <input class="form-control mb-2" [(ngModel)]="nuevoForm.telefono">
+        <label class="form-label small fw-medium">Institución</label>
+        <input class="form-control mb-2" [(ngModel)]="nuevoForm.institucion">
+        <label class="form-label small fw-medium">Contraseña</label>
+        <input type="password" class="form-control mb-2" [(ngModel)]="nuevoForm.password">
+    </div>
+    <div class="p-3 border-top d-flex gap-2">
+        <button class="btn btn-outline-secondary flex-fill" (click)="showNuevo = false">Cancelar</button>
+        <button class="btn et-btn-green flex-fill fw-semibold" (click)="crearDocente()" [disabled]="creandoDocente">
+            @if (creandoDocente) { <span class="spinner-border spinner-border-sm me-1"></span> }
+            Crear usuario
+        </button>
+    </div>
+</div>
+</div>
+}
 
-    <!-- Header verde con avatar -->
-    <div class="position-relative p-4 pb-3" [style.background]="getAvatarColor(modalUsuario.nombre)">
+<!-- MODAL: Ver / Editar usuario -->
+@if (modalUsuario) {
+<div class="et-modal-backdrop" (click)="!editMode && closeModal()">
+<div class="et-modal-panel" style="max-width:460px;padding:0;overflow:hidden" (click)="$event.stopPropagation()">
+    <div class="position-relative p-4 pb-3" [style.background]="getAvatarColor(modalUsuario.nombres)">
         <button class="btn-close btn-close-white position-absolute top-0 end-0 m-3" (click)="closeModal()"></button>
         <div class="d-flex align-items-center gap-3">
-            <div class="rounded-circle d-flex align-items-center justify-content-center
-                    text-white fw-bold border-white border-2"
+            <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold border-white border-2"
                 style="width:56px;height:56px;font-size:20px;background:rgba(255,255,255,.2)">
-                {{ getInitials(modalUsuario.nombre) }}
+                {{ getInitials(modalUsuario.nombres) }}
             </div>
             <div>
-                <h5 class="text-white fw-bold mb-1">{{ modalUsuario.nombre }}</h5>
+                <h5 class="text-white fw-bold mb-1">{{ modalUsuario.nombres }}</h5>
                 <div class="d-flex gap-2">
-                    <span class="badge rounded-pill" style="background:rgba(255,255,255,.25);color:#fff">
-                        {{ modalUsuario.rol }}
-                    </span>
-                    <span class="badge rounded-pill" style="background:rgba(255,255,255,.25);color:#fff">
-                        {{ modalUsuario.estado }}
-                    </span>
+                    <span class="badge rounded-pill" style="background:rgba(255,255,255,.25);color:#fff">{{ rolLabel(modalUsuario.rol) }}</span>
+                    <span class="badge rounded-pill" style="background:rgba(255,255,255,.25);color:#fff">{{ estadoDe(modalUsuario) }}</span>
                 </div>
             </div>
         </div>
-
-        <!-- Stats rápidos -->
         <div class="row g-2 mt-3">
             <div class="col-6">
                 <div class="rounded-3 text-center py-2" style="background:rgba(255,255,255,.15)">
-                    <p class="text-white fw-bold fs-5 mb-0">{{ modalUsuario.numEventos }}</p>
-                    <p class="text-white-75 mb-0" style="font-size:11px">Eventos</p>
+                    <p class="text-white fw-bold fs-5 mb-0">{{ talleresDe(modalUsuario) }}</p>
+                    <p class="text-white-75 mb-0" style="font-size:11px">Talleres</p>
                 </div>
             </div>
+            @if (modalUsuario.rol === 'docente' && modalUsuario.institucion) {
+            <div class="col-6">
+                <div class="rounded-3 text-center py-2" style="background:rgba(255,255,255,.15)">
+                    <p class="text-white fw-bold mb-0 text-truncate" style="font-size:13px">{{ modalUsuario.institucion }}</p>
+                    <p class="text-white-75 mb-0" style="font-size:11px">Institución</p>
+                </div>
+            </div>
+            }
         </div>
     </div>
 
-    <!-- Cuerpo del modal -->
     <div class="p-4" style="max-height:calc(88vh - 180px);overflow-y:auto;min-height:0">
         @if (!editMode) {
-        <!-- Vista de información -->
         <div class="d-flex flex-column gap-2 mb-4">
             <div class="d-flex align-items-center gap-2 text-muted small">
-                <i class="bi bi-envelope text-success" style="width:16px"></i>
-                {{ modalUsuario.email }}
+                <i class="bi bi-envelope text-success" style="width:16px"></i>{{ modalUsuario.email }}
             </div>
             <div class="d-flex align-items-center gap-2 text-muted small">
-                <i class="bi bi-telephone text-success" style="width:16px"></i>
-                {{ modalUsuario.telefono }}
+                <i class="bi bi-telephone text-success" style="width:16px"></i>{{ modalUsuario.telefono }}
             </div>
-            <!-- <div class="d-flex align-items-center gap-2 text-muted small">
-                <i class="bi bi-geo-alt text-success" style="width:16px"></i>
-                 {{ modalUsuario.distrito }}
-            </div> -->
             <div class="d-flex align-items-center gap-2 text-muted small">
-                <i class="bi bi-calendar text-success" style="width:16px"></i>
-                Miembro desde {{ getMiembroDesde(modalUsuario.creadoEn) }}
+                <i class="bi bi-calendar text-success" style="width:16px"></i>Miembro desde {{ getMiembroDesde(modalUsuario.creado_en) }}
             </div>
         </div>
-
-        <!-- Botones acción -->
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary flex-fill fw-medium" (click)="enableEdit()">
-                Editar perfil
-            </button>
-            <!-- <div class="dropdown">
-                <button class="btn btn-outline-secondary fw-medium" type="button" data-bs-toggle="dropdown"
-                    title="Exportar este usuario">
+            <button class="btn btn-outline-secondary flex-fill fw-medium" (click)="enableEdit()">Editar perfil</button>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary fw-medium" type="button" data-bs-toggle="dropdown" title="Exportar este usuario">
                     <i class="bi bi-download"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><button class="dropdown-item" (click)="exportarUno('xlsx')">
-                            <i class="bi bi-file-earmark-excel me-2 text-success"></i>Excel (.xlsx)
-                        </button></li>
-                    <li><button class="dropdown-item" (click)="exportarUno('pdf')">
-                            <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>PDF
-                        </button></li>
+                    <li><button class="dropdown-item" (click)="exportarUno('xlsx')"><i class="bi bi-file-earmark-excel me-2 text-success"></i>Excel (.xlsx)</button></li>
+                    <li><button class="dropdown-item" (click)="exportarUno('pdf')"><i class="bi bi-file-earmark-pdf me-2 text-danger"></i>PDF</button></li>
                 </ul>
-            </div> -->
-            @if (!esUsuarioActual(modalUsuario)) {
-            @if (modalUsuario.estado === 'activo') {
-            <button class="btn flex-fill fw-medium" style="background:#fff0f0;color:#dc2626;border:1px solid #fecaca"
-                (click)="pedirConfirm(modalUsuario, 'suspender')">
-                Suspender
-            </button>
+            </div>
+            @if (modalUsuario.activo) {
+            @if (modalUsuario.rol === 'administrador') {
+            <button class="btn btn-light flex-fill fw-medium" disabled title="El administrador está protegido"><i class="bi bi-shield-lock me-1"></i>Administrador protegido</button>
             } @else {
-            <button class="btn btn-success flex-fill fw-medium" (click)="pedirConfirm(modalUsuario, 'activar')">
-                Activar
-            </button>
+            <button class="btn flex-fill fw-medium" style="background:#fff0f0;color:#dc2626;border:1px solid #fecaca" (click)="pedirConfirm(modalUsuario, 'suspender')">Suspender</button>
             }
+            } @else {
+            <button class="btn btn-success flex-fill fw-medium" (click)="pedirConfirm(modalUsuario, 'activar')">Activar</button>
             }
         </div>
-        @if (esUsuarioActual(modalUsuario)) {
-        <p class="text-muted mt-2 mb-0" style="font-size:11px">
-            <i class="bi bi-info-circle me-1"></i>
-            Esta es tu propia cuenta: no puedes suspenderte ni cambiar tu rol desde aquí.
-        </p>
-        }
         } @else {
-        <!-- Formulario de edición -->
         <div class="d-flex flex-column gap-3 mb-4">
             <div>
                 <label class="form-label small fw-medium">Nombre completo</label>
-                <input class="form-control" [(ngModel)]="editForm.nombre">
+                <input class="form-control" [(ngModel)]="editForm.nombres">
             </div>
             <div>
                 <label class="form-label small fw-medium">Correo electrónico</label>
@@ -326,105 +277,64 @@
                 <label class="form-label small fw-medium">Teléfono</label>
                 <input class="form-control" [(ngModel)]="editForm.telefono">
             </div>
-
-            @if (editForm.rol === 'organizador') {
+            @if (editForm.rol === 'docente') {
             <div>
-                <label class="form-label small fw-medium">Organización</label>
-                <input class="form-control" [(ngModel)]="editForm.organizacion" placeholder="Nombre de la organización">
+                <label class="form-label small fw-medium">Institución</label>
+                <input class="form-control" [(ngModel)]="editForm.institucion" placeholder="Nombre de la institución">
             </div>
             }
-
-            <!-- Cambio de rol (voluntario ↔ organizador) -->
             <div>
                 <label class="form-label small fw-medium">Rol</label>
-                @if (!esUsuarioActual(editForm)) {
                 <div class="d-flex gap-2">
-                    @for (r of
-                    [{v:'voluntario',i:'bi-person'},{v:'organizador',i:'bi-building'},{v:'admin',i:'bi-shield-lock'}];
-                    track r.v) {
-                    <button class="btn flex-fill fw-medium" [class.btn-success]="editForm.rol === r.v"
-                        [class.btn-outline-secondary]="editForm.rol !== r.v" (click)="setRol(r.v)">
-                        <i class="bi me-1" [class]="r.i"></i>
-                        {{ r.v | titlecase }}
+                    @for (r of [{v:'alumno',i:'bi-person',l:'Alumno'},{v:'docente',i:'bi-mortarboard',l:'Tutor'},{v:'administrador',i:'bi-shield-lock',l:'Admin'}]; track r.v) {
+                    <button class="btn flex-fill fw-medium" [disabled]="editForm.rol === 'administrador' && r.v !== 'administrador'" [class.btn-success]="editForm.rol === r.v" [class.btn-outline-secondary]="editForm.rol !== r.v" (click)="setRol($any(r.v))">
+                        <i class="bi me-1" [class]="r.i"></i>{{ r.l }}
                     </button>
                     }
                 </div>
-                <p class="text-muted mt-1" style="font-size:11px">
-                    <i class="bi bi-info-circle me-1"></i>
-                    Cambiar a organizador permitirá gestionar eventos
-                </p>
-                } @else {
-                <div class="d-flex align-items-center gap-2 px-3 py-2 rounded"
-                    style="background:#f8fafc;border:1px solid #e2e8f0">
-                    <i class="bi bi-shield-lock text-muted"></i>
-                    <span class="fw-medium">{{ editForm.rol | titlecase }}</span>
-                </div>
-                <p class="text-muted mt-1" style="font-size:11px">
-                    <i class="bi bi-info-circle me-1"></i>
-                    No puedes cambiar tu propio rol. Pide a otro administrador que lo haga.
-                </p>
-                }
+                @if (editForm.rol !== 'administrador') {<p class="text-muted mt-1" style="font-size:11px">
+                    <i class="bi bi-info-circle me-1"></i>Cambiar a Tutor te pedirá la institución
+                </p>} @else { <p class="text-muted mt-1 mb-0" style="font-size:11px"><i class="bi bi-shield-lock me-1"></i>El rol Administrador está protegido.</p> }
             </div>
         </div>
-
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary flex-fill" (click)="editMode = false">
-                Cancelar
-            </button>
-            <button class="btn flex-fill fw-semibold" [class.btn-success]="!guardado" [class.btn-light]="guardado"
-                (click)="saveEdit()" [disabled]="guardado">
-                @if (guardado) {
-                <i class="bi bi-check-circle-fill text-success me-1"></i>¡Guardado!
-                } @else {
-                Guardar cambios
-                }
+            <button class="btn btn-outline-secondary flex-fill" (click)="editMode = false">Cancelar</button>
+            <button class="btn flex-fill fw-semibold" [class.btn-success]="!guardado" [class.btn-light]="guardado" (click)="saveEdit()" [disabled]="guardado || guardando">
+                @if (guardado) { <i class="bi bi-check-circle-fill text-success me-1"></i>¡Guardado! } @else { Guardar cambios }
             </button>
         </div>
         }
     </div>
 </div>
+</div>
 }
 
-<!-- ══ MODAL: Confirmación (suspender / activar / eliminar) ══ -->
+<!-- MODAL: Confirmación -->
 @if (showConfirm && confirmTarget) {
-<div class="gu-modal-backdrop" style="z-index:1060" (click)="showConfirm = false"></div>
-<div class="gu-modal-panel" style="max-width:360px;text-align:center;z-index:1070">
+<div class="et-modal-backdrop" style="z-index:1060" (click)="showConfirm = false">
+<div class="et-modal-panel-sm text-center p-4" style="z-index:1070" (click)="$event.stopPropagation()">
     <div class="d-flex justify-content-center mb-3">
         <div class="rounded-circle d-flex align-items-center justify-content-center" style="width:56px;height:56px"
-            [style.background]="confirmAccion === 'suspender' ? '#fef3c7'
-                              : confirmAccion === 'eliminar'  ? '#fee2e2' : '#dcfce7'">
-            <i class="bi fs-3" [class.bi-shield-x]="confirmAccion === 'suspender'"
-                [class.bi-trash-fill]="confirmAccion === 'eliminar'"
-                [class.bi-shield-check]="confirmAccion === 'activar'" [style.color]="confirmAccion === 'suspender' ? '#d97706'
-                         : confirmAccion === 'eliminar'  ? '#dc2626' : '#16a34a'"></i>
+            [style.background]="confirmAccion === 'suspender' ? '#fef3c7' : '#dcfce7'">
+            <i class="bi fs-3" [class.bi-shield-x]="confirmAccion === 'suspender'" [class.bi-shield-check]="confirmAccion === 'activar'"
+                [style.color]="confirmAccion === 'suspender' ? '#d97706' : '#16a34a'"></i>
         </div>
     </div>
-    <h5 class="fw-bold mb-1">
-        ¿{{ confirmAccion === 'suspender' ? 'Suspender'
-        : confirmAccion === 'activar' ? 'Activar'
-        : 'Eliminar' }} usuario?
-    </h5>
+    <h5 class="fw-bold mb-1">¿{{ confirmAccion === 'suspender' ? 'Suspender' : 'Activar' }} usuario?</h5>
     <p class="text-muted small mb-4">
         @if (confirmAccion === 'suspender') {
-        <strong>{{ confirmTarget.nombre }}</strong> no podrá acceder a la plataforma.
-        }
-        @if (confirmAccion === 'activar') {
-        <strong>{{ confirmTarget.nombre }}</strong> podrá volver a acceder normalmente.
-        }
-        @if (confirmAccion === 'eliminar') {
-        Esta acción es irreversible. Se eliminará a <strong>{{ confirmTarget.nombre }}</strong>
-        junto con todos sus datos.
+        <strong>{{ confirmTarget.nombres }}</strong> no podrá acceder a la plataforma.
+        @if (confirmTarget.rol === 'alumno') { Sus inscripciones activas quedarán anuladas. }
+        } @else {
+        <strong>{{ confirmTarget.nombres }}</strong> podrá volver a acceder normalmente.
         }
     </p>
     <div class="d-flex gap-3">
         <button class="btn btn-outline-secondary flex-fill" (click)="showConfirm = false">Cancelar</button>
-        <button class="btn flex-fill fw-semibold" [class.btn-warning]="confirmAccion === 'suspender'"
-            [class.btn-success]="confirmAccion === 'activar'" [class.btn-danger]="confirmAccion === 'eliminar'"
-            (click)="ejecutarConfirm()">
-            {{ confirmAccion === 'suspender' ? 'Sí, suspender'
-            : confirmAccion === 'activar' ? 'Sí, activar'
-            : 'Sí, eliminar' }}
+        <button class="btn flex-fill fw-semibold" [class.btn-warning]="confirmAccion === 'suspender'" [class.btn-success]="confirmAccion === 'activar'" (click)="ejecutarConfirm()">
+            {{ confirmAccion === 'suspender' ? 'Sí, suspender' : 'Sí, activar' }}
         </button>
     </div>
+</div>
 </div>
 }

@@ -1,69 +1,122 @@
 :host {
-      display: flex;
-      min-height: 100vh;
-    }
-    .admin-sidebar {
-      width: 240px;
-      min-width: 240px;
-      background: #0d1b2a;
-      display: flex;
-      flex-direction: column;
-      padding: 12px 8px;
-    }
-    .admin-main {
-      flex: 1;
-      background: #f1f4f9;
-      display: flex;
-      flex-direction: column;
-    }
-    .sidebar-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
-      border-radius: 8px;
-      color: #aaa;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all .15s;
-      margin-bottom: 4px;
-    }
-    .sidebar-link:hover,
-    .sidebar-link.active {
-      background: #2d9e5f;
-      color: #fff;
-    }
-    .top-bar {
-      background: white;
-      padding: 10px 20px;
-      border-bottom: 0.5px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-    .admin-user-section {
-      margin-top: auto;
-      padding: 12px 8px 8px;
-      border-top: 1px solid rgba(255,255,255,.1);
-    }
-    .btn-salir {
-      width: 100%;
-      background: transparent;
-      border: 1px solid #ef4444;
-      color: #ef4444;
-      border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 13px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: all .15s;
-    }
-    .btn-salir:hover {
-      background: #ef4444;
-      color: #fff;
-    }
+  display: block;
+}
+
+.et-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #eef2f7;
+}
+
+.et-sidebar {
+  width: 240px;
+  min-width: 240px;
+  background: #0d1b2a;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.et-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #c3ccd6;
+  font-size: 14.5px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  transition: background .15s ease, color .15s ease;
+}
+
+.et-nav-link i {
+  font-size: 15px;
+  width: 18px;
+  text-align: center;
+}
+
+/* Hover = mismo verde que el activo (igual que el proyecto anterior) */
+.et-nav-link:hover,
+.et-nav-link.active {
+  background: #2d9e5f;
+  color: #fff;
+}
+
+.et-sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+}
+
+.et-avatar {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: #2d9e5f;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Botón "Salir": idéntico al del proyecto anterior (outline rojo, ancho
+   completo, se rellena de rojo solido en hover) */
+.et-btn-salir {
+  width: 100%;
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.et-btn-salir:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.et-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.et-topbar {
+  height: 56px;
+  background: #fff;
+  border-bottom: 1px solid #e5e9ef;
+}
+
+.et-content {
+  flex: 1;
+}
+
+@media (max-width: 900px) {
+  .et-sidebar {
+    width: 72px;
+    min-width: 72px;
+  }
+
+  .et-nav-link span,
+  .et-sidebar-footer .flex-grow-1 {
+    display: none;
+  }
+
+  .et-nav-link {
+    justify-content: center;
+  }
+}

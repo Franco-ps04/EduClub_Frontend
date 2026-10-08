@@ -1,0 +1,162 @@
+.et-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+}
+
+.et-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.bg-light-blue { background: #e7f0ff; color: #2563eb; }
+.bg-light-green { background: #e3f8ec; color: #2d9e5f; }
+.bg-light-purple { background: #ece7ff; color: #6d4fd6; }
+
+.et-search { max-width: 320px; }
+
+.et-badge-tipo {
+  background: #e3f8ec;
+  color: #1e7a48;
+  font-weight: 500;
+}
+
+.et-taller-card {
+  border-left: 4px solid #2d9e5f;
+}
+
+.et-mini-stat {
+  background: #f1f8f4;
+  border-radius: 8px;
+  text-align: center;
+  padding: 6px 2px;
+}
+
+.et-btn-material {
+  background: #fdf1cf;
+  color: #92680a;
+  border: none;
+}
+
+.et-btn-material:hover {
+  background: #fbe4a0;
+  color: #6b4d06;
+}
+
+.et-recurso-row {
+  background: #f8fafc;
+  border: 1px solid #eef1f5;
+}
+
+.et-recurso-row:hover {
+  background: #f1f4f9;
+}
+
+.et-recurso-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e5e9ef;
+  border-radius: 12px;
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+
+.et-recurso-card:hover {
+  border-color: #2d9e5f;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+}
+
+.et-recurso-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.et-recurso-titulo {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1f2937;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.et-recurso-fecha {
+  font-size: 10.5px;
+  color: #94a3b8;
+}
+
+.et-recurso-del {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  border: none;
+  background: transparent;
+  color: #cbd5e1;
+  padding: 0;
+  line-height: 1;
+}
+
+.et-recurso-del:hover {
+  color: #dc2626;
+}
+
+.et-drop-zone.disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* Modal generico (igual que Talleres) */
+.et-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 20px;
+}
+
+.et-modal-panel {
+  background: #fff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.et-modal-body { overflow-y: auto; }
+
+.et-modal-panel-sm {
+  background: #fff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.et-drop-zone {
+  border: 2px dashed #bcd9c8;
+  background: #f4fbf7;
+  cursor: pointer;
+}
+
+.et-preview-panel {
+  max-width: 560px;
+}
+
+.et-preview-frame {
+  width: 100%;
+  height: 420px;
+  border: 1px solid #e5e9ef;
+  border-radius: 8px;
+}

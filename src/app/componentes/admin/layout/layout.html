@@ -1,71 +1,85 @@
-<aside class="admin-sidebar">
-  <!-- Logo -->
-  <div class="d-flex align-items-center gap-2 px-2 mb-4 mt-1">
-    <div style="width:30px;height:30px;background:#2d9e5f;border-radius:8px;
-                display:flex;align-items:center;justify-content:center;flex-shrink:0">
-      <i class="bi bi-leaf-fill text-white" style="font-size:13px"></i>
-    </div>
-    <span class="fw-bold" style="font-size:15px">
-      <span class="text-white">Green</span><span class="text-success">Unity</span>
-    </span>
-  </div>
+<div class="et-shell">
 
-  <p class="text-white-50 px-2 mb-2"
-    style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:600">
-    @if (isAdmin()) { Administración } @else { Organización }
-  </p>
-
-  <!-- Rutas compartidas: admin + organizador -->
-  <a routerLink="/admin/eventos" routerLinkActive="active" class="sidebar-link">
-    <i class="bi bi-calendar-event-fill"></i> Eventos
-  </a>
-  <a routerLink="/admin/inscripciones" routerLinkActive="active" class="sidebar-link">
-    <i class="bi bi-people-fill"></i> Inscripción
-  </a>
-  <a routerLink="/admin/notificaciones" routerLinkActive="active" class="sidebar-link">
-    <i class="bi bi-envelope-fill"></i> Mensajes
-    @if (sinLeerPanel() > 0) {
-    <span class="badge bg-danger rounded-pill ms-auto" style="font-size:10px">
-      {{ sinLeerPanel() }}
-    </span>
-    }
-  </a>
-
-  <!-- Rutas exclusivas del admin -->
-  @if (isAdmin()) {
-  <a routerLink="/admin/usuarios" routerLinkActive="active" class="sidebar-link">
-    <i class="bi bi-person-badge-fill"></i> Usuarios
-  </a>
-  <a routerLink="/admin/reportes" routerLinkActive="active" class="sidebar-link">
-    <i class="bi bi-bar-chart-fill"></i> Reportes
-  </a>
-  }
-
-  <!-- Usuario al fondo -->
-  <div class="admin-user-section">
-    <div class="d-flex align-items-center gap-2 mb-2 px-1">
-      <div class="rounded-circle bg-success d-flex align-items-center justify-content-center
-                  text-white fw-bold shrink-0" style="width:32px;height:32px;font-size:12px">
-        {{ getInitials() }}
-      </div>
-      <div style="min-width:0">
-        <p class="text-white mb-0 small fw-medium text-truncate">{{ getNombre() }}</p>
-        <p class="text-white-50 mb-0 text-truncate" style="font-size:11px">{{ getEmail() }}</p>
+  <!-- Sidebar -->
+  <aside class="et-sidebar d-flex flex-column">
+    <div class="px-3 pt-4 pb-3">
+      <div class="d-flex align-items-center gap-2">
+        <span class="et-logo-icon">
+          <i class="bi bi-mortarboard-fill text-white" style="font-size:15px"></i>
+        </span>
+        <span class="fw-bold text-white fs-5">Edu<span class="et-text-green">Taller</span></span>
       </div>
     </div>
-    <button class="btn-salir" (click)="logout()">
-      <i class="bi bi-box-arrow-right"></i> Salir
-    </button>
-  </div>
-</aside>
 
-<div class="admin-main d-flex flex-column">
-  <div class="top-bar">
-    <a routerLink="/" target="_blank" class="btn btn-sm btn-outline-success">
-      <i class="bi bi-globe me-1"></i>Ver sitio web
-    </a>
-  </div>
-  <div class="grow p-4" style="overflow-y:auto">
-    <router-outlet />
+    <div class="px-3 pb-2">
+      <p class="text-white-50 px-2 mb-2"
+        style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:600">
+        @if (isAdministrador()) { Administración } @else { Docente }
+      </p>
+    </div>
+
+    <nav class="flex-grow-1 px-2">
+      <a routerLink="/admin/talleres" routerLinkActive="active" class="et-nav-link">
+        <i class="bi bi-journal-bookmark-fill"></i> Talleres
+      </a>
+
+      <a routerLink="/admin/mis-talleres" routerLinkActive="active" class="et-nav-link">
+        <i class="bi bi-file-earmark-text-fill"></i> Mis talleres
+      </a>
+
+      <a routerLink="/admin/inscripcion" routerLinkActive="active" class="et-nav-link">
+        <i class="bi bi-people-fill"></i> Inscripción
+      </a>
+
+      <a routerLink="/admin/mensajes" routerLinkActive="active" class="et-nav-link">
+        <i class="bi bi-envelope-fill"></i> Mensajes
+        @if (sinLeer > 0) {
+        <span class="badge bg-danger rounded-pill ms-auto" style="font-size:10px">
+          {{ sinLeer }}
+        </span>
+        }
+      </a>
+
+      <a routerLink="/admin/enrollar" routerLinkActive="active" class="et-nav-link">
+        <i class="bi bi-person-plus-fill"></i> Enrollar
+      </a>
+
+      @if (isAdministrador()) {
+      <a routerLink="/admin/usuarios" routerLinkActive="active" class="et-nav-link">
+        <i class="bi bi-person-badge-fill"></i> Usuarios
+      </a>
+
+      <a routerLink="/admin/reportes" routerLinkActive="active" class="et-nav-link">
+        <i class="bi bi-bar-chart-fill"></i> Reportes
+      </a>
+      }
+    </nav>
+
+    <!-- Usuario al fondo -->
+    <div class="et-sidebar-footer px-2 pt-3 pb-2">
+      <div class="d-flex align-items-center gap-2 mb-2 px-1">
+        <span class="et-avatar">{{ getInitials() }}</span>
+        <div class="flex-grow-1 overflow-hidden" style="min-width:0">
+          <div class="text-white small fw-medium text-truncate">{{ getNombre() }}</div>
+          <div class="text-truncate" style="color:#7c8aa0;font-size:11px">{{ getEmail() }}</div>
+        </div>
+      </div>
+      <button class="et-btn-salir" (click)="cerrarSesion()">
+        <i class="bi bi-box-arrow-right"></i> Salir
+      </button>
+    </div>
+  </aside>
+
+  <!-- Contenido -->
+  <div class="et-main">
+    <header class="et-topbar d-flex justify-content-end align-items-center px-4">
+      <a routerLink="/" class="btn btn-sm btn-outline-success">
+        <i class="bi bi-globe me-1"></i>Ver sitio web
+      </a>
+    </header>
+
+    <main class="et-content p-4">
+      <router-outlet />
+    </main>
   </div>
 </div>
