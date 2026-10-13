@@ -1,0 +1,87 @@
+<div class="container py-5" style="max-width:1100px">
+    <div class="text-center mb-5">
+        <p class="text-success fw-semibold text-uppercase small" style="letter-spacing:.08em">ESCRÍBENOS</p>
+        <h2 class="fw-bold">¿Tienes alguna pregunta?</h2>
+        <p class="text-muted">Estamos aquí para ayudarte. Cuéntanos sobre los talleres, las inscripciones o cualquier
+            duda sobre la plataforma.</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-3 mb-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-success-subtle rounded-3 p-3 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-envelope-fill text-success fs-4"></i>
+                    </div>
+                    <div>
+                        <p class="fw-semibold mb-0 small">Correo electrónico</p>
+                        <p class="text-muted mb-0 small">edutaller&#64;gmail.com</p>
+                        <p class="text-muted mb-0" style="font-size:11px">Respondemos en menos de 24h</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm rounded-4 p-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-success-subtle rounded-3 p-3 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-whatsapp text-success fs-4"></i>
+                    </div>
+                    <div>
+                        <p class="fw-semibold mb-0 small">Teléfono / WhatsApp</p>
+                        <p class="text-muted mb-0 small fw-bold">+51 973 600 239</p>
+                        <p class="text-muted mb-0" style="font-size:11px">Lun – Vier, 9am – 6pm</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold mb-1">Envíanos un mensaje</h5>
+                <p class="text-muted small mb-4">Todos los campos son obligatorios.</p>
+                @if(success){<div class="alert alert-success py-2"><i class="bi bi-check-circle me-2"></i>¡Mensaje
+                    enviado correctamente! Puedes continuar la conversación desde Mensajes.</div>}
+                @if(errorMessage){<div class="alert alert-danger py-2"><i
+                        class="bi bi-exclamation-triangle me-2"></i>{{errorMessage}}</div>}
+                <form class="row g-3" (ngSubmit)="submit()" novalidate>
+                    <div class="col-md-6"><label class="form-label small fw-semibold">Nombre completo</label><input
+                            class="form-control" name="nombre" [(ngModel)]="form.nombre"
+                            [class.is-invalid]="submitted&&form.nombre.trim().length<3" maxlength="120"
+                            required>@if(submitted&&form.nombre.trim().length<3){<div class="invalid-feedback d-block">
+                            Ingresa tu nombre completo.</div>}
+            </div>
+            <div class="col-md-6"><label class="form-label small fw-semibold">Teléfono</label><input
+                    class="form-control" name="telefono" [(ngModel)]="form.telefono" maxlength="9" inputmode="numeric"
+                    (ngModelChange)="form.telefono=normalizePhone($event)"
+                    [class.is-invalid]="submitted&&!isPhoneValid(form.telefono)"
+                    required>@if(submitted&&!isPhoneValid(form.telefono)){<div class="invalid-feedback d-block">El
+                    teléfono debe tener 9 dígitos.</div>}</div>
+            <div class="col-md-6"><label class="form-label small fw-semibold">Correo electrónico</label><input
+                    type="email" class="form-control" name="email" [(ngModel)]="form.email"
+                    [class.is-invalid]="submitted&&!isEmailValid(form.email)"
+                    required>@if(submitted&&!isEmailValid(form.email)){<div class="invalid-feedback d-block">Ingresa un
+                    correo válido.</div>}</div>
+            <div class="col-md-6"><label class="form-label small fw-semibold">Asunto</label><select class="form-select"
+                    name="asunto" [(ngModel)]="form.asunto" [class.is-invalid]="submitted&&!form.asunto" required>
+                    <option value="">Seleccione un asunto...</option>@for(s of subjects;track s){<option [value]="s">
+                        {{s}}</option>}
+                </select>@if(submitted&&!form.asunto){<div class="invalid-feedback d-block">Selecciona un asunto.</div>}
+            </div>
+            <div class="col-12"><label class="form-label small fw-semibold">Mensaje</label><textarea
+                    class="form-control" rows="5" name="mensaje" [(ngModel)]="form.mensaje" maxlength="700"
+                    placeholder="Cuéntanos cómo podemos ayudarte..."
+                    [class.is-invalid]="submitted&&(form.mensaje.trim().length<10||form.mensaje.trim().length>700)"
+                    required></textarea>
+                <div class="d-flex justify-content-between align-items-start mt-1">
+                    <div class="form-text">Mínimo 10 caracteres.</div>
+                    <div class="form-text text-end ms-auto">{{form.mensaje.length}}/700</div>
+                </div>@if(submitted&&form.mensaje.trim().length<10){<div class="invalid-feedback d-block">Escribe un
+                    mensaje más detallado.
+            </div>}
+        </div>
+        <div class="col-12"><button type="submit" class="btn btn-success px-5 py-2 fw-semibold"
+                [disabled]="sending">@if(sending){<span
+                    class="spinner-border spinner-border-sm me-2"></span>Enviando...}@else{<i
+                    class="bi bi-send me-2"></i>Enviar mensaje}</button></div>
+        </form>
+    </div>
+</div>
+</div>
+</div>

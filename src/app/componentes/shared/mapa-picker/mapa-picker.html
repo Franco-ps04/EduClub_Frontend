@@ -1,13 +1,7 @@
 <div class="position-relative">
   <label class="form-label small fw-semibold">Buscar ubicación en el mapa</label>
-  <input
-    type="text"
-    class="form-control form-control-sm mb-2"
-    placeholder="Busca ubicación..."
-    [(ngModel)]="query"
-    (ngModelChange)="onQueryChange()"
-    (focus)="mostrarSugerencias = sugerencias.length > 0"
-    autocomplete="off">
+  <input type="text" class="form-control form-control-sm mb-2" placeholder="Busca ubicación..." [(ngModel)]="query"
+    (ngModelChange)="onQueryChange()" (focus)="mostrarSugerencias = sugerencias.length > 0" autocomplete="off">
 
   @if (mostrarSugerencias) {
   <ul class="list-group et-sugerencias shadow-sm">

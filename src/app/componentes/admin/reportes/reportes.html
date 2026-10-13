@@ -4,13 +4,16 @@
     <p class="text-muted small mb-0">Resumen general de talleres, inscripciones y asistencia</p>
   </div>
   <div class="dropdown">
-    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" [disabled]="exportando">
+    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+      [disabled]="exportando">
       @if (exportando) { <span class="spinner-border spinner-border-sm me-1"></span> }
       <i class="bi bi-download me-1"></i>Exportar
     </button>
     <ul class="dropdown-menu dropdown-menu-end">
-      <li><button class="dropdown-item" (click)="exportar('xlsx')"><i class="bi bi-file-earmark-excel me-2 text-success"></i>Excel (.xlsx)</button></li>
-      <li><button class="dropdown-item" (click)="exportar('pdf')"><i class="bi bi-file-earmark-pdf me-2 text-danger"></i>PDF</button></li>
+      <li><button class="dropdown-item" (click)="exportar('xlsx')"><i
+            class="bi bi-file-earmark-excel me-2 text-success"></i>Excel (.xlsx)</button></li>
+      <li><button class="dropdown-item" (click)="exportar('pdf')"><i
+            class="bi bi-file-earmark-pdf me-2 text-danger"></i>PDF</button></li>
     </ul>
   </div>
 </div>
@@ -26,19 +29,28 @@
   <div class="col-md-4">
     <div class="et-card p-3 d-flex align-items-center justify-content-center text-center gap-3 report-kpi-card">
       <span class="et-icon-box bg-light-blue"><i class="bi bi-calendar3"></i></span>
-      <div><h4 class="fw-bold mb-0">{{ totalTalleres }}</h4><p class="text-muted small mb-0">Total talleres</p></div>
+      <div>
+        <h4 class="fw-bold mb-0">{{ totalTalleres }}</h4>
+        <p class="text-muted small mb-0">Total talleres</p>
+      </div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="et-card p-3 d-flex align-items-center justify-content-center text-center gap-3 report-kpi-card">
       <span class="et-icon-box bg-light-green"><i class="bi bi-people-fill"></i></span>
-      <div><h4 class="fw-bold mb-0">{{ totalInscritos }}</h4><p class="text-muted small mb-0">Total inscritos</p></div>
+      <div>
+        <h4 class="fw-bold mb-0">{{ totalInscritos }}</h4>
+        <p class="text-muted small mb-0">Total inscritos</p>
+      </div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="et-card p-3 d-flex align-items-center justify-content-center text-center gap-3 report-kpi-card">
       <span class="et-icon-box bg-light-purple"><i class="bi bi-check-circle-fill"></i></span>
-      <div><h4 class="fw-bold mb-0">{{ pctAsistencia }}%</h4><p class="text-muted small mb-0">Tasa de asistencia</p></div>
+      <div>
+        <h4 class="fw-bold mb-0">{{ pctAsistencia }}%</h4>
+        <p class="text-muted small mb-0">Tasa de asistencia</p>
+      </div>
     </div>
   </div>
 </div>
@@ -137,9 +149,10 @@
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h6 class="fw-bold mb-0">Detalle por taller</h6>
     <div class="btn-group btn-group-sm">
-      @for (f of [{v:'todos',l:'Todos'},{v:'Proximo',l:'Próximos'},{v:'En curso',l:'En curso'},{v:'Finalizado',l:'Finalizados'}]; track f.v) {
-      <button class="btn" [class.btn-success]="filtroReporte === f.v" [class.btn-outline-secondary]="filtroReporte !== f.v"
-        (click)="filtroReporte = $any(f.v)">{{ f.l }}</button>
+      @for (f of [{v:'todos',l:'Todos'},{v:'Proximo',l:'Próximos'},{v:'En curso',l:'En
+      curso'},{v:'Finalizado',l:'Finalizados'}]; track f.v) {
+      <button class="btn" [class.btn-success]="filtroReporte === f.v"
+        [class.btn-outline-secondary]="filtroReporte !== f.v" (click)="filtroReporte = $any(f.v)">{{ f.l }}</button>
       }
     </div>
   </div>
@@ -148,14 +161,20 @@
     <table class="table align-middle mb-0" style="font-size:13px">
       <thead class="table-light">
         <tr>
-          <th>Taller</th><th>Área</th><th>Fecha</th><th>Estado</th><th>Ocupación</th><th>Asistencia</th>
+          <th>Taller</th>
+          <th>Área</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Ocupación</th>
+          <th>Asistencia</th>
         </tr>
       </thead>
       <tbody>
         @for (r of reporteFiltrado(); track r.id) {
         <tr>
           <td class="fw-medium">{{ r.titulo }}</td>
-          <td><span class="badge" [style.background]="colorFondo(r.area)" [style.color]="colorBorde(r.area)">{{ r.area }}</span></td>
+          <td><span class="badge" [style.background]="colorFondo(r.area)" [style.color]="colorBorde(r.area)">{{ r.area
+              }}</span></td>
           <td class="text-muted">{{ r.fecha | date:'dd MMM yyyy' }}</td>
           <td><span class="badge rounded-pill" [class]="estadoClass(r.estado)">{{ r.estado }}</span></td>
           <td>{{ r.inscritos }}/{{ r.capacidad }} <span class="text-muted">({{ r.pctOcupacion }}%)</span></td>
@@ -167,7 +186,9 @@
           </td>
         </tr>
         } @empty {
-        <tr><td colspan="6" class="text-center text-muted py-4">Sin talleres para este filtro.</td></tr>
+        <tr>
+          <td colspan="6" class="text-center text-muted py-4">Sin talleres para este filtro.</td>
+        </tr>
         }
       </tbody>
     </table>

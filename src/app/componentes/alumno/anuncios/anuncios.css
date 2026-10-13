@@ -1,0 +1,74 @@
+:host {
+    display: block
+}
+
+.et-announcements-page {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.5rem !important
+}
+
+.et-announcements-row {
+    min-height: 500px
+}
+
+.et-announcements-list-col,
+.et-announcements-detail-col {
+    min-width: 0
+}
+
+.et-announcement-cards .ann-item {
+    cursor: pointer;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background-color .18s ease;
+    border-color: #dee2e6 !important
+}
+
+.et-announcement-cards .ann-item:hover {
+    transform: translateY(-1px);
+    border-color: #2d9e5f !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .06)
+}
+
+.et-announcement-cards .ann-item.ann-selected {
+    background: #f0fdf4;
+    border-color: #2d9e5f !important;
+    box-shadow: 0 0 0 1px rgba(45, 158, 95, .12)
+}
+
+.et-unread-dot {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 50%;
+    background: #198754;
+    flex-shrink: 0;
+    margin-top: 4px
+}
+
+.et-announcement-detail-card {
+    min-height: 500px
+}
+
+.et-announcement-message {
+    line-height: 1.9;
+    white-space: pre-wrap;
+    color: #374151
+}
+
+.et-announcement-empty {
+    min-height: 500px
+}
+
+@media(max-width:767.98px) {
+    .et-announcements-row {
+        min-height: 0
+    }
+
+    .et-announcement-detail-card,
+    .et-announcement-empty {
+        min-height: 300px
+    }
+
+    .et-announcements-detail-col {
+        margin-top: 1rem
+    }
+}

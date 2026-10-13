@@ -1,0 +1,59 @@
+<div class="et-login-page">
+  <section class="et-login-photo" role="img" aria-label="Estudiantes aprendiendo en el aula"></section>
+
+  <section class="et-login-panel">
+    <div class="et-login-content">
+      <div class="et-login-brand mb-2">
+        <span class="et-login-brand-name"><span>Edu</span>Taller</span>
+        <span class="et-login-brand-icon"><i class="bi bi-mortarboard"></i></span>
+      </div>
+      <h1 class="et-login-title">Bienvenido de vuelta</h1>
+      <p class="et-login-subtitle">Ingresa tus datos para Iniciar Sesión</p>
+
+      @if (error) {
+      <div class="alert alert-danger py-2 small" role="alert">{{ error }}</div>
+      }
+
+      <form (ngSubmit)="submit()" novalidate>
+        <div class="mb-4">
+          <label class="form-label" for="email">Correo electrónico</label>
+          <div class="et-login-input input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input id="email" type="email" name="email" [(ngModel)]="email" placeholder="alumno@gmail.com"
+              autocomplete="username" maxlength="254" required>
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="password">Contraseña</label>
+          <div class="et-login-input input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input id="password" [type]="showPass ? 'text' : 'password'" name="password" [(ngModel)]="password"
+              placeholder="••••••••••••" autocomplete="current-password" required>
+            <button class="input-group-text et-password-toggle" type="button" (click)="showPass=!showPass"
+              [attr.aria-label]="showPass ? 'Ocultar contraseña' : 'Mostrar contraseña'">
+              <i class="bi" [class.bi-eye]="!showPass" [class.bi-eye-slash]="showPass"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="text-end mb-4">
+          <a routerLink="/recuperar-contrasena" class="et-login-link">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button type="submit" class="btn et-login-submit w-100" [disabled]="loading">
+          @if (loading) {
+          <span class="spinner-border spinner-border-sm me-2"></span>Iniciando sesión...
+          } @else {
+          Iniciar Sesión
+          }
+        </button>
+      </form>
+
+      <div class="et-login-teacher text-end mt-2">
+        <a routerLink="/admin/ingresar"><i class="bi bi-lock me-1"></i>Acceso Docente</a>
+      </div>
+    </div>
+  </section>
+</div>

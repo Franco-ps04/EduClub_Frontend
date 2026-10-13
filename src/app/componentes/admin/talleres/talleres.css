@@ -151,20 +151,81 @@
   max-width: 100%;
 }
 
-.et-action-btn, .et-action-link { transition: background-color .15s ease, color .15s ease, border-color .15s ease, transform .15s ease; }
-.et-action-btn:hover, .et-action-link:hover { transform: translateY(-1px); }
-.et-empty-search-img { width: 150px; height: 120px; object-fit: contain; opacity: .9; }
-.et-textarea-tall { min-height: 108px; resize: vertical; }
-.et-virtual-note { background: #eef8f2; color: #2d9e5f; border-radius: 10px; padding: 8px 10px; }
-.et-detail-panel { max-width: 760px; }
-.et-detail-img { max-height: 220px; object-fit: cover; }
-.et-confirm-icon { width: 56px; height: 56px; margin-inline: auto; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-size:28px; background:#dcfce7; color:#16a34a; }
-.et-confirm-icon.et-confirm-danger { background:#fee2e2; color:#dc2626; }
+.et-action-btn,
+.et-action-link {
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease, transform .15s ease;
+}
 
-.et-estado-proximo { background:#dbeafe; color:#1d4ed8; }
-.et-estado-en-curso { background:#fef3c7; color:#92400e; }
-.et-estado-finalizado { background:#e2e8f0; color:#475569; }
-.et-estado-cancelado { background:#fee2e2; color:#b91c1c; }
+.et-action-btn:hover,
+.et-action-link:hover {
+  transform: translateY(-1px);
+}
+
+.et-empty-search-img {
+  width: 150px;
+  height: 120px;
+  object-fit: contain;
+  opacity: .9;
+}
+
+.et-textarea-tall {
+  min-height: 108px;
+  resize: vertical;
+}
+
+.et-virtual-note {
+  background: #eef8f2;
+  color: #2d9e5f;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.et-detail-panel {
+  max-width: 760px;
+}
+
+.et-detail-img {
+  max-height: 220px;
+  object-fit: cover;
+}
+
+.et-confirm-icon {
+  width: 56px;
+  height: 56px;
+  margin-inline: auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.et-confirm-icon.et-confirm-danger {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.et-estado-proximo {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.et-estado-en-curso {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.et-estado-finalizado {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.et-estado-cancelado {
+  background: #fee2e2;
+  color: #b91c1c;
+}
 
 .et-actions {
   min-width: 260px;

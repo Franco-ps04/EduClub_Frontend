@@ -1,0 +1,354 @@
+<div class="container py-4 et-dashboard">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h2 class="fw-bold mb-0">Bienvenido, {{ firstName }}</h2>
+      <p class="text-muted mb-0">Observa tu progreso y organiza tu participación en los talleres.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <div class="et-student-avatar">{{ firstName.charAt(0) }}</div>
+      <div>
+        <p class="fw-semibold mb-0 small">{{ firstName }}</p><span
+          class="badge bg-success-subtle text-success et-role-chip">Alumno</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="gu-stat-card card border-0 shadow-sm rounded-4 p-3 p-md-4 text-center h-100"><i
+          class="bi bi-calendar-event text-success fs-2 d-block mb-1"></i>
+        <h3 class="fw-bold text-success mb-0">{{ enrolledCount() }}</h3>
+        <p class="text-muted mb-0 small">Talleres inscritos</p>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="gu-stat-card card border-0 shadow-sm rounded-4 p-3 p-md-4 text-center h-100"><i
+          class="bi bi-check2-circle text-primary fs-2 d-block mb-1"></i>
+        <h3 class="fw-bold text-primary mb-0">{{ completedCount() }}</h3>
+        <p class="text-muted mb-0 small">Talleres completados</p>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="gu-stat-card card border-0 shadow-sm rounded-4 p-3 p-md-4 text-center h-100"><i
+          class="bi bi-person-check-fill text-info fs-2 d-block mb-1"></i>
+        <h3 class="fw-bold text-info mb-0">{{ attendedCount() }}</h3>
+        <p class="text-muted mb-0 small">Asistencias confirmadas</p>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="gu-stat-card card border-0 shadow-sm rounded-4 p-3 p-md-4 text-center h-100"><i
+          class="bi bi-award-fill text-warning fs-2 d-block mb-1"></i>
+        <h3 class="fw-bold text-warning mb-0">{{ totalPremios() === null ? '0' : totalPremios() }}</h3>
+        <p class="text-muted mb-0 small">Certificados ganados</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="et-dashboard-tabs d-flex gap-2 flex-wrap mb-4" aria-label="Secciones del alumno">
+    <button type="button" class="btn btn-sm rounded-pill" [class.btn-success]="activeSection === 'inscripciones'"
+      [class.btn-outline-secondary]="activeSection !== 'inscripciones'" (click)="activeSection='inscripciones'"><i
+        class="bi bi-list-check me-1"></i>Mis inscripciones</button>
+    <button type="button" class="btn btn-sm rounded-pill" [class.btn-success]="activeSection === 'portafolio'"
+      [class.btn-outline-secondary]="activeSection !== 'portafolio'" (click)="activeSection='portafolio'"><i
+        class="bi bi-folder2-open me-1"></i>Portafolio</button>
+    <button type="button" class="btn btn-sm rounded-pill btn-outline-secondary" disabled
+      title="Disponible en una siguiente etapa"><i class="bi bi-award me-1"></i>Diploma <span
+        class="et-coming-soon">Próximamente</span></button>
+    <button type="button" class="btn btn-sm rounded-pill btn-outline-secondary" disabled
+      title="Disponible en una siguiente etapa"><i class="bi bi-file-earmark-pdf me-1"></i>Materiales <span
+        class="et-coming-soon">Próximamente</span></button>
+  </div>
+
+  @if (error) { <div class="alert alert-warning">{{ error }}</div> }
+
+  @if (activeSection === 'inscripciones') {
+  <section class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-3 p-md-4">
+      <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <h5 class="fw-bold mb-0"><i class="bi bi-person-check-fill text-success me-2"></i>Resumen de asistencia</h5>
+        <div class="d-flex gap-2 flex-wrap">
+          <span class="badge rounded-pill bg-success-subtle text-success px-3 py-2"><i
+              class="bi bi-check-circle-fill me-1"></i>Asistió: {{ attendedCount() }}</span>
+          <span class="badge rounded-pill bg-danger-subtle text-danger px-3 py-2"><i
+              class="bi bi-x-circle-fill me-1"></i>No asistió: {{ absentCount() }}</span>
+          <span class="badge rounded-pill bg-secondary-subtle text-secondary px-3 py-2"><i
+              class="bi bi-dash-circle me-1"></i>Sin registrar: {{ unregisteredCount() }}</span>
+        </div>
+      </div>
+      @if (attendedCount() + absentCount() > 0) {
+      <div class="mb-1">
+        <div class="d-flex justify-content-between small text-muted mb-1"><span>Tasa de asistencia
+            registrada</span><span class="fw-semibold text-success">{{ attendanceRate() }}%</span></div>
+        <div class="progress et-main-progress">
+          <div class="progress-bar bg-success" [style.width.%]="attendanceRate()"></div>
+        </div>
+      </div>
+      } @else {
+      <p class="text-muted small mb-0">Las asistencias aparecerán aquí cuando los docentes registren tu participación.
+      </p>
+      }
+    </div>
+  </section>
+
+  <section class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white border-0 p-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div>
+        <h5 class="fw-bold mb-1">Mis inscripciones</h5>
+        <p class="text-muted small mb-0">Consulta el estado de tus talleres y tus asistencias registradas.</p>
+      </div>
+      <div class="d-flex gap-2 align-items-center et-dashboard-actions"><input type="search"
+          class="form-control form-control-sm et-dashboard-search" placeholder="Buscar por taller o área..."
+          [(ngModel)]="searchText"><a routerLink="/eventos" class="btn btn-success btn-sm text-nowrap"><i
+            class="bi bi-plus-lg me-1"></i>Explorar talleres</a></div>
+    </div>
+    @if (loading) { <div class="text-center py-5"><span class="spinner-border spinner-border-sm text-success"></span>
+      <p class="text-muted small mt-2">Cargando tus inscripciones...</p>
+    </div> }
+    @if (!loading && filtered().length === 0) { <div class="text-center text-muted py-5 px-3"><img
+        src="assets/empty-search.svg" alt="Sin inscripciones" style="width:150px;max-width:100%">
+      <p class="small mt-3 mb-2">{{ searchText.trim() ? 'No encontramos talleres que coincidan con la búsqueda.' :
+        'Todavía no tienes inscripciones.' }}</p><a routerLink="/eventos" class="btn btn-outline-success btn-sm">Ver
+        talleres disponibles</a>
+    </div> }
+    @if (!loading && filtered().length > 0) {
+    <div class="table-responsive">
+      <table class="table table-hover mb-0 align-middle et-table">
+        <thead class="table-light">
+          <tr>
+            <th>Taller</th>
+            <th>Fecha / hora</th>
+            <th>Modalidad / formato</th>
+            <th>Estado</th>
+            <th>Asistencia</th>
+            <th>Inscrito el</th>
+            <th class="text-end">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filtered(); track item.id_inscripcion) {
+          <tr>
+            <td>
+              <div class="d-flex align-items-center gap-2"><img
+                  [src]="item.imagen_url || 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=180&q=75'"
+                  [alt]="item.titulo" class="et-enrolled-thumb">
+                <div>
+                  <div class="fw-semibold small">{{ item.titulo }}</div>
+                  <div class="mt-1"><span class="et-area-chip" [style.backgroundColor]="colorArea(item.area).bg"
+                      [style.color]="colorArea(item.area).text" [style.borderColor]="colorArea(item.area).border">{{
+                      item.area || 'Área general' }}</span>
+                    <div class="text-muted mt-1" style="font-size:11px">{{ displayDocente(item) }}</div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="small">{{ date(item.fecha) }}<br><span class="text-muted">{{ schedule(item) }}</span></td>
+            <td><span class="badge rounded-pill mb-1" [class]="modalityClass(item.modalidad)">{{
+                modalityLabel(item.modalidad) }}</span><br><span class="badge rounded-pill"
+                [class]="formatClass(item.tipo_evento)">{{ formatLabel(item.tipo_evento) }}</span></td>
+            <td><span class="badge rounded-pill" [class]="stateClass(item.estado_taller)">{{
+                stateLabel(item.estado_taller) }}</span>
+              <!-- <div class="small text-muted mt-1">Inscripción: {{ item.estado_inscripcion }}</div> -->
+            </td>
+            <td><span class="small">{{ attendance(item) }}</span>
+              <div class="progress mt-1 et-row-progress">
+                <div class="progress-bar bg-success" [style.width.%]="attendancePercent(item)"></div>
+              </div>
+            </td>
+            <td class="small text-muted">{{ date(item.fecha_inscripcion) }}</td>
+            <td class="text-end">@if (canCancel(item)) { <button class="btn btn-outline-danger btn-sm"
+                (click)="pedirCancelacion(item)"><i class="bi bi-x-circle me-1"></i>Cancelar</button> } @else { <span
+                class="text-muted small">—</span> }</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    }
+  </section>
+
+  <section class="et-certificates-section mb-4">
+    <div class="text-center mb-3">
+      <h4 class="fw-bold mb-1">Certificados ganados</h4>
+      <p class="text-muted small mb-0">Diplomas y reconocimientos obtenidos por tu participación en los talleres.</p>
+    </div>
+
+    @if (diplomasCount() === null && reconocimientosCount() === null) {
+    <div class="text-center text-muted py-4"><i class="bi bi-award fs-2 d-block mb-2"></i>
+      <p class="small mb-0">No se pudieron cargar tus diplomas ni reconocimientos en este momento.</p>
+    </div>
+    } @else if (!loadingReconocimientos && diplomasCount() !== null && reconocimientosCount() !== null &&
+    diplomas().length === 0 && reconocimientos().length === 0) {
+    <div class="et-empty-certificates text-center"><i class="bi bi-award fs-2 d-block mb-2"></i>
+      <p class="fw-semibold mb-1">Aún no tienes certificados ni reconocimientos</p>
+      <p class="text-muted small mb-0">Tus diplomas y reconocimientos aparecerán aquí cuando se emitan o alcances una
+        meta de asistencia.</p>
+    </div>
+    } @else {
+    @if (diplomasCount() === null) {
+    <p class="text-muted small text-center mb-3">No se pudieron cargar tus diplomas en este momento.</p>
+    }
+    @if (loadingReconocimientos) {
+    <div class="text-center text-muted py-3"><span class="spinner-border spinner-border-sm text-success"></span>
+      <p class="small mt-2 mb-0">Cargando tus reconocimientos...</p>
+    </div>
+    } @else if (reconocimientosCount() === null) {
+    <p class="text-muted small text-center mb-3">No se pudieron cargar tus reconocimientos en este momento.</p>
+    }
+
+    @if (diplomas().length > 0 || reconocimientos().length > 0) {
+    <div class="et-certificates-grid">
+      @for (diploma of diplomas(); track diploma.id_diploma) {
+      <article class="et-certificate-card" [style.--certificate-color]="diplomaColor(diploma)">
+        <div class="et-certificate-medal"><i [class]="diplomaIcon(diploma)"></i></div>
+        <div class="et-certificate-level">{{ diploma.nombre_nivel || 'Diploma de participación' }}</div>
+        <span class="et-recognition-kind">Diploma</span>
+        @if (diploma.fecha_emision) { <p class="small mb-1"><strong>Fecha:</strong> {{ date(diploma.fecha_emision) }}
+        </p> }
+        @if (diploma.taller) { <p class="small mb-1"><strong>Taller:</strong> {{ diploma.taller }}</p> }
+        <!-- @if (diploma.descripcion) { <p class="small text-muted mb-2">{{ diploma.descripcion }}</p> } -->
+        @if (diploma.porcentaje_obtenido !== null && diploma.porcentaje_obtenido !== undefined) { <span
+          class="et-certificate-percent">{{ diploma.porcentaje_obtenido }}% de asistencia</span> }
+        @if (diploma.archivo_descarga_url || diploma.archivo_url) { <a class="btn btn-success btn-sm mt-3"
+          [href]="diploma.archivo_descarga_url || diploma.archivo_url" target="_blank" rel="noopener"><i
+            class="bi bi-download me-1"></i>Descargar certificado</a> }
+      </article>
+      }
+      @for (reconocimiento of reconocimientos(); track reconocimiento.id_reconocimiento) {
+      <article class="et-certificate-card et-recognition-card"
+        [style.--certificate-color]="recognitionColor(reconocimiento)">
+        <div class="et-certificate-medal">
+          @if (recognitionImage(reconocimiento); as imagenReconocimiento) {
+          <img [src]="imagenReconocimiento" [alt]="reconocimiento.titulo" class="et-recognition-image">
+          } @else {
+          <i [class]="recognitionIcon(reconocimiento)"></i>
+          }
+        </div>
+        <div class="et-certificate-level">{{ reconocimiento.titulo }}</div>
+        <span class="et-recognition-kind">{{ recognitionTypeLabel(reconocimiento) }}</span>
+        @if (reconocimiento.fecha_emision) { <p class="small mb-1"><strong>Fecha:</strong> {{
+          date(reconocimiento.fecha_emision) }}</p> }
+        @if (reconocimiento.taller) { <p class="small mb-1"><strong>Taller:</strong> {{ reconocimiento.taller }}</p> }
+        @if (reconocimiento.motivo) { <p class="small text-muted mb-2">{{ reconocimiento.motivo }}</p> }
+        @if (reconocimiento.tipo === 'ASISTENCIA_ACUMULADA') {
+        <span class="et-certificate-percent">Meta: {{ reconocimiento.umbral }} {{ reconocimiento.umbral === 1 ?
+          'asistencia' : 'asistencias' }}</span>
+        } @else {
+        <span class="et-certificate-percent">100% de asistencia</span>
+        }
+        @if (reconocimiento.archivo_descarga_url || reconocimiento.archivo_url) { <a
+          class="btn btn-outline-success btn-sm mt-3"
+          [href]="reconocimiento.archivo_descarga_url || reconocimiento.archivo_url" target="_blank" rel="noopener"><i
+            class="bi bi-download me-1"></i>Ver reconocimiento</a> }
+      </article>
+      }
+    </div>
+    }
+    }
+    <div class="text-end mt-3"><a routerLink="/eventos" class="et-explore-link">Explorar más talleres <i
+          class="bi bi-arrow-right ms-1"></i></a></div>
+  </section>
+  }
+
+  @if (activeSection === 'portafolio') {
+  <section class="et-portfolio-banner mb-3">
+    <div class="et-portfolio-overline">PORTAFOLIO ESTUDIANTIL {{ currentYear }}</div>
+    <h4 class="fw-bold mb-1">{{ fullName }}</h4>
+    <p class="small mb-0">5to de secundaria · {{ currentYear }} · {{ enrolledCount() }} talleres registrados</p>
+  </section>
+
+  @if (loading) { <div class="text-center py-5"><span class="spinner-border spinner-border-sm text-success"></span>
+    <p class="text-muted small mt-2">Cargando tu portafolio...</p>
+  </div> }
+  @if (!loading && inscripciones().length === 0) {
+  <div class="et-empty-certificates text-center"><i class="bi bi-folder2-open fs-2 d-block mb-2"></i>
+    <p class="fw-semibold mb-1">Tu portafolio está vacío</p>
+    <p class="text-muted small mb-3">Inscríbete en un taller para consultar tu avance y tus asistencias.</p><a
+      routerLink="/eventos" class="btn btn-success btn-sm">Explorar talleres</a>
+  </div>
+  }
+  @if (!loading && inscripciones().length > 0) {
+  <div class="et-portfolio-list">
+    @for (item of inscripciones(); track item.id_inscripcion) {
+    <article class="et-portfolio-course">
+      <header class="et-portfolio-course-head">
+        <div class="et-portfolio-course-icon" [style.backgroundColor]="colorArea(item.area).bg"
+          [style.color]="colorArea(item.area).text"><i class="bi bi-journal-bookmark-fill"></i></div>
+        <div class="flex-grow-1 min-w-0">
+          <h5 class="fw-bold mb-1">{{ item.titulo }}</h5>
+          <p class="small text-muted mb-1"><span class="et-area-chip" [style.backgroundColor]="colorArea(item.area).bg"
+              [style.color]="colorArea(item.area).text" [style.borderColor]="colorArea(item.area).border">{{ item.area
+              || 'Área general' }}</span><span class="ms-2">{{ displayDocente(item) }}</span></p>
+          <div class="d-flex flex-wrap gap-1"><span class="badge rounded-pill"
+              [class]="formatClass(item.tipo_evento)">{{ formatLabel(item.tipo_evento) }}</span><span
+              class="badge rounded-pill" [class]="stateClass(item.estado_taller)">{{ stateLabel(item.estado_taller)
+              }}</span></div>
+        </div>
+        <div class="et-portfolio-rate"><strong>{{ attendancePercent(item) }}%</strong><span>asistencia</span></div>
+        <div class="et-portfolio-mini-stat"><strong>{{ attendedSessions(item) }}</strong><span>presente</span></div>
+        <div class="et-portfolio-mini-stat et-portfolio-absent"><strong>{{ absentSessions(item)
+            }}</strong><span>ausente</span></div>
+        <div class="et-portfolio-mini-stat et-portfolio-pending"><strong>{{ pendingSessions(item)
+            }}</strong><span>pendiente</span></div>
+      </header>
+      <div class="px-3 pt-3 pb-2">
+        <div class="d-flex justify-content-between small text-muted mb-1"><span>Progreso de asistencia</span><span>{{
+            attendedSessions(item) }} de {{ item.sesiones.length }} sesiones</span></div>
+        <div class="progress et-portfolio-progress">
+          <div class="progress-bar bg-success" [style.width.%]="attendancePercent(item)"></div>
+        </div>
+      </div>
+      <div class="et-portfolio-sessions">
+        @for (session of item.sesiones; track session.id_sesion) {
+        <div class="et-portfolio-session" [class.et-session-present-card]="session.asistio === true"
+          [class.et-session-absent-card]="session.asistio === false">
+          <div class="d-flex align-items-start justify-content-between gap-2"><strong>{{ sessionLabel(session)
+              }}</strong><span class="et-session-dot" [class.et-dot-present]="session.asistio === true"
+              [class.et-dot-absent]="session.asistio === false" [class.et-dot-pending]="session.asistio == null"></span>
+          </div>
+          <p class="small text-muted mb-2">{{ sessionMeta(session) || 'Fecha por confirmar' }}</p>
+          <span class="et-session-state" [class]="sessionStateClass(session)">{{ sessionStateLabel(session) }}</span>
+        </div>
+        }
+        @if (!item.sesiones.length) { <p class="small text-muted px-2 py-3 mb-0">Todavía no se han configurado sesiones
+          para este taller.</p> }
+      </div>
+      <footer class="et-portfolio-diploma-row">
+        @if (diplomaFor(item); as diploma) {
+        <div class="d-flex align-items-center gap-2"><i [class]="diplomaIcon(diploma)"
+            [style.color]="diplomaColor(diploma)"></i>
+          <div><strong>Diploma de {{ diploma.nombre_nivel || 'participación' }}</strong>
+            <div class="small text-muted">Emitido {{ diploma.fecha_emision ? date(diploma.fecha_emision) : 'sin fecha
+              registrada' }}</div>
+          </div>
+        </div>
+        @if (diploma.archivo_descarga_url || diploma.archivo_url) { <a class="btn btn-success btn-sm"
+          [href]="diploma.archivo_descarga_url || diploma.archivo_url" target="_blank" rel="noopener"><i
+            class="bi bi-download me-1"></i>Descargar diploma</a> }
+        } @else {
+        <div class="d-flex align-items-center gap-2 text-muted"><i class="bi bi-award"></i><span class="small">Aún no se
+            ha emitido un diploma para este taller.</span></div>
+        }
+      </footer>
+    </article>
+    }
+  </div>
+  }
+  }
+</div>
+
+@if (cancelTarget) {
+<div class="gu-modal-backdrop" (click)="closeCancel()"></div>
+<section class="gu-modal-panel et-cancel-modal" role="dialog" aria-modal="true" aria-labelledby="et-cancel-title">
+  <div
+    class="rounded-circle bg-warning-subtle text-warning mx-auto mb-3 d-flex align-items-center justify-content-center"
+    style="width:56px;height:56px"><i class="bi bi-calendar-x-fill fs-3"></i></div>
+  <h5 id="et-cancel-title" class="fw-bold mb-2">¿Cancelar inscripción?</h5>
+  <p class="text-muted small">Dejarás de estar inscrito en <strong>{{ cancelTarget.titulo }}</strong>. El registro
+    histórico se conservará.</p>
+  @if (cancelError) { <div class="alert alert-danger small">{{ cancelError }}</div> }
+  <div class="d-flex gap-2"><button class="btn btn-outline-secondary flex-fill" (click)="closeCancel()"
+      [disabled]="cancelando">Volver</button><button class="btn btn-danger flex-fill" (click)="confirmarCancelacion()"
+      [disabled]="cancelando">@if (cancelando) { <span
+        class="spinner-border spinner-border-sm me-1"></span>Cancelando... } @else { Sí, cancelar }</button></div>
+</section>
+}

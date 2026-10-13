@@ -1,0 +1,496 @@
+:host {
+    display: block;
+    min-height: 65vh
+}
+
+.et-dashboard {
+    max-width: 1400px
+}
+
+.et-student-avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+    border-radius: 50%;
+    background: #198754;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700
+}
+
+.et-role-chip {
+    font-size: 10px
+}
+
+.et-dashboard-search {
+    max-width: 260px
+}
+
+.et-dashboard-tabs {
+    padding: 8px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px
+}
+
+.et-dashboard-tabs .btn {
+    transition: background .18s, color .18s, border-color .18s
+}
+
+.et-dashboard-tabs .btn:disabled {
+    opacity: .72;
+    cursor: not-allowed
+}
+
+.et-coming-soon {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    opacity: .72;
+    margin-left: 3px
+}
+
+.et-table thead th {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: #6b7280;
+    border-bottom-color: #e5e7eb;
+    white-space: nowrap
+}
+
+.et-table td {
+    font-size: 12px
+}
+
+.et-enrolled-thumb {
+    width: 54px;
+    height: 43px;
+    object-fit: cover;
+    border-radius: 7px;
+    background: #e5e7eb;
+    flex-shrink: 0
+}
+
+.et-cancel-modal {
+    max-width: 400px;
+    text-align: center
+}
+
+.et-main-progress {
+    height: 8px;
+    border-radius: 99px
+}
+
+.et-row-progress {
+    height: 4px;
+    max-width: 125px
+}
+
+.et-area-chip {
+    display: inline-block;
+    padding: 3px 8px;
+    border: 1px solid;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap
+}
+
+.et-format-sesion {
+    background: #e3f8ec;
+    color: #1e7a48
+}
+
+.et-format-seminario {
+    background: #ece7ff;
+    color: #6d4fd6
+}
+
+.et-modality-presencial {
+    background: #e7f0ff;
+    color: #2563eb
+}
+
+.et-modality-virtual {
+    background: #e0f2fe;
+    color: #0369a1
+}
+
+.et-certificates-section {
+    padding: 8px 0 4px
+}
+
+.et-certificates-grid {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 18px
+}
+
+.et-certificate-card {
+    width: 250px;
+    max-width: 100%;
+    min-height: 200px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, .09);
+    padding: 15px 14px 16px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform .18s, box-shadow .18s
+}
+
+.et-certificate-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, .12)
+}
+
+.et-certificate-medal {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--certificate-color) 14%, white);
+    border: 1px solid var(--certificate-color);
+    color: var(--certificate-color);
+    font-size: 20px;
+    margin: 0 auto 10px
+}
+
+.et-certificate-level {
+    width: 100%;
+    background: var(--certificate-color);
+    color: #fff;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 12px
+}
+
+.et-certificate-percent {
+    font-size: 10px;
+    color: var(--certificate-color);
+    background: color-mix(in srgb, var(--certificate-color) 12%, white);
+    padding: 3px 9px;
+    border-radius: 999px
+}
+
+.et-empty-certificates {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 28px;
+    color: #64748b
+}
+
+.et-explore-link {
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #198754
+}
+
+.et-explore-link:hover {
+    color: #146c43
+}
+
+.et-portfolio-banner {
+    padding: 17px 20px;
+    border-radius: 13px;
+    background: #111c3b;
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, .08)
+}
+
+.et-portfolio-overline {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: #91e0b3;
+    margin-bottom: 3px
+}
+
+.et-portfolio-banner p {
+    color: #cbd5e1
+}
+
+.et-portfolio-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px
+}
+
+.et-portfolio-course {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 13px;
+    overflow: hidden;
+    box-shadow: 0 2px 7px rgba(15, 23, 42, .04)
+}
+
+.et-portfolio-course-head {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 15px 10px;
+    border-bottom: 1px solid #edf0f2
+}
+
+.et-portfolio-course-icon {
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e3f8ec;
+    color: #1e7a48;
+    font-size: 20px
+}
+
+.et-portfolio-course-head h5 {
+    font-size: 15px
+}
+
+.et-portfolio-course-head .small {
+    font-size: 11px
+}
+
+.et-portfolio-rate,
+.et-portfolio-mini-stat {
+    min-width: 42px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.3
+}
+
+.et-portfolio-rate strong {
+    font-size: 17px;
+    color: #198754
+}
+
+.et-portfolio-rate span,
+.et-portfolio-mini-stat span {
+    font-size: 9px;
+    color: #64748b
+}
+
+.et-portfolio-mini-stat strong {
+    font-size: 14px;
+    color: #198754
+}
+
+.et-portfolio-absent strong {
+    color: #dc3545
+}
+
+.et-portfolio-pending strong {
+    color: #6b7280
+}
+
+.et-portfolio-progress {
+    height: 5px;
+    border-radius: 99px
+}
+
+.et-portfolio-sessions {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(130px, 1fr));
+    gap: 8px;
+    padding: 10px 13px 13px;
+    overflow-x: auto
+}
+
+.et-portfolio-session {
+    min-width: 130px;
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+    padding: 9px;
+    background: #fbfcfd;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start
+}
+
+.et-portfolio-session>div strong {
+    font-size: 11px
+}
+
+.et-portfolio-session p {
+    font-size: 10px;
+    line-height: 1.35;
+    margin-top: 7px;
+    min-height: 25px
+}
+
+.et-session-dot {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 50%;
+    flex-shrink: 0
+}
+
+.et-dot-present {
+    background: #198754
+}
+
+.et-dot-absent {
+    background: #dc3545
+}
+
+.et-dot-pending {
+    background: #9ca3af
+}
+
+.et-session-state {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 600
+}
+
+.et-session-presente {
+    background: #d1fae5;
+    color: #047857
+}
+
+.et-session-ausente {
+    background: #fee2e2;
+    color: #b91c1c
+}
+
+.et-session-pendiente {
+    background: #f1f5f9;
+    color: #64748b
+}
+
+.et-session-present-card {
+    border-color: #c1e8d0;
+    background: #fbfffc
+}
+
+.et-session-absent-card {
+    border-color: #fecaca;
+    background: #fffafa
+}
+
+.et-portfolio-diploma-row {
+    border-top: 1px solid #eef0f2;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: #fcfdfd
+}
+
+.et-portfolio-diploma-row strong {
+    font-size: 12px
+}
+
+.et-portfolio-diploma-row .small {
+    font-size: 10px
+}
+
+@media(max-width:991.98px) {
+    .et-dashboard-search {
+        max-width: 100%;
+        width: 100%
+    }
+
+    .et-portfolio-course-head {
+        flex-wrap: wrap
+    }
+
+    .et-portfolio-course-head>div:nth-child(2) {
+        min-width: 180px
+    }
+
+    .et-portfolio-sessions {
+        grid-template-columns: repeat(3, minmax(130px, 1fr))
+    }
+}
+
+@media(max-width:767.98px) {
+    .et-dashboard-search {
+        width: 100%
+    }
+
+    .et-dashboard-actions {
+        width: 100%;
+        flex-wrap: wrap
+    }
+
+    .et-dashboard-actions a {
+        margin-left: auto
+    }
+
+    .et-table {
+        min-width: 980px
+    }
+
+    .et-portfolio-course-head {
+        gap: 9px
+    }
+
+    .et-portfolio-course-head>div:nth-child(2) {
+        flex-basis: calc(100% - 54px)
+    }
+
+    .et-portfolio-rate {
+        margin-left: auto
+    }
+
+    .et-portfolio-sessions {
+        grid-template-columns: repeat(2, minmax(130px, 1fr));
+        overflow-x: visible
+    }
+
+    .et-portfolio-diploma-row>a {
+        width: 100%
+    }
+}
+
+.et-recognition-kind {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--certificate-color);
+    background: color-mix(in srgb, var(--certificate-color) 10%, white);
+    border-radius: 999px;
+    padding: 3px 9px;
+    margin: -4px 0 10px
+}
+
+.et-recognitions-section {
+    border-top: 1px solid #edf0f2;
+    padding-top: 22px
+}
+
+.et-recognition-card {
+    min-height: 220px
+}
+
+.et-recognition-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+    padding: 4px
+}

@@ -1,0 +1,80 @@
+:host {
+    display: block
+}
+
+.et-workshop-card {
+    height: auto !important;
+    min-height: 0;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s
+}
+
+.et-workshop-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, .1) !important
+}
+
+.et-workshop-selected {
+    outline: 2px solid #2d9e5f
+}
+
+.et-workshop-image-wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 170px;
+    overflow: hidden;
+    background: #e5e7eb;
+    flex-shrink: 0
+}
+
+.et-workshop-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .25s
+}
+
+.et-workshop-image-wrap:hover .et-workshop-image {
+    transform: scale(1.04)
+}
+
+.et-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .25);
+    opacity: 0;
+    transition: opacity .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.et-workshop-image-wrap:hover .et-image-overlay {
+    opacity: 1
+}
+
+.et-image-overlay span {
+    background: rgba(255, 255, 255, .92);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600
+}
+
+.et-workshop-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 50px
+}
+
+.et-workshop-card .card-body {
+    height: auto;
+    min-height: 0
+}
+
+.et-workshop-card .card-body>.d-flex:last-child {
+    padding-top: 8px
+}

@@ -1,0 +1,191 @@
+:host {
+    display: block
+}
+
+.et-student-messages {
+    height: calc(100vh - 64px);
+    min-height: 520px;
+    overflow: hidden;
+    background: #fff
+}
+
+.et-message-list {
+    width: 320px;
+    min-width: 280px;
+    max-width: 34vw;
+    overflow: hidden
+}
+
+.et-message-list-scroll {
+    min-height: 0
+}
+
+.et-thread-row {
+    padding: 13px 15px;
+    border: 0;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+    transition: background .15s;
+    border-left: 3px solid transparent
+}
+
+.et-thread-row:hover {
+    background: #f8fafc
+}
+
+.et-thread-row.et-thread-active {
+    background: #f0fdf4;
+    border-left-color: #2d9e5f
+}
+
+.et-thread-row.et-thread-unread {
+    background: #fafafa
+}
+
+.et-unread-dot {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 50%;
+    background: #198754;
+    flex-shrink: 0;
+    margin-top: 4px
+}
+
+.et-message-detail {
+    min-width: 0;
+    min-height: 0
+}
+
+.et-message-detail-scroll {
+    min-height: 0
+}
+
+.et-response-admin {
+    border-left: 3px solid #3b82f6 !important
+}
+
+.et-response-student {
+    border-left: 3px solid #2d9e5f !important;
+    margin-left: 24px
+}
+
+.et-pending-note {
+    background: #fefce8;
+    border: 1px solid #fef08a;
+    color: #854d0e
+}
+
+.et-followup-box {
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, .02)
+}
+
+.et-new-message-modal {
+    max-width: 520px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow: hidden
+}
+
+.et-new-head {
+    padding: 22px 24px 18px;
+    background: linear-gradient(135deg, #2d9e5f, #1e7a48);
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    align-items: flex-start
+}
+
+@media(max-width:767.98px) {
+    .et-student-messages {
+        height: auto;
+        min-height: 0;
+        flex-direction: column;
+        overflow: visible
+    }
+
+    .et-message-list {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        max-height: 360px;
+        border-right: 0;
+        border-bottom: 1px solid #e5e7eb
+    }
+
+    .et-message-detail {
+        min-height: 520px
+    }
+
+    .et-message-detail-scroll {
+        max-height: 60vh
+    }
+
+    .et-response-student {
+        margin-left: 8px
+    }
+}
+
+.et-selected-recipient {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    border-radius: 10px;
+    min-width: 0
+}
+
+.et-selected-recipient.et-selected-teacher {
+    border-color: #bfdbfe;
+    background: #eff6ff
+}
+
+.et-recipient-avatar {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #269e62;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px
+}
+
+.et-selected-teacher .et-recipient-avatar {
+    background: #3b82f6
+}
+
+.et-selected-recipient>div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0
+}
+
+.et-selected-recipient strong {
+    font-size: 13px;
+    color: #1f2937
+}
+
+.et-selected-recipient span:not(.et-recipient-avatar),
+.et-selected-recipient small {
+    font-size: 11px;
+    color: #64748b;
+    overflow-wrap: anywhere
+}
+
+.et-selected-recipient>i {
+    margin-left: auto;
+    color: #198754;
+    flex-shrink: 0
+}
+
+.et-selected-teacher>i {
+    color: #2563eb
+}

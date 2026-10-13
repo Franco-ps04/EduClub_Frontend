@@ -1,0 +1,127 @@
+<div class="events-layout et-events-layout">
+  <aside class="events-sidebar et-events-sidebar">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h5 class="fw-bold mb-0">Talleres</h5><span class="badge bg-success-subtle text-success">{{ filtered.length
+        }}</span>
+    </div>
+    <div class="input-group input-group-sm mb-2"><span class="input-group-text bg-light"><i
+          class="bi bi-search text-muted"></i></span><input class="form-control" placeholder="Buscar taller o lugar..."
+        [(ngModel)]="buscar" (ngModelChange)="filtersChanged()" maxlength="120"></div>
+    <div class="row g-2 mb-3">
+      <div class="col-12"><label class="form-label small fw-semibold mb-1">Área</label><select
+          class="form-select form-select-sm" [(ngModel)]="idArea" (ngModelChange)="filtersChanged()">
+          <option value="">Todas las áreas</option>@for (area of areas; track area.id_area) {<option
+            [value]="area.id_area">{{ area.nombre }}</option>}
+        </select></div>
+      <div class="col-6"><label class="form-label small fw-semibold mb-1">Modalidad</label><select
+          class="form-select form-select-sm" [(ngModel)]="modalidad" (ngModelChange)="filtersChanged()">
+          <option>Todos</option>
+          <option>Presencial</option>
+          <option>Virtual</option>
+        </select></div>
+      <div class="col-6"><label class="form-label small fw-semibold mb-1">Formato</label><select
+          class="form-select form-select-sm" [(ngModel)]="formato" (ngModelChange)="filtersChanged()">
+          <option>Todos</option>
+          <option>Sesión</option>
+          <option>Seminario</option>
+        </select></div>
+    </div>
+    @if (loading) { <div class="text-center py-5"><span class="spinner-border text-success spinner-border-sm"></span>
+      <p class="small text-muted mt-2">Cargando talleres...</p>
+    </div> }
+    @if (error) { <div class="alert alert-warning small">{{ error }}</div> }
+    @for (t of filtered; track t.id_taller) {
+    <app-tarjeta-taller-alumno [taller]="t" [selected]="selected?.id_taller === t.id_taller" [inscrito]="isInscrito(t)"
+      [puedeInscribirse]="canEnroll()" (seleccionar)="select($event)" (informacion)="openInfo($event)"
+      (inscribir)="beginEnrollment($event)">
+    </app-tarjeta-taller-alumno>
+    }
+    @if (!loading && filtered.length === 0) { <div class="text-center py-5"><img src="assets/empty-search.svg"
+        alt="Sin resultados" style="width:150px;max-width:90%">
+      <p class="small text-muted mt-3">No encontramos talleres con esos filtros.</p><button
+        class="btn btn-sm btn-outline-success"
+        (click)="buscar='';idArea='';modalidad='Todos';formato='Todos';filtersChanged()">Limpiar filtros</button>
+    </div> }
+  </aside>
+  <div class="events-map-wrap"><app-mapa-vista [latitude]="-12.0464" [longitude]="-77.0428"
+      [markers]="markers"></app-mapa-vista>
+    <div class="et-map-note"><i class="bi bi-geo-alt-fill text-success me-1"></i>@if(markers.length){Las marcas
+      corresponden a talleres presenciales}@else{No hay talleres presenciales con ubicación para estos filtros}</div>
+  </div>
+</div>
+
+@if (infoTaller) {
+<div class="gu-modal-backdrop" (click)="closeInfo()"></div>
+<section class="gu-modal-panel et-modal-info" role="dialog" aria-modal="true" aria-label="Información del taller">
+  <div class="et-modal-cover"><img [src]="image(infoTaller)" [alt]="infoTaller.nombre"></div>
+  <div class="d-flex align-items-start justify-content-between gap-2 mb-3 et-modal-title-row">
+    <div>
+      <div class="d-flex flex-wrap gap-2 mb-2"><span class="gu-badge rounded-pill bg-light text-dark border">{{
+          infoTaller.area || 'Área general' }}</span><span class="badge rounded-pill bg-success-subtle text-success">{{
+          formatoLabel(infoTaller) }}</span><span class="badge rounded-pill bg-primary-subtle text-primary">{{
+          modalidadLabel(infoTaller) }}</span></div>
+      <h4 class="fw-bold mb-0">{{ infoTaller.nombre }}</h4>
+    </div>
+    <button class="btn-close flex-shrink-0 mt-1" (click)="closeInfo()" aria-label="Cerrar"></button>
+  </div>
+  <p class="text-muted small" style="white-space:pre-wrap">{{ infoTaller.descripcion }}</p>
+  <div class="row g-3 mb-3">
+    <div class="col-sm-6">
+      <div class="et-detail-box"><span class="et-detail-label">Fecha</span><strong><i
+            class="bi bi-calendar3 me-2 text-success"></i>{{ date(infoTaller.fecha) }}</strong></div>
+    </div>
+    <div class="col-sm-6">
+      <div class="et-detail-box"><span class="et-detail-label">Horario</span><strong><i
+            class="bi bi-clock me-2 text-success"></i>{{ hora(infoTaller) }}</strong></div>
+    </div>
+    <div class="col-sm-6">
+      <div class="et-detail-box"><span class="et-detail-label">Días de clase</span><strong>{{ getDays(infoTaller)
+          }}</strong></div>
+    </div>
+    <div class="col-sm-6">
+      <div class="et-detail-box"><span class="et-detail-label">Docente</span><strong>{{ displayDocente(infoTaller)
+          }}</strong></div>
+    </div>
+    @if (isPresencial(infoTaller)) { <div class="col-12">
+      <div class="et-detail-box"><span class="et-detail-label">Ubicación</span><strong><i
+            class="bi bi-geo-alt me-2 text-success"></i>{{ infoTaller.ubicacion || 'Por confirmar' }}</strong></div>
+    </div> }
+    <div class="col-sm-6">
+      <div class="et-detail-box"><span class="et-detail-label">Cupos disponibles</span><strong>{{ freeSeats(infoTaller)
+          }} de {{ infoTaller.capacidad }}</strong></div>
+    </div>
+    <div class="col-sm-6">
+      <div class="et-detail-box"><span class="et-detail-label">Institución</span><strong>{{ infoTaller.institucion ||
+          'No especificada' }}</strong></div>
+    </div>
+  </div>
+  @if (infoTaller.requisitos && infoTaller.requisitos.length > 0) { <div class="mb-3">
+    <h6 class="fw-bold">Requisitos</h6>
+    <ul class="mb-0">@for (r of infoTaller.requisitos; track r) {<li class="small text-muted">{{ r }}</li>}</ul>
+  </div> }
+  <div class="d-flex flex-wrap gap-2 justify-content-end"><button type="button" class="btn btn-outline-secondary"
+      (click)="closeInfo()">Cerrar</button>@if (!canEnroll()) { <button type="button" class="btn btn-outline-secondary"
+      disabled><i class="bi bi-shield-lock me-1"></i>Alumno</button> } @else { <button type="button"
+      class="btn btn-success" [disabled]="isInscrito(infoTaller) || freeSeats(infoTaller)===0"
+      (click)="beginEnrollment(infoTaller);closeInfo()">@if(isInscrito(infoTaller)){<i
+        class="bi bi-check-circle me-1"></i>Inscrito}@else{<i class="bi bi-person-plus me-1"></i>Inscribirse}</button> }
+  </div>
+</section>
+}
+@if (confirmTaller) {
+<div class="gu-modal-backdrop" (click)="closeConfirm()"></div>
+<section class="gu-modal-panel et-confirm-modal" role="dialog" aria-modal="true">
+  <div
+    class="rounded-circle bg-success-subtle text-success mx-auto mb-3 d-flex align-items-center justify-content-center"
+    style="width:58px;height:58px"><i class="bi bi-person-check-fill fs-2"></i></div>
+  @if(success){<h5 class="fw-bold text-success mb-2">¡Inscripción exitosa!</h5>
+  <p class="text-muted small">Ya estás inscrito en <strong>{{ confirmTaller.nombre }}</strong>.</p>}
+  @else {<h5 class="fw-bold mb-2">¿Confirmar inscripción?</h5>
+  <p class="text-muted small">Te inscribirás en <strong>{{ confirmTaller.nombre }}</strong>.</p>@if(errorInscripcion){
+  <div class="alert alert-warning small">{{ errorInscripcion }}</div>}<div class="d-flex gap-2"><button
+      class="btn btn-outline-secondary flex-fill" (click)="closeConfirm()"
+      [disabled]="submitting">Cancelar</button><button class="btn btn-success flex-fill" (click)="confirmEnrollment()"
+      [disabled]="submitting || !!errorInscripcion">@if(submitting){<span
+        class="spinner-border spinner-border-sm me-1"></span>Inscribiendo...}@else{Sí, inscribirme}</button></div>}
+</section>
+}

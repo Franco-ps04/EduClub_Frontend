@@ -14,9 +14,20 @@
   font-size: 18px;
 }
 
-.bg-light-blue { background: #e7f0ff; color: #2563eb; }
-.bg-light-green { background: #e3f8ec; color: #2d9e5f; }
-.bg-light-purple { background: #ece7ff; color: #6d4fd6; }
+.bg-light-blue {
+  background: #e7f0ff;
+  color: #2563eb;
+}
+
+.bg-light-green {
+  background: #e3f8ec;
+  color: #2d9e5f;
+}
+
+.bg-light-purple {
+  background: #ece7ff;
+  color: #6d4fd6;
+}
 
 .et-chart {
   height: 180px;

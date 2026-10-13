@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
   <div>
-    <h2 class="fw-bold mb-0">{{ isAdmin() ? 'Panel de administración' : 'Panel de organización' }}</h2>
+    <h2 class="mb-0 fw-bold">Panel de administración</h2>
     <p class="text-muted mb-0">Gestión de talleres</p>
     <p class="text-muted small mb-0">{{ talleres.length }} talleres registrados</p>
   </div>
@@ -53,16 +53,15 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
   <div class="input-group et-search">
     <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-    <input type="text" class="form-control border-start-0" placeholder="Buscar por taller o tipo"
-      [(ngModel)]="buscar">
+    <input type="text" class="form-control border-start-0" placeholder="Buscar por taller o tipo" [(ngModel)]="buscar">
   </div>
   <div class="btn-group et-tabs" role="group">
-    <button class="btn btn-sm" [class.btn-dark]="tab==='eventos'"
-      [class.btn-outline-secondary]="tab!=='eventos'" (click)="cambiarTab('eventos')">Eventos</button>
+    <button class="btn btn-sm" [class.btn-dark]="tab==='eventos'" [class.btn-outline-secondary]="tab!=='eventos'"
+      (click)="cambiarTab('eventos')">Eventos</button>
     <button class="btn btn-sm" [class.btn-dark]="tab==='estadisticas'"
       [class.btn-outline-secondary]="tab!=='estadisticas'" (click)="cambiarTab('estadisticas')">Estadísticas</button>
-    <button class="btn btn-sm" [class.btn-dark]="tab==='reglas'"
-      [class.btn-outline-secondary]="tab!=='reglas'" (click)="cambiarTab('reglas')">Reglas de constancia</button>
+    <button class="btn btn-sm" [class.btn-dark]="tab==='reglas'" [class.btn-outline-secondary]="tab!=='reglas'"
+      (click)="cambiarTab('reglas')">Reglas de constancia</button>
   </div>
 </div>
 
@@ -99,7 +98,10 @@
         @for (t of talleresVisibles; track t.id_taller) {
         <tr>
           <td class="fw-semibold">{{ t.nombre }}</td>
-          <td class="small text-muted"><div>{{ formatDias(t.dias_semana) }}</div><div>{{ formatHorario(t) }}</div></td>
+          <td class="small text-muted">
+            <div>{{ formatDias(t.dias_semana) }}</div>
+            <div>{{ formatHorario(t) }}</div>
+          </td>
           <td class="small text-muted">{{ formatFecha(t.fecha) }}</td>
           <td>
             <span class="badge" [style.background]="colorArea(t.area).bg" [style.color]="colorArea(t.area).text">
@@ -111,28 +113,33 @@
           <td>
             <div class="d-flex flex-wrap gap-1 et-actions">
               @if (puedeCambiarEstado(t)) {
-              <button class="btn btn-sm btn-outline-success et-action-btn" (click)="pedirCambioEstado(t, 'Finalizado')" title="Finalizar taller">
+              <button class="btn btn-sm btn-outline-success et-action-btn" (click)="pedirCambioEstado(t, 'Finalizado')"
+                title="Finalizar taller">
                 <i class="bi bi-check2-square me-1"></i>Finalizar
               </button>
-              <button class="btn btn-sm btn-outline-danger et-action-btn" (click)="pedirCambioEstado(t, 'Cancelado')" title="Cancelar taller">
+              <button class="btn btn-sm btn-outline-danger et-action-btn" (click)="pedirCambioEstado(t, 'Cancelado')"
+                title="Cancelar taller">
                 <i class="bi bi-x-circle me-1"></i>Cancelar
               </button>
               }
 
               @if (puedeEditar(t)) {
-              <button class="btn btn-sm btn-outline-warning et-action-btn" (click)="abrirEditarTaller(t)" title="Editar taller">
+              <button class="btn btn-sm btn-outline-warning et-action-btn" (click)="abrirEditarTaller(t)"
+                title="Editar taller">
                 <i class="bi bi-pencil-fill me-1"></i>Editar
               </button>
               }
 
               @if (puedeObservar(t)) {
-              <button class="btn btn-sm btn-outline-primary et-action-btn" (click)="abrirObservacion(t)" title="Observar información">
+              <button class="btn btn-sm btn-outline-primary et-action-btn" (click)="abrirObservacion(t)"
+                title="Observar información">
                 <i class="bi bi-eye me-1"></i>Observar
               </button>
               }
 
               @if (puedeArchivar(t)) {
-              <button class="btn btn-sm btn-outline-danger et-action-btn" (click)="pedirArchivar(t)" title="Archivar del listado">
+              <button class="btn btn-sm btn-outline-danger et-action-btn" (click)="pedirArchivar(t)"
+                title="Archivar del listado">
                 <i class="bi bi-archive me-1"></i>Archivar
               </button>
               }
@@ -159,7 +166,8 @@
           <span>{{ item.area }}</span><span>{{ item.total }}</span>
         </div>
         <div class="progress" style="height:6px">
-          <div class="progress-bar et-bg-green" [style.width.%]="(item.total / (estadisticas?.totalInscritos || 1)) * 100"></div>
+          <div class="progress-bar et-bg-green"
+            [style.width.%]="(item.total / (estadisticas?.totalInscritos || 1)) * 100"></div>
         </div>
       </div>
       }
@@ -174,7 +182,8 @@
           <span>{{ item.area }}</span><span>{{ item.total }}</span>
         </div>
         <div class="progress" style="height:6px">
-          <div class="progress-bar bg-primary" [style.width.%]="(item.total / (estadisticas?.totalTalleres || 1)) * 100"></div>
+          <div class="progress-bar bg-primary"
+            [style.width.%]="(item.total / (estadisticas?.totalTalleres || 1)) * 100"></div>
         </div>
       </div>
       }
@@ -218,7 +227,8 @@
         <input class="form-check-input" type="checkbox" role="switch" [checked]="r.activo"
           [disabled]="actualizandoActivoId === r.id_regla_diploma" (change)="toggleActivo(r)">
       </div>
-      <button class="btn btn-sm btn-outline-warning" (click)="abrirEditarRegla(r)"><i class="bi bi-pencil-fill"></i></button>
+      <button class="btn btn-sm btn-outline-warning" (click)="abrirEditarRegla(r)"><i
+          class="bi bi-pencil-fill"></i></button>
     </div>
   </div>
   }
@@ -228,7 +238,8 @@
 <!-- MODAL: Observar taller -->
 @if (tallerObservado) {
 <div class="et-modal-backdrop" (click)="cerrarObservacion()">
-  <div class="et-modal-panel et-detail-panel" style="max-width:760px;max-height:88vh;overflow-y:auto" (click)="$event.stopPropagation()">
+  <div class="et-modal-panel et-detail-panel" style="max-width:760px;max-height:88vh;overflow-y:auto"
+    (click)="$event.stopPropagation()">
     <div class="d-flex justify-content-between align-items-start mb-3">
       <div>
         <div class="small text-muted">Información del taller</div>
@@ -238,50 +249,59 @@
     </div>
 
     @if (tallerObservado.imagen_url) {
-      <img [src]="tallerObservado.imagen_url" class="w-100 rounded-3 mb-3 et-detail-img" alt="Imagen del taller">
+    <img [src]="tallerObservado.imagen_url" class="w-100 rounded-3 mb-3 et-detail-img" alt="Imagen del taller">
     }
 
     <div class="row g-3 mb-3">
       <div class="col-md-6">
-        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Área</small><strong class="text-break d-block">{{ tallerObservado.area }}</strong></div>
+        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Área</small><strong
+            class="text-break d-block">{{ tallerObservado.area }}</strong></div>
       </div>
       <div class="col-md-6">
-        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Tipo</small><strong class="text-break d-block">{{ tallerObservado.tipo_evento }}</strong></div>
+        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Tipo</small><strong
+            class="text-break d-block">{{ tallerObservado.tipo_evento }}</strong></div>
       </div>
       <div class="col-md-6">
-        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Fecha</small><strong class="text-break d-block">{{ formatFecha(tallerObservado.fecha) }}</strong></div>
+        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Fecha</small><strong
+            class="text-break d-block">{{ formatFecha(tallerObservado.fecha) }}</strong></div>
       </div>
       <div class="col-md-6">
-        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Horario</small><strong class="text-break d-block">{{ formatDias(tallerObservado.dias_semana) }} / {{ formatHorario(tallerObservado) }}</strong></div>
+        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Horario</small><strong
+            class="text-break d-block">{{ formatDias(tallerObservado.dias_semana) }} / {{ formatHorario(tallerObservado)
+            }}</strong></div>
       </div>
       <div class="col-md-6">
-        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Docente</small><strong class="text-break d-block">{{ tallerObservado.docente }}</strong></div>
+        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Docente</small><strong
+            class="text-break d-block">{{ tallerObservado.docente }}</strong></div>
       </div>
       <div class="col-md-6">
-        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Modalidad</small><strong class="text-break d-block">{{ tallerObservado.modalidad }}</strong></div>
+        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Modalidad</small><strong
+            class="text-break d-block">{{ tallerObservado.modalidad }}</strong></div>
       </div>
       @if (tallerObservado.modalidad === 'Presencial') {
       <div class="col-md-6">
-        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Ubicación</small><strong class="text-break d-block">{{ tallerObservado.ubicacion }}</strong></div>
+        <div class="p-3 border rounded-3 bg-light h-100"><small class="text-muted d-block">Ubicación</small><strong
+            class="text-break d-block">{{ tallerObservado.ubicacion }}</strong></div>
       </div>
       }
     </div>
 
     <div class="mb-3 p-3 border rounded-3 bg-white">
       <small class="text-muted d-block mb-1">Descripción</small>
-      <p class="mb-0 text-break" style="overflow-wrap:anywhere;word-break:break-word">{{ tallerObservado.descripcion }}</p>
+      <p class="mb-0 text-break" style="overflow-wrap:anywhere;word-break:break-word">{{ tallerObservado.descripcion }}
+      </p>
     </div>
 
     <div class="mb-3 p-3 border rounded-3 bg-white">
       <small class="text-muted d-block mb-1">Requisitos</small>
       @if (tallerObservado.requisitos.length) {
-        <ul class="mb-0 ps-3">
-          @for (r of tallerObservado.requisitos; track r) {
-            <li class="text-break" style="overflow-wrap:anywhere;word-break:break-word">{{ r }}</li>
-          }
-        </ul>
+      <ul class="mb-0 ps-3">
+        @for (r of tallerObservado.requisitos; track r) {
+        <li class="text-break" style="overflow-wrap:anywhere;word-break:break-word">{{ r }}</li>
+        }
+      </ul>
       } @else {
-        <p class="text-muted mb-0">Sin requisitos registrados.</p>
+      <p class="text-muted mb-0">Sin requisitos registrados.</p>
       }
     </div>
 
@@ -296,13 +316,20 @@
 @if (tallerAccion) {
 <div class="et-modal-backdrop" (click)="cerrarCambioEstado()">
   <div class="et-modal-panel-sm text-center p-4" (click)="$event.stopPropagation()">
-    <div class="et-confirm-icon mb-3" [class.et-confirm-danger]="accionEstado === 'Cancelado'"><i class="bi" [class.bi-check2-circle]="accionEstado === 'Finalizado'" [class.bi-x-circle]="accionEstado === 'Cancelado'"></i></div>
+    <div class="et-confirm-icon mb-3" [class.et-confirm-danger]="accionEstado === 'Cancelado'"><i class="bi"
+        [class.bi-check2-circle]="accionEstado === 'Finalizado'" [class.bi-x-circle]="accionEstado === 'Cancelado'"></i>
+    </div>
     <h5 class="fw-bold">¿{{ accionEstado === 'Finalizado' ? 'Finalizar' : 'Cancelar' }} taller?</h5>
-    <p class="text-muted small mb-4">Se cambiará el estado de <strong>{{ tallerAccion.nombre }}</strong> a <strong>{{ accionEstado }}</strong>.</p>
+    <p class="text-muted small mb-4">Se cambiará el estado de <strong>{{ tallerAccion.nombre }}</strong> a <strong>{{
+        accionEstado }}</strong>.</p>
     <div class="d-flex gap-2">
-      <button class="btn btn-outline-secondary flex-fill" (click)="cerrarCambioEstado()" [disabled]="procesandoAccion">Cancelar</button>
-      <button class="btn flex-fill fw-semibold" [class.btn-success]="accionEstado === 'Finalizado'" [class.btn-danger]="accionEstado === 'Cancelado'" (click)="confirmarCambioEstado()" [disabled]="procesandoAccion">
-        @if (procesandoAccion) { <span class="spinner-border spinner-border-sm me-1"></span> } Sí, {{ accionEstado === 'Finalizado' ? 'finalizar' : 'cancelar' }}
+      <button class="btn btn-outline-secondary flex-fill" (click)="cerrarCambioEstado()"
+        [disabled]="procesandoAccion">Cancelar</button>
+      <button class="btn flex-fill fw-semibold" [class.btn-success]="accionEstado === 'Finalizado'"
+        [class.btn-danger]="accionEstado === 'Cancelado'" (click)="confirmarCambioEstado()"
+        [disabled]="procesandoAccion">
+        @if (procesandoAccion) { <span class="spinner-border spinner-border-sm me-1"></span> } Sí, {{ accionEstado ===
+        'Finalizado' ? 'finalizar' : 'cancelar' }}
       </button>
     </div>
   </div>
@@ -329,7 +356,8 @@
       <label class="form-label small fw-medium">Descripción <span class="text-danger">*</span></label>
       <textarea class="form-control form-control-sm mb-1 et-textarea-tall" rows="4" [(ngModel)]="form.descripcion"
         [class.is-invalid]="submitted && errores['descripcion']"></textarea>
-      @if (submitted && errores['descripcion']) { <div class="invalid-feedback d-block mb-2">{{ errores['descripcion'] }}</div> }
+      @if (submitted && errores['descripcion']) { <div class="invalid-feedback d-block mb-2">{{ errores['descripcion']
+        }}</div> }
 
       <div class="row g-2 mb-1">
         <div class="col-6">
@@ -345,7 +373,8 @@
           <label class="form-label small fw-medium">Máx. alumnos <span class="text-danger">*</span></label>
           <input type="number" min="1" [max]="capacidadMax" class="form-control form-control-sm"
             [(ngModel)]="form.capacidad" [class.is-invalid]="submitted && errores['capacidad']">
-          @if (submitted && errores['capacidad']) { <div class="invalid-feedback d-block">{{ errores['capacidad'] }}</div> }
+          @if (submitted && errores['capacidad']) { <div class="invalid-feedback d-block">{{ errores['capacidad'] }}
+          </div> }
         </div>
       </div>
 
@@ -397,10 +426,8 @@
       <div class="d-flex flex-wrap column-gap-3 row-gap-1 mb-1">
         @for (d of diasSemana; track d) {
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" [id]="'dia-' + d"
-            [checked]="form.dias.includes(d)"
-            [disabled]="!form.dias.includes(d) && form.dias.length >= 3"
-            (change)="toggleDia(d)">
+          <input class="form-check-input" type="checkbox" [id]="'dia-' + d" [checked]="form.dias.includes(d)"
+            [disabled]="!form.dias.includes(d) && form.dias.length >= 3" (change)="toggleDia(d)">
           <label class="form-check-label small" [for]="'dia-' + d">{{ d }}</label>
         </div>
         }
@@ -412,11 +439,10 @@
       <label class="form-label small fw-medium mt-1">Ubicación (texto) <span class="text-danger">*</span></label>
       <input type="text" class="form-control form-control-sm mb-1" [(ngModel)]="form.ubicacion"
         [class.is-invalid]="submitted && errores['ubicacion']">
-      @if (submitted && errores['ubicacion']) { <div class="invalid-feedback d-block mb-2">{{ errores['ubicacion'] }}</div> }
+      @if (submitted && errores['ubicacion']) { <div class="invalid-feedback d-block mb-2">{{ errores['ubicacion'] }}
+      </div> }
 
-      <app-mapa-picker
-        [latitud]="form.latitud"
-        [longitud]="form.longitud"
+      <app-mapa-picker [latitud]="form.latitud" [longitud]="form.longitud"
         (ubicacionSeleccionada)="onUbicacionElegida($event)">
       </app-mapa-picker>
 
@@ -435,7 +461,8 @@
         </div>
       </div>
       } @else {
-      <div class="et-virtual-note small mb-2"><i class="bi bi-wifi me-1"></i>Modalidad virtual: no requiere ubicación ni coordenadas.</div>
+      <div class="et-virtual-note small mb-2"><i class="bi bi-wifi me-1"></i>Modalidad virtual: no requiere ubicación ni
+        coordenadas.</div>
       }
 
       <label class="form-label small fw-medium">Docente</label>
@@ -449,7 +476,8 @@
       } @else {
       <input type="text" class="form-control form-control-sm mb-1" [(ngModel)]="form.institucion"
         [class.is-invalid]="submitted && errores['institucion']">
-      @if (submitted && errores['institucion']) { <div class="invalid-feedback d-block mb-2">{{ errores['institucion'] }}</div> }
+      @if (submitted && errores['institucion']) { <div class="invalid-feedback d-block mb-2">{{ errores['institucion']
+        }}</div> }
       }
 
       <label class="form-label small fw-medium mt-1">Imagen del taller</label>
@@ -459,7 +487,8 @@
         } @else {
         <i class="bi bi-cloud-arrow-up fs-3 text-success"></i>
         <div class="small text-muted">Arrastra una imagen aquí</div>
-        <div class="text-muted" style="font-size:11px">o haz clic para seleccionar desde tu computadora · JPG, PNG, WEBP · Máx. 5 MB</div>
+        <div class="text-muted" style="font-size:11px">o haz clic para seleccionar desde tu computadora · JPG, PNG, WEBP
+          · Máx. 5 MB</div>
         }
       </div>
       <input #imagenInput type="file" accept="image/*" class="d-none" (change)="onImagenSeleccionada($event)">
@@ -467,7 +496,8 @@
       <label class="form-label small fw-medium">
         Requisitos <span class="text-muted fw-normal">(opcional — uno por línea)</span>
       </label>
-      <textarea class="form-control form-control-sm mb-2 et-textarea-tall" rows="4" [(ngModel)]="form.requisitos" placeholder="Un requisito por línea"></textarea>
+      <textarea class="form-control form-control-sm mb-2 et-textarea-tall" rows="4" [(ngModel)]="form.requisitos"
+        placeholder="Un requisito por línea"></textarea>
 
       @if (errorGeneral) {
       <div class="alert alert-danger py-2 small d-flex align-items-center gap-2 mb-0">
@@ -497,7 +527,8 @@
 <div class="et-modal-backdrop" (click)="tallerAArchivar = null">
   <div class="et-modal-panel-sm text-center p-4" (click)="$event.stopPropagation()">
     <div class="d-flex justify-content-center mb-3">
-      <div class="rounded-circle bg-danger-subtle d-flex align-items-center justify-content-center" style="width:56px;height:56px">
+      <div class="rounded-circle bg-danger-subtle d-flex align-items-center justify-content-center"
+        style="width:56px;height:56px">
         <i class="bi bi-archive-fill text-danger fs-3"></i>
       </div>
     </div>
@@ -531,11 +562,13 @@
       <div class="row g-2 mb-2">
         <div class="col-6">
           <label class="form-label small fw-semibold">% mínimo</label>
-          <input type="number" min="0" max="100" class="form-control form-control-sm" [(ngModel)]="reglaForm.porcentajeMinimo">
+          <input type="number" min="0" max="100" class="form-control form-control-sm"
+            [(ngModel)]="reglaForm.porcentajeMinimo">
         </div>
         <div class="col-6">
           <label class="form-label small fw-semibold">% máximo</label>
-          <input type="number" min="0" max="100" class="form-control form-control-sm" [(ngModel)]="reglaForm.porcentajeMaximo">
+          <input type="number" min="0" max="100" class="form-control form-control-sm"
+            [(ngModel)]="reglaForm.porcentajeMaximo">
         </div>
       </div>
 

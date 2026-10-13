@@ -84,7 +84,8 @@
         <button class="btn btn-sm et-btn-green flex-fill" (click)="irAGestionarAsistencia(t, $event)">
           <i class="bi bi-clipboard2-check me-1"></i>Gestionar Asistencia
         </button>
-        <span class="small text-muted align-self-center"><i class="bi bi-hand-index-thumb me-1"></i>Clic en la tarjeta para ver materiales</span>
+        <span class="small text-muted align-self-center"><i class="bi bi-hand-index-thumb me-1"></i>Clic en la tarjeta
+          para ver materiales</span>
       </div>
 
       @if (tallerExpandidoId === t.id_taller) {
@@ -97,7 +98,8 @@
         </div>
 
         @if (cargandoRecursos) {
-        <div class="text-center text-muted small py-2"><span class="spinner-border spinner-border-sm me-2"></span>Cargando materiales…</div>
+        <div class="text-center text-muted small py-2"><span
+            class="spinner-border spinner-border-sm me-2"></span>Cargando materiales…</div>
         } @else if (sesionesDelTaller.length === 0) {
         <div class="text-muted small">Este taller todavía no tiene sesiones.</div>
         } @else {
@@ -155,7 +157,8 @@
       <div class="row g-2">
         <div class="col-6">
           <label class="form-label small fw-semibold">Sesión relacionada</label>
-          <select class="form-select form-select-sm mb-2" [(ngModel)]="form.idSesion" (ngModelChange)="onSesionChange()">
+          <select class="form-select form-select-sm mb-2" [(ngModel)]="form.idSesion"
+            (ngModelChange)="onSesionChange()">
             <option [ngValue]="null">-Selecciona una sesión-</option>
             @for (s of sesionesDelTaller; track s.id_sesion) {
             <option [ngValue]="s.id_sesion">Sesión {{ s.numero_sesion }} ({{ s.fecha }})</option>
@@ -189,8 +192,8 @@
       <textarea class="form-control form-control-sm mb-2" rows="2" [(ngModel)]="form.descripcion"></textarea>
 
       <label class="form-label small fw-semibold">Documento del recurso</label>
-      <div class="et-drop-zone mb-2 text-center p-3 rounded-3"
-        [class.disabled]="!form.tipo" (click)="form.tipo && archivoInput.click()">
+      <div class="et-drop-zone mb-2 text-center p-3 rounded-3" [class.disabled]="!form.tipo"
+        (click)="form.tipo && archivoInput.click()">
         @if (form.archivoNombre) {
         <i class="bi bi-file-earmark-check fs-4 text-success"></i>
         <div class="small">{{ form.archivoNombre }}</div>
@@ -200,12 +203,15 @@
         } @else {
         <i class="bi bi-cloud-arrow-up fs-4 text-success"></i>
         <div class="small text-muted">Arrastra un documento aquí</div>
-        <div class="text-muted" style="font-size:11px">o haz clic para seleccionar · solo {{ form.tipo }} · máx. 50 MB</div>
+        <div class="text-muted" style="font-size:11px">o haz clic para seleccionar · solo {{ form.tipo }} · máx. 50 MB
+        </div>
         }
       </div>
-      <input #archivoInput type="file" [attr.accept]="acceptActual" class="d-none" (change)="onArchivoSeleccionado($event)">
+      <input #archivoInput type="file" [attr.accept]="acceptActual" class="d-none"
+        (change)="onArchivoSeleccionado($event)">
 
-      <label class="form-label small fw-semibold">Enlace <span class="text-muted fw-normal">(Zoom, video, opcional)</span></label>
+      <label class="form-label small fw-semibold">Enlace <span class="text-muted fw-normal">(Zoom, video,
+          opcional)</span></label>
       <input type="text" class="form-control form-control-sm mb-2" placeholder="https://..." [(ngModel)]="form.enlace">
     </div>
     <div class="p-3 border-top d-flex justify-content-end gap-2">
@@ -224,7 +230,8 @@
 <div class="et-modal-backdrop" (click)="recursoAEliminar = null">
   <div class="et-modal-panel-sm p-4" (click)="$event.stopPropagation()">
     <h6 class="fw-bold">Eliminar recurso</h6>
-    <p class="text-muted small">¿Seguro que deseas eliminar "{{ recursoAEliminar.titulo }}"? Esta acción no se puede deshacer.</p>
+    <p class="text-muted small">¿Seguro que deseas eliminar "{{ recursoAEliminar.titulo }}"? Esta acción no se puede
+      deshacer.</p>
     <div class="d-flex justify-content-end gap-2">
       <button class="btn btn-light btn-sm" (click)="recursoAEliminar = null">Cancelar</button>
       <button class="btn btn-danger btn-sm" (click)="confirmarEliminar()" [disabled]="eliminando">
@@ -252,7 +259,8 @@
       } @else {
       <div class="py-4">
         <i class="bi bi-file-earmark-word-fill text-primary" style="font-size:48px"></i>
-        <p class="text-muted small mt-2">La vista previa no está disponible para documentos Word.<br>Descárgalo para abrirlo.</p>
+        <p class="text-muted small mt-2">La vista previa no está disponible para documentos Word.<br>Descárgalo para
+          abrirlo.</p>
       </div>
       }
       @if (recursoPreview.enlace_url) {
@@ -262,7 +270,8 @@
       }
     </div>
     <div class="p-3 border-top d-flex justify-content-end">
-      <a [href]="recursoPreview.archivo_descarga_url || recursoPreview.archivo_url" target="_blank" class="btn et-btn-green btn-sm px-3">
+      <a [href]="recursoPreview.archivo_descarga_url || recursoPreview.archivo_url" target="_blank"
+        class="btn et-btn-green btn-sm px-3">
         <i class="bi bi-download me-1"></i>Descargar
       </a>
     </div>

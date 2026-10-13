@@ -1,0 +1,30 @@
+.footer {
+    background: #12182c;
+    color: #fff
+}
+
+.footer-soft,
+.footer-soft span,
+.footer-soft p {
+    color: rgba(255, 255, 255, .78) !important
+}
+
+.footer i {
+    cursor: pointer;
+    transition: .2s
+}
+
+.footer i:hover {
+    transform: scale(1.08)
+}
+
+.et-footer-socials a {
+    color: #fff;
+    text-decoration: none;
+    transition: transform .2s, color .2s
+}
+
+.et-footer-socials a:hover {
+    color: #48d487;
+    transform: translateY(-2px)
+}

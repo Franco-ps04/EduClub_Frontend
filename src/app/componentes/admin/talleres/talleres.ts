@@ -93,8 +93,6 @@ export class Talleres implements OnInit {
     public auth: AuthService
   ) { }
 
-  isAdmin(): boolean { return this.auth.currentUser?.rol === 'administrador'; }
-
   ngOnInit(): void {
     this.cargarCatalogos();
     this.cargarTalleres();

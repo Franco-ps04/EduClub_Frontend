@@ -1,0 +1,244 @@
+<div class="et-student-messages d-flex">
+  <aside class="et-message-list border-end bg-white d-flex flex-column flex-shrink-0">
+    <div class="p-3 border-bottom flex-shrink-0">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">Mis consultas</h5>@if(unreadCount>0){<span
+          class="badge bg-success rounded-pill">{{unreadCount}} nuevas</span>}
+      </div>
+      <div class="d-flex gap-1 flex-wrap">
+        @for(f of [{v:'todos',l:'Todos'},{v:'sin-leer',l:'Sin leer'},{v:'respondidos',l:'Respondidos'}];track
+        f.v){<button type="button" class="btn btn-sm rounded-pill" [class.btn-success]="filtro===f.v"
+          [class.btn-outline-secondary]="filtro!==f.v" (click)="filtro=$any(f.v)">{{f.l}}</button>}
+      </div>
+    </div>
+    <div class="px-3 py-2 border-bottom flex-shrink-0"><button class="btn btn-success w-100 fw-medium"
+        (click)="openNew()"><i class="bi bi-pencil-square me-2"></i>Nueva consulta</button></div>
+    @if(error){<div class="alert alert-warning small m-2">{{error}}</div>}
+    <div class="et-message-list-scroll flex-grow-1 overflow-y-auto">
+      @if(loading){<div class="text-center py-4"><span class="spinner-border spinner-border-sm text-success"></span>
+      </div>}
+      @for(m of filtered();track m.id_mensaje){
+      <button type="button" class="et-thread-row w-100 text-start"
+        [class.et-thread-active]="seleccionado?.id_mensaje===m.id_mensaje"
+        [class.et-thread-unread]="m.historial.length>0&&!m.leido_por_alumno" (click)="select(m)">
+        <div class="d-flex justify-content-between align-items-start gap-2 mb-1"><span
+            class="fw-semibold small text-truncate flex-grow-1">{{m.asunto}}</span>@if(m.historial.length>0&&!m.leido_por_alumno){<span
+            class="et-unread-dot"></span>}</div>
+        <div class="d-flex justify-content-between align-items-center gap-2"><span class="badge rounded-pill"
+            [class]="messageStatus(m).cls">{{messageStatus(m).label}}</span><span class="text-muted"
+            style="font-size:10px">{{date(m.fecha)}}</span></div>
+        <!-- <div class="small text-muted text-truncate mt-1">{{m.destinatario}} · {{m.mensaje}}</div> -->
+        @if(m.tallerRelacionado){<p class="text-muted mb-0 mt-1 text-truncate" style="font-size:11px"><i
+            class="bi bi-journal-bookmark me-1 text-success"></i>{{m.tallerRelacionado}}</p>}
+      </button>
+      }
+      @if(!loading&&filtered().length===0){<div class="text-center text-muted py-5 px-3"><i
+          class="bi bi-envelope-open fs-1 d-block mb-2 opacity-50"></i>
+        <p class="small mb-3">Aún no tienes consultas para mostrar.</p><button class="btn btn-sm btn-outline-success"
+          (click)="openNew()">Enviar consulta</button>
+      </div>}
+    </div>
+  </aside>
+  <section class="et-message-detail flex-grow-1 d-flex flex-column overflow-hidden bg-light">
+    @if (seleccionado; as m) {
+    <div class="et-message-detail-scroll flex-grow-1 overflow-y-auto p-3 p-lg-4">
+      <article class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+          <div>
+            <h5 class="fw-bold mb-2">{{m.asunto}}</h5>
+            <div class="d-flex gap-2 flex-wrap"><span class="badge rounded-pill"
+                [class]="messageStatus(m).cls">{{messageStatus(m).label}}</span>@if(m.tallerRelacionado){<span
+                class="badge bg-success-subtle text-success rounded-pill"><i
+                  class="bi bi-journal-bookmark me-1"></i>{{m.tallerRelacionado}}</span>}</div>
+            <p class="text-muted small mb-0 mt-2">Para: <strong class="text-dark">{{m.destinatario}}</strong> ·
+              {{m.rolDestinatario==='administrador'?'Administrador':'Docente'}}</p>
+          </div><span class="text-muted small flex-shrink-0">{{date(m.fecha)}}</span>
+        </div>
+        <div class="rounded-3 p-3" style="background:#f0fdf4;border-left:3px solid #2d9e5f">
+          <p class="small fw-semibold text-success mb-2"><i class="bi bi-person-fill me-1"></i>Tu consulta inicial</p>
+          <p class="text-dark mb-0" style="line-height:1.8;white-space:pre-wrap">{{m.mensaje}}</p>
+        </div>
+      </article>
+      @if(m.historial.length>0){<p class="small fw-semibold text-muted mb-3 px-1"><i
+          class="bi bi-chat-dots-fill text-success me-1"></i>Conversación ({{m.historial.length}}
+        mensaje{{m.historial.length!==1?'s':''}})</p>}
+      @for (resp of m.historial; track resp.id_respuesta ?? $index) {
+      @if(resp.tipo==='admin'){
+      <article class="card border-0 shadow-sm rounded-4 p-4 mb-3 et-response-admin">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <div
+            class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center flex-shrink-0"
+            style="width:32px;height:32px;font-size:12px">E</div>
+          <div>
+            <p class="fw-semibold mb-0 small">{{resp.respondido_por||'Equipo EduTaller'}}</p>
+            <p class="text-muted mb-0" style="font-size:11px">{{date(resp.fecha)}}</p>
+          </div><span class="badge bg-primary-subtle text-primary ms-auto" style="font-size:10px">Respuesta</span>
+        </div>
+        <p class="text-dark mb-0 ms-5" style="white-space:pre-wrap;font-size:13px">{{resp.texto}}</p>
+      </article>
+      } @else {
+      <article class="card border-0 shadow-sm rounded-4 p-4 mb-3 et-response-student">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <div
+            class="rounded-circle bg-success-subtle text-success fw-bold d-flex align-items-center justify-content-center flex-shrink-0"
+            style="width:32px;height:32px;font-size:12px">T</div>
+          <div>
+            <p class="fw-semibold mb-0 small">Tú</p>
+            <p class="text-muted mb-0" style="font-size:11px">{{date(resp.fecha)}}</p>
+          </div><span class="badge bg-success-subtle text-success ms-auto" style="font-size:10px">Seguimiento</span>
+        </div>
+        <p class="text-dark mb-0 ms-5" style="white-space:pre-wrap;font-size:13px">{{resp.texto}}</p>
+      </article>
+      }
+      }
+      @if(isPending(m)){<div class="rounded-4 p-3 mb-4 text-center et-pending-note">
+        <p class="mb-0 small"><i class="bi bi-clock me-1"></i>Tu consulta está pendiente de respuesta.</p>
+      </div>}
+      @if(errorSeguimiento){<div class="alert alert-danger py-2 small">{{errorSeguimiento}}</div>}
+    </div>
+    <div class="et-followup-box border-top p-3 bg-white flex-shrink-0"><label class="form-label small fw-semibold"><i
+          class="bi bi-reply text-success me-1"></i>Enviar seguimiento</label><textarea class="form-control mb-2"
+        rows="3" style="resize:vertical" [(ngModel)]="seguimientoTexto" maxlength="5000"
+        placeholder="Añade información adicional o una pregunta de seguimiento..."></textarea>
+      <div class="d-flex justify-content-between align-items-center"><span
+          class="text-muted small">{{seguimientoTexto.length}}/5000</span><button
+          class="btn btn-success fw-semibold px-4" (click)="sendFollowup()"
+          [disabled]="!seguimientoTexto.trim()||sendingFollowup">@if(sendingFollowup){<span
+            class="spinner-border spinner-border-sm me-1"></span>Enviando...}@else{<i
+            class="bi bi-send me-1"></i>Enviar}</button></div>
+    </div>
+    } @else {
+    <div class="flex-grow-1 d-flex align-items-center justify-content-center text-muted p-5">
+      <div class="text-center"><i class="bi bi-envelope-open fs-1 d-block mb-3 opacity-50"></i>
+        <p class="fw-medium mb-1">Selecciona una consulta para verla</p>
+        <p class="small mb-3">o envía una nueva al equipo</p><button class="btn btn-success px-4" (click)="openNew()"><i
+            class="bi bi-pencil-square me-2"></i>Nueva consulta</button>
+      </div>
+    </div>
+    }
+  </section>
+</div>
+@if (showModal) {
+<div class="gu-modal-backdrop" (click)="closeNew()"></div>
+<section class="gu-modal-panel et-new-message-modal" role="dialog" aria-modal="true" aria-label="Nueva consulta">
+  <div class="et-new-head flex-shrink-0">
+    <div>
+      <h5 class="text-white fw-bold mb-1"><i class="bi bi-pencil-square me-2"></i>Nueva consulta</h5>
+      <p class="small mb-0 text-white-50">Elige a quién dirigir tu mensaje.</p>
+    </div>
+    <button class="btn-close btn-close-white mt-1" (click)="closeNew()" [disabled]="sendingNew"
+      aria-label="Cerrar"></button>
+  </div>
+
+  <div class="p-4 overflow-auto flex-grow-1" style="min-height:0">
+    <div class="mb-4">
+      <label class="form-label small fw-semibold mb-2">¿A quién quieres enviar la consulta?</label>
+      <div class="d-flex gap-2">
+        <label class="flex-fill cursor-pointer">
+          <input type="radio" name="destinoMensaje" class="d-none" [checked]="destinoTipo === 'administrador'"
+            (change)="cambiarDestino('administrador')">
+          <div class="p-3 rounded-3 text-center h-100"
+            [style.border]="destinoTipo === 'administrador' ? '2px solid #2d9e5f' : '2px solid #e5e7eb'"
+            [style.background]="destinoTipo === 'administrador' ? '#f0fdf4' : 'white'">
+            <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center fw-bold text-white mb-2"
+              style="width:40px;height:40px;background:#2d9e5f;font-size:16px">A</div>
+            <p class="fw-semibold mb-0 small">Administrador</p>
+            <p class="text-muted mb-0" style="font-size:11px">Consulta general</p>
+            @if (destinoTipo === 'administrador') { <i class="bi bi-check-circle-fill text-success mt-1 d-block"></i> }
+          </div>
+        </label>
+        <label class="flex-fill cursor-pointer">
+          <input type="radio" name="destinoMensaje" class="d-none" [checked]="destinoTipo === 'taller'"
+            (change)="cambiarDestino('taller')">
+          <div class="p-3 rounded-3 text-center h-100"
+            [style.border]="destinoTipo === 'taller' ? '2px solid #3b82f6' : '2px solid #e5e7eb'"
+            [style.background]="destinoTipo === 'taller' ? '#eff6ff' : 'white'">
+            <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center fw-bold text-white mb-2"
+              style="width:40px;height:40px;background:#3b82f6;font-size:16px"><i class="bi bi-easel2"
+                style="font-size:16px"></i></div>
+            <p class="fw-semibold mb-0 small">Por taller</p>
+            <p class="text-muted mb-0" style="font-size:11px">A quien creó el taller</p>
+            @if (destinoTipo === 'taller') { <i class="bi bi-check-circle-fill text-primary mt-1 d-block"></i> }
+          </div>
+        </label>
+      </div>
+
+      @if (destinoTipo === 'administrador') {
+      <div class="mt-3">
+        <label class="form-label small fw-semibold">Selecciona un administrador</label>
+        <select class="form-select" name="destinatarioAdmin" [(ngModel)]="destinatarioId"
+          [class.is-invalid]="!!errorDestinatario" (ngModelChange)="limpiarErrorCampo('destinatario')">
+          <option [ngValue]="null">— Elige un administrador —</option>
+          @for (d of administradores; track d.id_usuario) { <option [ngValue]="d.id_usuario">{{ d.nombres }} ({{ d.email
+            }})</option> }
+        </select>
+        @if (errorDestinatario) { <div class="invalid-feedback d-block">{{ errorDestinatario }}</div> }
+        @if (administradorSeleccionado; as seleccionadoAdmin) {
+        <div class="et-selected-recipient et-selected-admin mt-3">
+          <span class="et-recipient-avatar">{{ avatar(seleccionadoAdmin.nombres) }}</span>
+          <div class="min-w-0 flex-grow-1"><strong>{{ seleccionadoAdmin.nombres }}</strong><span>{{
+              seleccionadoAdmin.email }}</span></div>
+          <i class="bi bi-check-circle-fill" aria-label="Destinatario seleccionado"></i>
+        </div>
+        }
+      </div>
+      }
+
+      @if (destinoTipo === 'taller') {
+      <div class="mt-3">
+        <label class="form-label small fw-semibold">Selecciona uno de tus talleres activos</label>
+        <select class="form-select" [(ngModel)]="tallerId" name="tallerMensaje" [class.is-invalid]="!!errorTaller"
+          (ngModelChange)="onWorkshopChange()">
+          <option [ngValue]="null">— Elige un taller —</option>
+          @for (i of inscripciones; track i.id_taller) { <option [ngValue]="i.id_taller">{{ i.titulo }}</option> }
+        </select>
+        @if (errorTaller) { <div class="invalid-feedback d-block">{{ errorTaller }}</div> }
+        @if (creadorTallerSeleccionado; as creadorActual) {
+        <div class="form-text">La consulta se enviará a {{ creadorActual.rol === 'administrador' ? 'la persona
+          administradora' : 'el docente' }} que creó el taller.</div>
+        } @else if (!inscripciones.length) {
+        <div class="form-text text-muted">Para una consulta general, selecciona Administrador.</div>
+        }
+        @if (creadorTallerSeleccionado; as seleccionadoCreador) {
+        <div class="et-selected-recipient mt-3" [class.et-selected-teacher]="seleccionadoCreador.rol === 'docente'"
+          [class.et-selected-admin]="seleccionadoCreador.rol === 'administrador'">
+          <span class="et-recipient-avatar">{{ avatar(seleccionadoCreador.nombres) }}</span>
+          <div class="min-w-0 flex-grow-1"><strong>{{ seleccionadoCreador.nombres }}</strong><span>{{
+              seleccionadoCreador.email }}</span><small>{{ seleccionadoCreador.rol === 'administrador' ? 'Administrador
+              que creó el taller' : 'Docente que creó el taller' }} · {{ tallerSeleccionado?.titulo || 'Taller
+              seleccionado' }}</small></div>
+          <i class="bi bi-check-circle-fill" aria-label="Destinatario seleccionado"></i>
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label small fw-semibold">Asunto</label>
+      <input class="form-control" name="asunto" [(ngModel)]="nuevoAsunto" maxlength="150"
+        [class.is-invalid]="!!errorAsunto" (ngModelChange)="limpiarErrorCampo('asunto')"
+        placeholder="Ej.: Consulta sobre el horario">
+      @if (errorAsunto) { <div class="invalid-feedback d-block">{{ errorAsunto }}</div> }
+      <div class="form-text text-end">{{ nuevoAsunto.length }}/150</div>
+    </div>
+    <div class="mb-1">
+      <label class="form-label small fw-semibold">Mensaje</label>
+      <textarea class="form-control" name="mensaje" [(ngModel)]="nuevoMensaje" rows="5" maxlength="5000"
+        [class.is-invalid]="!!errorMensaje" (ngModelChange)="limpiarErrorCampo('mensaje')" style="resize:vertical"
+        placeholder="Describe tu consulta..."></textarea>
+      @if (errorMensaje) { <div class="invalid-feedback d-block">{{ errorMensaje }}</div> }
+      <div class="form-text text-end">{{ nuevoMensaje.length }}/5000</div>
+    </div>
+    @if (errorNuevo) { <div class="alert alert-danger py-2 small mt-3">{{ errorNuevo }}</div> }
+  </div>
+
+  <div class="px-4 py-3 border-top d-flex justify-content-end gap-2 flex-shrink-0">
+    <button class="btn btn-outline-secondary" (click)="closeNew()" [disabled]="sendingNew">Cancelar</button>
+    <button class="btn btn-success" (click)="sendNew()" [disabled]="sendingNew">
+      @if (sendingNew) { <span class="spinner-border spinner-border-sm me-1"></span>Enviando... } @else { <i
+        class="bi bi-send me-1"></i>Enviar consulta }
+    </button>
+  </div>
+</section>
+}

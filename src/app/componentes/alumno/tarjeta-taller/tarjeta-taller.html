@@ -1,0 +1,53 @@
+<article class="card shadow-sm border-0 rounded-4 gu-event-card overflow-hidden mb-3 et-workshop-card"
+  [class.et-workshop-selected]="selected" (click)="seleccionar.emit(taller)">
+  <button type="button" class="et-workshop-image-wrap p-0 border-0"
+    (click)="informacion.emit(taller); $event.stopPropagation()"><img [src]="image()" [alt]="taller.nombre"
+      class="et-workshop-image"><span class="et-image-overlay"><span><i class="bi bi-info-circle me-1"></i>Ver
+        información</span></span></button>
+  <div class="card-body p-3 d-flex flex-column">
+    <div class="d-flex flex-wrap gap-1 mb-2"><span class="badge rounded-pill bg-light text-dark border">{{ taller.area
+        ||
+        'Área general' }}</span><span class="badge rounded-pill bg-success-subtle text-success">{{ formatoLabel()
+        }}</span><span class="badge rounded-pill" [class.bg-primary-subtle]="isPresencial()"
+        [class.text-primary]="isPresencial()" [class.bg-info-subtle]="!isPresencial()"
+        [class.text-info-emphasis]="!isPresencial()">{{ modalidadLabel() }}</span></div>
+    <h6 class="fw-bold mb-1 lh-sm gu-event-title">{{ taller.nombre }}</h6>
+    <!-- Se conserva comentada la descripción para respetar el formato que estableció el usuario. -->
+    <!-- <p class="text-muted small mb-2 et-workshop-description">{{ taller.descripcion }}</p> -->
+    <p class="text-muted small mb-1">
+      <i class="bi bi-calendar-event me-1"></i>
+      Fecha: {{ taller.fecha }} &nbsp; Hora: {{ hora() }}
+    </p>
+    <!-- <div class="small text-muted mb-1"><i class="bi bi-clock me-1"></i>{{ getDays() }} / {{ hora() }}</div> -->
+    @if (isPresencial()) {
+    <p class="text-muted small mb-2 gu-event-location"><i class="bi bi-geo-alt me-1"></i>Lugar: {{ taller.ubicacion ||
+      'Lugar por confirmar' }}</p>
+    } @else {
+    <p class="text-muted small mb-2 gu-event-location"><i class="bi bi-calendar2-day me-1"></i>Días: {{ getDays() }}</p>
+    }
+    <div class="d-flex justify-content-between small text-muted mt-2"><span>Inscritos: <b>{{ taller.inscritos
+          }}</b></span><span>Cupos disponibles: <b>{{ freeSeats() }}</b></span></div>
+    <div class="progress my-2" style="height:3px">
+      <div class="progress-bar bg-success" [style.width.%]="occupiedPct()"></div>
+    </div>
+    <div class="d-flex gap-1 mt-auto pt-2">
+      @if (hasMap()) {
+      <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" style="font-size:11px"
+        (click)="seleccionar.emit(taller); $event.stopPropagation()"><i class="bi bi-map me-1"></i>Ver mapa</button>
+      }
+      <button type="button" class="btn btn-outline-success btn-sm flex-fill" style="font-size:11px"
+        (click)="informacion.emit(taller); $event.stopPropagation()"><i
+          class="bi bi-info-circle me-1"></i>Información</button>
+      @if (!puedeInscribirse) {
+      <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" disabled style="font-size:11px"><i
+          class="bi bi-shield-lock me-1"></i>Alumno</button>
+      } @else {
+      <button type="button" class="btn btn-success btn-sm flex-fill" style="font-size:11px"
+        [disabled]="inscrito || freeSeats()===0" (click)="inscribir.emit(taller); $event.stopPropagation()">
+        @if (inscrito) { <i class="bi bi-check-circle me-1"></i>Inscrito } @else { <i
+          class="bi bi-person-plus me-1"></i>Inscribirse }
+      </button>
+      }
+    </div>
+  </div>
+</article>

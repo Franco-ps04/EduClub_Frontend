@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "voluntariado_ambiental": {
+    "edutaller_frontend": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -65,10 +65,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "voluntariado_ambiental:build:production"
+              "buildTarget": "edutaller_frontend:build:production"
             },
             "development": {
-              "buildTarget": "voluntariado_ambiental:build:development"
+              "buildTarget": "edutaller_frontend:build:development"
             }
           },
           "defaultConfiguration": "development"

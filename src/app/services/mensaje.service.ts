@@ -11,6 +11,7 @@ export class MensajeService {
   private readonly base = `${environment.apiUrl}/mensajes`;
   private readonly _mensajes = signal<Mensaje[]>([]);
   private readonly usuarioActual = signal<AuthUser | null>(null);
+  private refreshRequestId = 0;
 
   /** Lista cacheada para que el layout pueda mostrar el badge sin abrir Mensajes. */
   readonly mensajes = this._mensajes.asReadonly();
@@ -24,7 +25,7 @@ export class MensajeService {
     if (!user) return 0;
 
     return this._mensajes().filter(m =>
-      user.rol === 'alumno' ? !m.leido_por_alumno : !m.leido
+      user.rol === 'alumno' ? (Array.isArray(m.historial) && m.historial.length > 0 && !m.leido_por_alumno) : !m.leido
     ).length;
   });
 
@@ -51,23 +52,31 @@ export class MensajeService {
    */
   refresh(): void {
     const user = this.usuarioActual();
+    const requestId = ++this.refreshRequestId;
     if (!user) {
       this._mensajes.set([]);
       return;
     }
 
+    const applyIfLatest = (data: Mensaje[]) => {
+      if (requestId === this.refreshRequestId) this._mensajes.set(data ?? []);
+    };
+    const clearIfLatest = () => {
+      if (requestId === this.refreshRequestId) this._mensajes.set([]);
+    };
+
     if (user.rol === 'alumno') {
       this.http.get<Mensaje[]>(`${this.base}/mis`).subscribe({
-        next: data => this._mensajes.set(data),
-        error: () => this._mensajes.set([])
+        next: applyIfLatest,
+        error: clearIfLatest
       });
       return;
     }
 
     if (user.rol === 'docente' || user.rol === 'administrador') {
       this.http.get<Mensaje[]>(`${this.base}/panel`).subscribe({
-        next: data => this._mensajes.set(data),
-        error: () => this._mensajes.set([])
+        next: applyIfLatest,
+        error: clearIfLatest
       });
       return;
     }

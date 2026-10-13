@@ -1,5 +1,6 @@
 <h2 class="fw-bold mb-1">Carga masiva de alumno</h2>
-<p class="text-muted mb-4">Sube un archivo Excel para registrar múltiples alumnos a la vez. Todos se crean como <strong>Alumno</strong>.</p>
+<p class="text-muted mb-4">Sube un archivo Excel para registrar múltiples alumnos a la vez. Todos se crean como
+  <strong>Alumno</strong>.</p>
 
 @if (registrado) {
 <div class="alert alert-success d-flex justify-content-between align-items-center mb-4">
@@ -69,7 +70,8 @@
         <div class="d-flex gap-2">
           @if (hayArchivoCargado && !registrado) {
           <button class="btn btn-outline-secondary btn-sm" (click)="nuevaCarga()">Limpiar</button>
-          <button class="btn et-btn-green btn-sm" [disabled]="validos === 0 || registrando" (click)="registrarAlumnos()">
+          <button class="btn et-btn-green btn-sm" [disabled]="validos === 0 || registrando"
+            (click)="registrarAlumnos()">
             @if (registrando) { <span class="spinner-border spinner-border-sm me-1"></span> }
             <i class="bi bi-person-check me-1"></i>Registrar alumnos ({{ validos }})
           </button>
@@ -81,7 +83,8 @@
       <div class="text-center text-muted py-5">
         <i class="bi bi-folder2-open fs-1 d-block mb-2 opacity-50"></i>
         <p class="fw-medium mb-0">Ningún archivo cargado</p>
-        <p class="small">Sube un archivo Excel con el formato de la plantilla. Los registros detectados aparecerán aquí con su estado de validación.</p>
+        <p class="small">Sube un archivo Excel con el formato de la plantilla. Los registros detectados aparecerán aquí
+          con su estado de validación.</p>
       </div>
       } @else {
       <div class="table-responsive">
@@ -103,7 +106,8 @@
               <td>{{ f.correo }}</td>
               <td>{{ f.telefono }}</td>
               <td>
-                <span class="badge" [style.background]="estiloEstado(f.estado).bg" [style.color]="estiloEstado(f.estado).text">
+                <span class="badge" [style.background]="estiloEstado(f.estado).bg"
+                  [style.color]="estiloEstado(f.estado).text">
                   <span class="et-dot" [style.background]="estiloEstado(f.estado).dot"></span>
                   {{ f.estado }}
                 </span>

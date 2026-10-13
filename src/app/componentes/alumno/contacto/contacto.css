@@ -1,0 +1,45 @@
+:host {
+    display: block;
+    min-height: 65vh
+}
+
+.et-contact-page {
+    padding-top: 1.25rem !important
+}
+
+.et-contact-page .form-control:focus,
+.et-contact-page .form-select:focus {
+    border-color: #2d9e5f;
+    box-shadow: 0 0 0 .2rem #2d9e5f1c
+}
+
+.et-contact-page .row.g-4 {
+    align-items: stretch
+}
+
+.et-contact-page .col-md-4 {
+    display: flex;
+    flex-direction: column;
+    gap: 12px
+}
+
+.et-contact-page .col-md-4 .card {
+    height: auto;
+    min-height: 135px;
+    margin-bottom: 0 !important;
+    flex: 1 1 0
+}
+
+.et-contact-page .card p {
+    overflow-wrap: anywhere
+}
+
+.et-contact-page .btn-success {
+    transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease
+}
+
+.et-contact-page .btn-success:hover:not(:disabled) {
+    background: #1e7a48;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(45, 158, 95, .2)
+}

@@ -1,0 +1,265 @@
+:host {
+    display: block;
+    min-height: 100vh
+}
+
+.et-login-page {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(480px, 1fr);
+    background: #0d1632
+}
+
+.et-login-photo {
+    min-height: 100vh;
+    background: url('/assets/alumno-login.jpg') center center/cover no-repeat
+}
+
+.et-login-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 56px;
+    background: #0d1632;
+    color: #f8fafc
+}
+
+.et-login-content {
+    width: 100%;
+    max-width: 440px;
+    animation: et-login-in .28s ease-out
+}
+
+.et-login-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px
+}
+
+.et-login-brand-name {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -1.6px;
+    color: #f8fafc;
+    line-height: 1.15
+}
+
+.et-login-brand-name span {
+    color: #20a85c
+}
+
+.et-login-brand-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 9px;
+    background: #20a85c;
+    color: #fff;
+    font-size: 31px
+}
+
+.et-login-title {
+    font-size: 27px;
+    font-weight: 750;
+    letter-spacing: -.35px;
+    margin: 0 0 7px;
+    color: #fff
+}
+
+.et-login-subtitle {
+    font-size: 15px;
+    color: #d4d9e7;
+    margin-bottom: 23px
+}
+
+.et-login-content .form-label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 7px;
+    color: #e1e6f1
+}
+
+.et-login-input {
+    height: 49px;
+    border: 1px solid #6b7280;
+    border-radius: 7px;
+    overflow: hidden;
+    background: #2c384d;
+    transition: border-color .18s, box-shadow .18s
+}
+
+.et-login-input:focus-within {
+    border-color: #20a85c;
+    box-shadow: 0 0 0 3px #20a85c2b
+}
+
+.et-login-input .input-group-text {
+    border: 0;
+    background: transparent;
+    color: #bdc5d4;
+    padding: 0 12px
+}
+
+.et-login-input input {
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+    padding: 0 12px
+}
+
+.et-login-input input::placeholder {
+    color: #aeb7c8;
+    opacity: 1
+}
+
+.et-login-input input:focus {
+    background: transparent;
+    color: #fff;
+    box-shadow: none
+}
+
+.et-password-toggle {
+    cursor: pointer
+}
+
+.et-password-toggle:hover {
+    color: #fff !important
+}
+
+.et-login-link {
+    font-size: 13px;
+    color: #1ea55b;
+    text-decoration: none;
+    transition: color .18s
+}
+
+.et-login-link:hover {
+    color: #42d985;
+    text-decoration: underline
+}
+
+.et-login-submit {
+    height: 50px;
+    background: #2ca56d;
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: 700;
+    transition: background .18s, transform .18s, box-shadow .18s
+}
+
+.et-login-submit:hover:not(:disabled) {
+    background: #218957;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px #20a85c30
+}
+
+.et-login-submit:disabled {
+    opacity: .7
+}
+
+.et-login-teacher a {
+    font-size: 11px;
+    color: #f1f5f9;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color .18s
+}
+
+.et-login-teacher a:hover {
+    color: #43d984
+}
+
+@keyframes et-login-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px)
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}
+
+@media(max-width:900px) {
+    .et-login-page {
+        grid-template-columns: minmax(0, .8fr) minmax(410px, 1fr)
+    }
+
+    .et-login-panel {
+        padding: 36px 32px
+    }
+
+    .et-login-brand-name {
+        font-size: 38px
+    }
+
+    .et-login-brand-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 27px
+    }
+}
+
+@media(max-width:680px) {
+    .et-login-page {
+        grid-template-columns: 1fr
+    }
+
+    .et-login-photo {
+        display: none
+    }
+
+    .et-login-panel {
+        min-height: 100vh;
+        padding: 32px 24px
+    }
+
+    .et-login-content {
+        max-width: 420px
+    }
+
+    .et-login-brand-name {
+        font-size: 40px
+    }
+}
+
+/* Mantener el color oscuro cuando Chrome muestra credenciales guardadas. */
+.et-login-input input:-webkit-autofill,
+.et-login-input input:-webkit-autofill:hover,
+.et-login-input input:-webkit-autofill:focus,
+.et-login-input input:-webkit-autofill:active {
+    -webkit-text-fill-color: #fff !important;
+    -webkit-box-shadow: 0 0 0 1000px #2c384d inset !important;
+    box-shadow: 0 0 0 1000px #2c384d inset !important;
+    caret-color: #fff;
+    transition: background-color 9999s ease-out 0s
+}
+
+.et-login-input input {
+    flex: 1 1 0%;
+    width: 1%;
+    padding-left: 13px;
+    padding-right: 13px;
+    min-width: 0
+}
+
+.et-login-input .input-group-text {
+    flex-shrink: 0
+}
+
+@media(min-width:681px) and (max-width:900px) {
+    .et-login-page {
+        grid-template-columns: minmax(0, .8fr) minmax(410px, 1fr)
+    }
+}

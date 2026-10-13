@@ -1,0 +1,81 @@
+<div class="d-flex align-items-center justify-content-center py-5 px-3" style="min-height:80vh">
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 w-100" style="max-width:520px">
+        <div class="text-center mb-4">
+            <div class="bg-success text-white rounded-3 d-inline-flex p-3 mb-3 shadow-sm">
+                <i class="bi bi-shield-lock-fill fs-3"></i>
+            </div>
+            <h4 class="fw-bold mb-1">Recuperar contraseña</h4>
+            <p class="text-muted small mb-0">Confirma tu correo y teléfono para crear una nueva contraseña.</p>
+        </div>
+
+        @if (success) {
+        <div class="alert alert-success py-2 small">
+            <i class="bi bi-check-circle me-2"></i>Contraseña actualizada correctamente. Redirigiendo al ingreso...
+        </div>
+        }
+
+        @if (errorMessage) {
+        <div class="alert alert-danger py-2 small">{{ errorMessage }}</div>
+        }
+
+        <form class="row g-3" (ngSubmit)="submit()" novalidate>
+            <div class="col-12">
+                <label class="form-label small fw-semibold">Correo electrónico</label>
+                <input class="form-control" name="email" [(ngModel)]="form.email" placeholder="tu@gmail.com"
+                    [class.is-invalid]="submitted && (!form.email.trim() || !isEmailValid(form.email))">
+                @if (submitted && !form.email.trim()) {
+                <div class="invalid-feedback d-block">El correo es obligatorio.</div>
+                }
+                @if (submitted && form.email.trim() && !isEmailValid(form.email)) {
+                <div class="invalid-feedback d-block">Ingresa un correo válido.</div>
+                }
+            </div>
+
+            <div class="col-12">
+                <label class="form-label small fw-semibold">Número telefónico</label>
+                <input class="form-control" name="telefono" [(ngModel)]="form.telefono" placeholder="987654321"
+                    maxlength="9" inputmode="numeric"
+                    [class.is-invalid]="submitted && (!form.telefono.trim() || !isPhoneValid(form.telefono))">
+                @if (submitted && !form.telefono.trim()) {
+                <div class="invalid-feedback d-block">El teléfono es obligatorio.</div>
+                }
+                @if (submitted && form.telefono.trim() && !isPhoneValid(form.telefono)) {
+                <div class="invalid-feedback d-block">El teléfono debe tener 9 dígitos.</div>
+                }
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label small fw-semibold">Nueva contraseña</label>
+                <input type="password" class="form-control" name="password" [(ngModel)]="form.password"
+                    [class.is-invalid]="submitted && (!form.password || !isPasswordStrong(form.password))">
+                @if (submitted && !form.password) {
+                <div class="invalid-feedback d-block">La contraseña es obligatoria.</div>
+                }
+                @if (submitted && form.password && !isPasswordStrong(form.password)) {
+                <div class="invalid-feedback d-block">Debe tener 8 caracteres, una letra y un número.</div>
+                }
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label small fw-semibold">Confirmar contraseña</label>
+                <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="form.confirmPassword"
+                    [class.is-invalid]="submitted && form.password !== form.confirmPassword">
+                @if (submitted && form.password !== form.confirmPassword) {
+                <div class="invalid-feedback d-block">Las contraseñas no coinciden.</div>
+                }
+            </div>
+
+            <div class="col-12 d-flex gap-2 justify-content-end">
+                <a routerLink="/ingresar" class="btn btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success px-4" [disabled]="sending">
+                    @if (sending) {
+                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                    Guardando...
+                    } @else {
+                    Actualizar contraseña
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

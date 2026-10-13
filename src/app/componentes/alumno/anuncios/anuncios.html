@@ -1,0 +1,51 @@
+<div class="container-fluid py-4 et-announcements-page">
+  <div class="row g-3 et-announcements-row">
+    <div class="col-md-4 col-lg-3 et-announcements-list-col">
+      <h5 class="fw-bold mb-3">Mis anuncios</h5>
+      <input type="text" class="form-control form-control-sm mb-3" placeholder="Buscar anuncio..."
+        [(ngModel)]="searchText" maxlength="120" aria-label="Buscar anuncio">
+      @if (error) { <div class="alert alert-warning small py-2">{{ error }}</div> }
+      <div class="d-flex flex-column gap-2 et-announcement-cards">
+        @for (a of filtered(); track a.id_notificacion) {
+        <div class="ann-item card border rounded-3 p-3"
+          [class.ann-selected]="seleccionado()?.id_notificacion === a.id_notificacion" (click)="seleccionar(a)"
+          role="button" tabindex="0" (keydown.enter)="seleccionar(a)">
+          <div class="d-flex align-items-start justify-content-between gap-2">
+            <p class="fw-semibold mb-1 small lh-sm">{{ a.taller || a.titulo }}</p>
+            @if (!a.leida) { <span class="et-unread-dot" aria-label="Anuncio sin leer"></span> }
+          </div>
+          <p class="text-muted mb-1" style="font-size:11px">Por: <strong>{{ a.enviado_por }}</strong></p>
+          <p class="text-muted mb-1" style="font-size:11px"><i class="bi bi-calendar3 me-1"></i>{{ fecha(a.fecha) }}</p>
+          <!-- <p class="text-muted mb-0 text-truncate" style="font-size:11px">{{ a.titulo }}</p> -->
+        </div>
+        } @empty {
+        <p class="text-muted text-center small py-3">Sin anuncios disponibles.</p>
+        }
+      </div>
+    </div>
+
+    <div class="col-md-8 col-lg-9 et-announcements-detail-col">
+      @if (seleccionado(); as a) {
+      <div class="card border-0 shadow-sm rounded-4 p-4 h-100 et-announcement-detail-card">
+        <h5 class="fw-bold mb-2">{{ a.taller || a.titulo }}</h5>
+        <div class="d-flex gap-4 mb-3 pb-3 border-bottom flex-wrap">
+          <span class="small text-muted">Por: <strong class="text-dark">{{ a.enviado_por }}</strong></span>
+          <span class="small text-muted"><i class="bi bi-calendar3 me-1"></i>Publicado: {{ fecha(a.fecha) }}</span>
+        </div>
+        <!--  <h6 class="fw-bold text-dark mb-2">{{ a.titulo }}</h6>
+        <p class="text-dark mb-0 et-announcement-message">{{ a.mensaje }}</p> -->
+        <strong class="text-dark">
+          <p class="text-dark" style="line-height:1.9;white-space:pre-wrap">{{ a.titulo }}</p>
+        </strong>
+        <p class="text-dark" style="line-height:1.9;white-space:pre-wrap">{{ a.mensaje }}</p>
+      </div>
+      } @else {
+      <div class="d-flex align-items-center justify-content-center h-100 text-muted et-announcement-empty">
+        <div class="text-center"><i class="bi bi-megaphone fs-1 d-block mb-2 opacity-50"></i>
+          <p>Selecciona un anuncio para verlo</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>
