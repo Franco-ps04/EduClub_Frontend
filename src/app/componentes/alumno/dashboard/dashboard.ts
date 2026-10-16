@@ -6,11 +6,12 @@ import { AuthService } from '../../../services/auth.service';
 import { AlumnoService, DiplomaAlumno, InscripcionAlumno, ReconocimientoAlumno, SesionAlumno } from '../../../services/alumno.service';
 import { colorPorArea, colorPorRegla } from '../../../shared/colores';
 import { MaterialesAlumno } from '../materiales/materiales';
+import { DiplomasAlumno } from '../diplomas/diplomas';
 
 @Component({
   selector: 'app-dashboard-alumno',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MaterialesAlumno],
+  imports: [CommonModule, FormsModule, RouterLink, MaterialesAlumno, DiplomasAlumno],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -20,8 +21,10 @@ export class DashboardAlumno implements OnInit {
   diplomasCount = signal<number | null>(null);
   reconocimientos = signal<ReconocimientoAlumno[]>([]);
   reconocimientosCount = signal<number | null>(null);
+  loadingDiplomas = true;
+  diplomaError = '';
   loadingReconocimientos = false;
-  activeSection: 'inscripciones' | 'portafolio' | 'materiales' = 'inscripciones';
+  activeSection: 'inscripciones' | 'portafolio' | 'materiales' | 'diplomas' = 'inscripciones';
   loading = true;
   error = '';
   searchText = '';
@@ -88,8 +91,13 @@ export class DashboardAlumno implements OnInit {
         const lista = Array.isArray(data) ? data : [];
         this.diplomas.set(lista);
         this.diplomasCount.set(lista.length);
+        this.loadingDiplomas = false;
       },
-      error: () => this.diplomasCount.set(null)
+      error: err => {
+        this.diplomasCount.set(null);
+        this.diplomaError = err?.error?.message ?? 'No se pudieron cargar tus diplomas.';
+        this.loadingDiplomas = false;
+      }
     });
   }
 

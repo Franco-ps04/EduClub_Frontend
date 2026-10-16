@@ -1,0 +1,94 @@
+@if (talleres().length === 0) {
+<div class="diploma-empty">
+  <i class="bi bi-award"></i>
+  <h5 class="fw-bold mt-3">Aún no tienes talleres para mostrar</h5>
+  <p class="text-muted small mb-0">Tus diplomas y el progreso de asistencia aparecerán aquí.</p>
+</div>
+} @else {
+<div class="diploma-grid">
+  @for (taller of talleres(); track taller.id_inscripcion) {
+  <article *ngIf="estado(taller) === 'disponible'" class="diploma-card diploma-card-available">
+    <span class="diploma-state-badge diploma-state-available"><i
+        class="bi bi-patch-check-fill me-1"></i>Disponible</span>
+    <div class="diploma-medal"><i class="bi bi-award-fill"></i></div>
+    <h3 class="diploma-name">{{ diplomaDescargable(taller)?.nombre_nivel || 'Diploma de excelencia' }}</h3>
+    <p class="diploma-course">{{ taller.titulo }}</p>
+    <p class="diploma-awarded">se otorga a</p>
+    <p class="diploma-student">{{ nombreAlumno() }}</p>
+    <div class="diploma-progress-badges">
+      <span>{{ porcentaje(taller) }}% asistencia</span>
+      <span>{{ asistencias(taller) }}/{{ sesionesEsperadas(taller) }} sesiones</span>
+    </div>
+    <div class="diploma-actions">
+      <button class="diploma-preview-button" type="button" [disabled]="descargando().includes(taller.id_taller)"
+        (click)="vistaPrevia(taller)">
+        <i class="bi bi-eye me-1"></i>Vista previa
+      </button>
+      <button class="diploma-download" type="button" [disabled]="descargando().includes(taller.id_taller)"
+        (click)="descargar(taller)">
+        @if (descargando().includes(taller.id_taller)) {
+        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Generando PDF...
+        } @else {
+        <i class="bi bi-download me-1"></i>Descargar
+        }
+      </button>
+    </div>
+    @if (errorDescarga()[taller.id_taller]) {
+    <p class="small text-danger mt-2 mb-0" role="alert">{{ errorDescarga()[taller.id_taller] }}</p>
+    }
+  </article>
+  <article *ngIf="estado(taller) === 'sin-asistencia'" class="diploma-card diploma-card-blocked">
+    <span class="diploma-state-badge diploma-state-blocked">En progreso</span>
+    <div class="diploma-warning-icon"><i class="bi bi-hand-index-thumb-fill"></i></div>
+    <h3 class="diploma-reminder">No olvidar asistir a tus {{ esSeminario(taller) ? 'seminarios' : 'talleres' }}</h3>
+    <p class="diploma-course">{{ taller.titulo }}</p>
+    <p class="diploma-awarded">se otorga a</p>
+    <p class="diploma-student">{{ nombreAlumno() }}</p>
+    <div class="diploma-progress-badges">
+      <span>{{ porcentaje(taller) }}% asistencia</span>
+      <span>{{ asistencias(taller) }}/{{ sesionesEsperadas(taller) }} sesiones</span>
+    </div>
+    <button class="diploma-disabled" type="button" disabled>Sin disponibilidad</button>
+  </article>
+  <article *ngIf="estado(taller) === 'progreso'" class="diploma-card diploma-card-progress">
+    <span class="diploma-state-badge diploma-state-progress">
+      {{ estadoTallerFinalizado(taller) ? (esSeminario(taller) ? 'Seminario finalizado' : 'Taller finalizado') : 'En
+      progreso' }}
+    </span>
+    <div class="diploma-progress-icon"><i class="bi bi-award"></i></div>
+    <h3 class="diploma-name">Diploma de aprobación</h3>
+    <p class="diploma-course">{{ taller.titulo }}</p>
+    <p class="diploma-awarded">se otorga a</p>
+    <p class="diploma-student">{{ nombreAlumno() }}</p>
+    <div class="diploma-progress-badges">
+      <span>{{ porcentaje(taller) }}% asistencia</span>
+      <span>{{ asistencias(taller) }}/{{ sesionesEsperadas(taller) }} sesiones</span>
+    </div>
+    <button class="diploma-disabled" type="button" disabled>{{ etiquetaBoton(taller) }}</button>
+  </article>
+  }
+</div>
+}
+
+@if (previewUrl(); as url) {
+<div class="diploma-preview-backdrop" (click)="cerrarPreview()">
+  <section class="diploma-preview-dialog" role="dialog" aria-modal="true"
+    [attr.aria-label]="'Vista previa del diploma de ' + previewTitulo()" (click)="$event.stopPropagation()">
+    <header class="diploma-preview-header">
+      <div>
+        <h2 class="h5 fw-bold mb-1">Vista previa del diploma</h2>
+        <p class="small text-muted mb-0">{{ previewTitulo() }}</p>
+      </div>
+      <div class="diploma-preview-actions">
+        <button type="button" class="diploma-preview-download" (click)="descargarPreview()">
+          <i class="bi bi-download me-1"></i>Descargar diploma
+        </button>
+        <button type="button" class="diploma-preview-close" aria-label="Cerrar vista previa" (click)="cerrarPreview()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    </header>
+    <iframe class="diploma-preview-frame" [src]="url" title="Vista previa del diploma generado"></iframe>
+  </section>
+</div>
+}

@@ -84,6 +84,7 @@ export interface InscripcionAlumno {
   id_usuario_docente?: number;
   hora_fin?: string;
   dias_semana?: string[];
+  estado_taller_registrado?: string;
   sesiones_marcadas?: number;
   asistencias?: number;
   estado_taller: string;
@@ -250,6 +251,10 @@ export class AlumnoService {
 
   diplomas(): Observable<DiplomaAlumno[]> {
     return this.http.get<DiplomaAlumno[]>(`${this.base}/diplomas/mis`);
+  }
+
+  descargarDiploma(idTaller: number): Observable<Blob> {
+    return this.http.get(`${this.base}/diplomas/talleres/${idTaller}/pdf`, { responseType: 'blob' });
   }
 
   perfil(): Observable<any> {

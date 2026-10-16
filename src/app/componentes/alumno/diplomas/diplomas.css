@@ -1,0 +1,316 @@
+:host {
+    display: block;
+}
+
+.diploma-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+    gap: 1rem;
+}
+
+.diploma-card {
+    position: relative;
+    display: flex;
+    min-height: 390px;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.4rem 1.2rem 1.2rem;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.diploma-card-available {
+    border: 2px solid #e8b94d;
+    background: linear-gradient(150deg, #fff9fc, #fff4f7);
+}
+
+.diploma-card-progress {
+    border: 2px dashed #9bc9aa;
+    background: #f2faf4;
+}
+
+.diploma-card-blocked {
+    border: 1px solid #d1d5db;
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.diploma-state-badge {
+    align-self: flex-end;
+    padding: .35rem .7rem;
+    border-radius: 999px;
+    font-size: .73rem;
+    font-weight: 700;
+}
+
+.diploma-state-available {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.diploma-state-progress {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.diploma-state-blocked {
+    background: #e5e7eb;
+    color: #6b7280;
+}
+
+.diploma-medal,
+.diploma-progress-icon,
+.diploma-warning-icon {
+    display: grid;
+    width: 68px;
+    height: 68px;
+    place-items: center;
+    margin: .55rem 0 .7rem;
+    border-radius: 50%;
+    font-size: 2.25rem;
+}
+
+.diploma-medal {
+    border: 2px solid #eabf55;
+    background: #fff2c2;
+    color: #c58b13;
+}
+
+.diploma-progress-icon {
+    border: 1px solid #bbd9c4;
+    background: #e5f3e9;
+    color: #43845a;
+}
+
+.diploma-warning-icon {
+    border: 1px solid #d1d5db;
+    background: #e5e7eb;
+    color: #7b8490;
+}
+
+.diploma-name,
+.diploma-reminder {
+    margin: 0 0 .45rem;
+    color: #26352c;
+    font-size: 1.1rem;
+    font-weight: 750;
+}
+
+.diploma-reminder {
+    color: #6b7280;
+    font-size: 1rem;
+}
+
+.diploma-course {
+    margin: 0 0 .8rem;
+    color: #198754;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.diploma-card-blocked .diploma-course {
+    color: #626b75;
+}
+
+.diploma-awarded {
+    margin: auto 0 .1rem;
+    color: #64748b;
+    font-size: .8rem;
+}
+
+.diploma-student {
+    margin: 0 0 1rem;
+    color: #334155;
+    font-weight: 700;
+}
+
+.diploma-progress-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: .45rem;
+    margin: 0 0 1rem;
+}
+
+.diploma-progress-badges span {
+    padding: .4rem .65rem;
+    border-radius: 999px;
+    background: #dcfce7;
+    color: #166534;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.diploma-card-blocked .diploma-progress-badges span {
+    background: #e5e7eb;
+    color: #626b75;
+}
+
+.diploma-actions {
+    display: flex;
+    width: 100%;
+    gap: .55rem;
+    margin-top: auto;
+}
+
+.diploma-preview-button,
+.diploma-download,
+.diploma-disabled {
+    display: inline-flex;
+    min-height: 40px;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: .55rem 1rem;
+    border: 0;
+    border-radius: .65rem;
+    font-size: .85rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.diploma-preview-button {
+    border: 1px solid #198754;
+    background: #fff;
+    color: #198754;
+}
+
+.diploma-preview-button:hover:not(:disabled) {
+    background: #ecfdf3;
+}
+
+.diploma-preview-button:disabled {
+    opacity: .7;
+    cursor: wait;
+}
+
+.diploma-download {
+    background: #198754;
+    color: #fff;
+}
+
+.diploma-download:hover:not(:disabled) {
+    background: #146c43;
+    color: #fff;
+}
+
+.diploma-download:disabled {
+    opacity: .7;
+    cursor: wait;
+}
+
+.diploma-disabled {
+    width: 100%;
+    background: #e5e7eb;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+.diploma-empty {
+    padding: 2rem 1rem;
+    border: 1px dashed #cbd5e1;
+    border-radius: 1rem;
+    background: #fff;
+    color: #198754;
+    text-align: center;
+}
+
+.diploma-empty>i {
+    font-size: 2rem;
+}
+
+.diploma-preview-backdrop {
+    position: fixed;
+    z-index: 1060;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    background: #0f172a99;
+}
+
+.diploma-preview-dialog {
+    display: flex;
+    width: min(100%, 1100px);
+    height: min(90vh, 780px);
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 20px 60px #0f172a40;
+}
+
+.diploma-preview-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .85rem 1.1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.diploma-preview-actions {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+}
+
+.diploma-preview-download {
+    min-height: 38px;
+    padding: .5rem .85rem;
+    border: 0;
+    border-radius: .6rem;
+    background: #198754;
+    color: #fff;
+    font-size: .85rem;
+    font-weight: 700;
+}
+
+.diploma-preview-download:hover {
+    background: #146c43;
+}
+
+.diploma-preview-close {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    place-items: center;
+    border: 0;
+    border-radius: .6rem;
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.diploma-preview-close:hover {
+    background: #e2e8f0;
+}
+
+.diploma-preview-frame {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    border: 0;
+    background: #f1f5f9;
+}
+
+@media (max-width: 575.98px) {
+    .diploma-card {
+        min-height: 360px;
+    }
+
+    .diploma-preview-header {
+        align-items: flex-start;
+        padding: .75rem;
+    }
+
+    .diploma-preview-actions {
+        gap: .4rem;
+    }
+
+    .diploma-preview-download {
+        padding: .45rem .6rem;
+        font-size: .75rem;
+    }
+}
