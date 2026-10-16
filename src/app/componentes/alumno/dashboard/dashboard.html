@@ -54,9 +54,10 @@
     <button type="button" class="btn btn-sm rounded-pill btn-outline-secondary" disabled
       title="Disponible en una siguiente etapa"><i class="bi bi-award me-1"></i>Diploma <span
         class="et-coming-soon">Próximamente</span></button>
-    <button type="button" class="btn btn-sm rounded-pill btn-outline-secondary" disabled
-      title="Disponible en una siguiente etapa"><i class="bi bi-file-earmark-pdf me-1"></i>Materiales <span
-        class="et-coming-soon">Próximamente</span></button>
+    <button type="button" class="btn btn-sm rounded-pill" [class.btn-success]="activeSection === 'materiales'"
+      [class.btn-outline-secondary]="activeSection !== 'materiales'" (click)="activeSection='materiales'">
+      <i class="bi bi-file-earmark-pdf me-1"></i>Materiales
+    </button>
   </div>
 
   @if (error) { <div class="alert alert-warning">{{ error }}</div> }
@@ -333,6 +334,10 @@
     }
   </div>
   }
+  }
+
+  @if (activeSection === 'materiales') {
+  <app-materiales-alumno></app-materiales-alumno>
   }
 </div>
 

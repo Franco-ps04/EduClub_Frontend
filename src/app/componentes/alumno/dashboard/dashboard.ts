@@ -5,11 +5,12 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { AlumnoService, DiplomaAlumno, InscripcionAlumno, ReconocimientoAlumno, SesionAlumno } from '../../../services/alumno.service';
 import { colorPorArea, colorPorRegla } from '../../../shared/colores';
+import { MaterialesAlumno } from '../materiales/materiales';
 
 @Component({
   selector: 'app-dashboard-alumno',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, MaterialesAlumno],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -20,7 +21,7 @@ export class DashboardAlumno implements OnInit {
   reconocimientos = signal<ReconocimientoAlumno[]>([]);
   reconocimientosCount = signal<number | null>(null);
   loadingReconocimientos = false;
-  activeSection: 'inscripciones' | 'portafolio' = 'inscripciones';
+  activeSection: 'inscripciones' | 'portafolio' | 'materiales' = 'inscripciones';
   loading = true;
   error = '';
   searchText = '';

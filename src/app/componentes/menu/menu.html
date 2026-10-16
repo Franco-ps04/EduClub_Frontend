@@ -1,15 +1,15 @@
 <header class="bg-white border-bottom shadow-sm fixed-top et-student-header">
-  <nav class="navbar navbar-expand-lg container py-2 position-relative">
+  <nav class="navbar navbar-expand-xl container py-2 position-relative">
     <a routerLink="/inicio" class="d-flex align-items-center text-decoration-none gap-2" (click)="closeMenu()">
       <span class="gu-logo-icon"><i class="bi bi-mortarboard-fill text-white"></i></span>
       <span class="fw-bold fs-4 text-dark">Edu<span class="text-success">Taller</span></span>
     </a>
-    <button class="navbar-toggler border-0 shadow-none d-lg-none" type="button" aria-label="Abrir menú"
+    <button class="navbar-toggler border-0 shadow-none d-xl-none" type="button" aria-label="Abrir menú"
       (click)="toggleMenu()">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div
-      class="d-none d-lg-flex position-absolute start-50 translate-middle-x align-items-center gap-1 et-public-nav-links">
+      class="d-none d-xl-flex position-absolute start-50 translate-middle-x align-items-center gap-1 et-public-nav-links">
       <a routerLink="/inicio" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}"
         class="px-3 py-2 rounded-3 fw-medium text-decoration-none text-dark">Inicio</a>
       <a routerLink="/eventos" routerLinkActive="active-link"
@@ -28,7 +28,7 @@
       <a routerLink="/contacto" routerLinkActive="active-link"
         class="px-3 py-2 rounded-3 fw-medium text-decoration-none text-dark">Contacto</a>
     </div>
-    <div class="ms-lg-auto d-none d-lg-flex align-items-center gap-2">
+    <div class="ms-xl-auto d-none d-xl-flex align-items-center gap-2">
       @if (!user) {
       <a routerLink="/ingresar" class="btn btn-light border shadow-sm d-flex align-items-center gap-2 px-3"><i
           class="bi bi-box-arrow-in-right"></i>Ingresar</a>
@@ -56,7 +56,7 @@
     </div>
   </nav>
   @if (mobileOpen) {
-  <div class="d-lg-none bg-white border-top px-3 py-3">
+  <div class="d-xl-none bg-white border-top px-3 py-3">
     <div class="d-flex flex-column gap-2">
       <a routerLink="/inicio" (click)="closeMenu()" routerLinkActive="active-link"
         [routerLinkActiveOptions]="{exact:true}" class="px-3 py-2 rounded-3 text-dark fw-medium">Inicio</a>

@@ -42,6 +42,26 @@ export interface SesionAlumno {
   asistio?: boolean | null;
 }
 
+export interface RecursoSesionAlumno {
+  id_recurso: number;
+  id_sesion: number;
+  tipo: string;
+  titulo: string;
+  descripcion?: string | null;
+  archivo_url: string | null;
+  archivo_descarga_url?: string | null;
+  enlace_url: string | null;
+  fecha_subida: string;
+}
+
+export interface SesionRecursosAlumno {
+  id_sesion: number;
+  numero_sesion: number;
+  fecha: string;
+  titulo?: string | null;
+  recursos: RecursoSesionAlumno[];
+}
+
 export interface InscripcionAlumno {
   id_inscripcion: number;
   estado_inscripcion: string;
@@ -177,6 +197,10 @@ export class AlumnoService {
 
   sesiones(id: number): Observable<SesionAlumno[]> {
     return this.http.get<SesionAlumno[]>(`${this.base}/talleres/${id}/sesiones`);
+  }
+
+  recursosTaller(idTaller: number): Observable<SesionRecursosAlumno[]> {
+    return this.http.get<SesionRecursosAlumno[]>(`${this.base}/talleres/${idTaller}/recursos`);
   }
 
   misInscripciones(): Observable<InscripcionAlumno[]> {

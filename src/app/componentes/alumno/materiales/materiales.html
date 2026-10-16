@@ -1,0 +1,134 @@
+<main class="container py-4 materials-page">
+  <header class="materials-heading d-flex justify-content-between align-items-start gap-3 flex-wrap mb-4">
+    <div>
+      <h1 class="h2 fw-bold mb-1">Materiales por taller</h1>
+      <p class="text-muted mb-0">Selecciona un taller para ver sus recursos.</p>
+    </div>
+    <span class="materials-visibility"><i class="bi bi-shield-lock-fill"></i>Solo visible para talleres inscritos</span>
+  </header>
+
+  @if (error) {
+  <div class="alert alert-warning" role="alert">{{ error }}</div>
+  }
+
+  @if (loading) {
+  <div class="materials-state">
+    <span class="spinner-border spinner-border-sm text-success" aria-hidden="true"></span>
+    <span>Cargando tus talleres...</span>
+  </div>
+  } @else if (talleres().length === 0) {
+  <section class="text-center py-5 bg-white border rounded-4">
+    <i class="bi bi-journal-x text-success fs-1 d-block"></i>
+    <h2 class="h5 fw-bold mt-3">Aún no tienes talleres inscritos</h2>
+    <p class="text-muted mb-0">Cuando te inscribas, los materiales de cada taller aparecerán aquí.</p>
+  </section>
+  } @else {
+  <section class="materials-grid" aria-label="Talleres inscritos">
+    @for (taller of talleres(); track taller.inscripcion.id_taller) {
+    <article class="material-workshop-card"
+      [class.material-workshop-selected]="seleccionado() === taller.inscripcion.id_taller">
+      <button type="button" class="material-workshop-button"
+        [class.has-workshop-image]="!!imagen(taller)"
+        [attr.aria-expanded]="seleccionado() === taller.inscripcion.id_taller"
+        [attr.aria-controls]="'materials-panel-' + taller.inscripcion.id_taller"
+        (click)="toggleTaller(taller.inscripcion.id_taller)">
+        @if (imagen(taller); as imagenTaller) {
+        <img class="material-workshop-image"
+          [src]="imagenTaller"
+          [alt]="'Imagen del taller ' + taller.inscripcion.titulo">
+        }
+        <span class="material-workshop-status" [ngClass]="estadoClass(taller.inscripcion.estado_taller)">
+          {{ estadoLabel(taller.inscripcion.estado_taller) }}
+        </span>
+        <span class="material-workshop-content">
+          <span class="material-workshop-area">{{ area(taller) }}</span>
+          <span class="material-workshop-title">{{ taller.inscripcion.titulo }}</span>
+          <span class="material-workshop-teacher"><i class="bi bi-person"></i>{{ docente(taller) }}</span>
+          <span class="material-workshop-count">
+            @if (taller.cargandoRecursos) {
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Cargando recursos
+            } @else if (taller.errorRecursos) {
+            Recursos no disponibles
+            } @else {
+            {{ cantidadRecursos(taller) }} {{ cantidadRecursos(taller) === 1 ? 'recurso' : 'recursos' }}
+            }
+            <i class="bi" [class.bi-chevron-down]="seleccionado() !== taller.inscripcion.id_taller"
+              [class.bi-chevron-up]="seleccionado() === taller.inscripcion.id_taller"></i>
+          </span>
+        </span>
+      </button>
+
+      @if (seleccionado() === taller.inscripcion.id_taller) {
+      <section class="materials-panel" [id]="'materials-panel-' + taller.inscripcion.id_taller"
+        [attr.aria-label]="'Materiales de ' + taller.inscripcion.titulo">
+        <div class="materials-panel-heading">
+          <div>
+            <h2 class="h5 fw-bold mb-1">{{ area(taller) }}</h2>
+            <p class="text-muted small mb-0">
+              {{ cantidadRecursos(taller) }} {{ cantidadRecursos(taller) === 1 ? 'recurso disponible' : 'recursos disponibles' }}
+            </p>
+          </div>
+          <span class="badge bg-light text-secondary">
+            {{ key(taller.inscripcion.tipo_evento) === 'seminario' ? 'Seminario · 1 sesión' : 'Taller · hasta 6 sesiones' }}
+          </span>
+        </div>
+
+        @if (taller.cargandoRecursos) {
+        <div class="materials-state py-4">
+          <span class="spinner-border spinner-border-sm text-success" aria-hidden="true"></span>
+          <span>Cargando materiales...</span>
+        </div>
+        } @else if (taller.errorRecursos) {
+        <div class="materials-inline-error" role="alert">
+          <i class="bi bi-exclamation-circle"></i>{{ taller.errorRecursos }}
+        </div>
+        } @else {
+        <div class="materials-list">
+          @for (sesion of taller.sesiones; track sesion.id_sesion) {
+          <section class="materials-session">
+            <header class="materials-session-heading">
+              <h3 class="h6 fw-bold mb-0">
+                Sesión {{ sesion.numero_sesion }}{{ sesion.titulo ? ': ' + sesion.titulo : '' }}
+              </h3>
+              <span class="small text-muted">{{ fecha(sesion.fecha) }}</span>
+            </header>
+            @if (sesion.recursos.length === 0) {
+            <p class="materials-session-empty small text-muted mb-0">Sin materiales publicados para esta sesión.</p>
+            } @else {
+            <div class="materials-session-resources">
+              @for (recurso of sesion.recursos; track recurso.id_recurso) {
+              <article class="material-resource-card">
+                <span class="material-resource-icon" [class.material-resource-image]="key(recurso.tipo) === 'imagen'"
+                  [class.material-resource-link]="!!recurso.enlace_url">
+                  <i [class]="tipoIcono(recurso)" aria-hidden="true"></i>
+                </span>
+                <div class="material-resource-info">
+                  <h4 class="h6 fw-semibold mb-1 text-break">{{ recurso.titulo }}</h4>
+                  <p class="small text-muted mb-0">{{ detalle(recurso, sesion) }}</p>
+                  @if (recurso.descripcion) {
+                  <p class="small text-muted mt-1 mb-0">{{ recurso.descripcion }}</p>
+                  }
+                </div>
+                @if (recursoUrl(recurso); as url) {
+                <a class="material-action" [href]="url" target="_blank" rel="noopener noreferrer">
+                  <i [class]="recurso.enlace_url ? 'bi bi-box-arrow-up-right' : 'bi bi-download'"></i>
+                  <span>📥 Descargar / Abrir</span>
+                </a>
+                } @else {
+                <span class="small text-secondary">Archivo no disponible</span>
+                }
+              </article>
+              }
+            </div>
+            }
+          </section>
+          }
+        </div>
+        }
+      </section>
+      }
+    </article>
+    }
+  </section>
+  }
+</main>
