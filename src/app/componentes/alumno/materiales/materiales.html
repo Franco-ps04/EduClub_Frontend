@@ -103,17 +103,17 @@
                   <i [class]="tipoIcono(recurso)" aria-hidden="true"></i>
                 </span>
                 <div class="material-resource-info">
-                  <h4 class="h6 fw-semibold mb-1 text-break">{{ recurso.titulo }}</h4>
-                  <p class="small text-muted mb-0">{{ detalle(recurso, sesion) }}</p>
+                  <h4 class="material-resource-title fw-semibold mb-1 text-break">{{ recurso.titulo }}</h4>
+                  <p class="material-resource-subtitle text-muted mb-0">{{ detalle(recurso, sesion) }}</p>
                   @if (recurso.descripcion) {
-                  <p class="small text-muted mt-1 mb-0">{{ recurso.descripcion }}</p>
+                  <p class="material-resource-description text-muted mt-1 mb-0">{{ recurso.descripcion }}</p>
                   }
                 </div>
-                @if (recursoUrl(recurso); as url) {
-                <a class="material-action" [href]="url" target="_blank" rel="noopener noreferrer">
-                  <i [class]="recurso.enlace_url ? 'bi bi-box-arrow-up-right' : 'bi bi-download'"></i>
-                  <span>📥 Descargar / Abrir</span>
-                </a>
+                @if (recursoUrl(recurso) || recurso.enlace_url) {
+                <button type="button" class="material-action" (click)="abrirPreview(recurso)">
+                  <i class="bi bi-eye"></i>
+                  <span>Vista previa</span>
+                </button>
                 } @else {
                 <span class="small text-secondary">Archivo no disponible</span>
                 }
@@ -132,3 +132,59 @@
   </section>
   }
 </main>
+
+@if (recursoPreview) {
+<div class="material-preview-backdrop" (click)="cerrarPreview()">
+  <section class="material-preview-dialog" role="dialog" aria-modal="true"
+    [attr.aria-label]="'Vista previa: ' + recursoPreview.titulo" (click)="$event.stopPropagation()">
+    <header class="material-preview-heading">
+      <h2 class="h5 fw-bold mb-0">{{ recursoPreview.titulo }}</h2>
+      <button type="button" class="btn-close" aria-label="Cerrar vista previa" (click)="cerrarPreview()"></button>
+    </header>
+
+    <div class="material-preview-body">
+      @if (recursoPreview.archivo_url && key(recursoPreview.tipo) === 'pdf') {
+      <iframe [src]="previewUrlSegura" title="Vista previa del PDF" class="material-preview-frame"></iframe>
+      } @else if (recursoPreview.archivo_url && key(recursoPreview.tipo) === 'imagen') {
+      <img [src]="recursoPreview.archivo_url" [alt]="recursoPreview.titulo" class="material-preview-image">
+      } @else if (recursoPreview.archivo_url) {
+      <div class="material-preview-unavailable">
+        <i class="bi bi-file-earmark-word text-primary"></i>
+        <p class="mb-0">La vista previa de este tipo de archivo no está disponible.</p>
+        <p class="small text-muted mb-0">Puedes descargarlo para abrirlo.</p>
+      </div>
+      } @else if (recursoPreview.enlace_url) {
+      <div class="material-preview-unavailable">
+        <i class="bi bi-link-45deg text-success"></i>
+        <p class="mb-0">Este material es un enlace externo.</p>
+      </div>
+      } @else {
+      <div class="material-preview-unavailable">
+        <i class="bi bi-file-earmark text-primary"></i>
+        <p class="mb-0">No hay una vista previa disponible para este archivo.</p>
+        <p class="small text-muted mb-0">Puedes descargarlo para abrirlo.</p>
+      </div>
+      }
+
+      @if (recursoPreview.enlace_url) {
+      <div class="material-preview-link">
+        <span class="small fw-semibold">Enlace del material</span>
+        <a [href]="recursoPreview.enlace_url" target="_blank" rel="noopener noreferrer">
+          {{ recursoPreview.enlace_url }}
+          <i class="bi bi-box-arrow-up-right ms-1" aria-hidden="true"></i>
+        </a>
+      </div>
+      }
+    </div>
+
+    @if (recursoUrl(recursoPreview)) {
+    <footer class="material-preview-footer">
+      <a class="material-action" [href]="recursoUrl(recursoPreview)" target="_blank" rel="noopener noreferrer">
+        <i class="bi bi-download"></i>
+        <span>Descargar archivo</span>
+      </a>
+    </footer>
+    }
+  </section>
+</div>
+}

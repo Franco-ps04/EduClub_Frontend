@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { AlumnoService, InscripcionAlumno, RecursoSesionAlumno, SesionRecursosAlumno } from '../../../services/alumno.service';
 
 interface TallerMateriales {
@@ -21,8 +22,12 @@ export class MaterialesAlumno implements OnInit {
   seleccionado = signal<number | null>(null);
   loading = true;
   error = '';
+  recursoPreview: RecursoSesionAlumno | null = null;
 
-  constructor(private alumno: AlumnoService) { }
+  constructor(
+    private alumno: AlumnoService,
+    private sanitizer: DomSanitizer,
+  ) { }
 
   ngOnInit(): void {
     this.alumno.misInscripciones().subscribe({
@@ -93,6 +98,21 @@ export class MaterialesAlumno implements OnInit {
     this.seleccionado.update(actual => actual === idTaller ? null : idTaller);
   }
 
+  abrirPreview(recurso: RecursoSesionAlumno): void {
+    this.recursoPreview = recurso;
+  }
+
+  cerrarPreview(): void {
+    this.recursoPreview = null;
+  }
+
+  get previewUrlSegura(): SafeResourceUrl | null {
+    if (!this.recursoPreview?.archivo_url || this.key(this.recursoPreview.tipo) !== 'pdf') {
+      return null;
+    }
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.recursoPreview.archivo_url);
+  }
+
   cantidadRecursos(taller: TallerMateriales): number {
     return taller.sesiones.reduce((total, sesion) => total + sesion.recursos.length, 0);
   }
@@ -140,7 +160,6 @@ export class MaterialesAlumno implements OnInit {
   }
 
   recursoUrl(recurso: RecursoSesionAlumno): string | null {
-    if (recurso.enlace_url) return recurso.enlace_url;
     return recurso.archivo_descarga_url || recurso.archivo_url || null;
   }
 
