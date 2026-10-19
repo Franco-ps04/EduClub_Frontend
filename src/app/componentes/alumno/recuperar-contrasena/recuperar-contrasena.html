@@ -5,7 +5,13 @@
                 <i class="bi bi-shield-lock-fill fs-3"></i>
             </div>
             <h4 class="fw-bold mb-1">Recuperar contraseña</h4>
-            <p class="text-muted small mb-0">Confirma tu correo y teléfono para crear una nueva contraseña.</p>
+            <p class="text-muted small mb-0">
+                @switch (paso) {
+                    @case (1) { Ingresa tu correo y te enviaremos un código de verificación. }
+                    @case (2) { Ingresa el código de 6 dígitos que enviamos a tu correo. }
+                    @case (3) { Crea tu nueva contraseña. }
+                }
+            </p>
         </div>
 
         @if (success) {
@@ -13,16 +19,20 @@
             <i class="bi bi-check-circle me-2"></i>Contraseña actualizada correctamente. Redirigiendo al ingreso...
         </div>
         }
-
+        @if (infoMessage && !errorMessage) {
+        <div class="alert alert-info py-2 small">{{ infoMessage }}</div>
+        }
         @if (errorMessage) {
         <div class="alert alert-danger py-2 small">{{ errorMessage }}</div>
         }
 
-        <form class="row g-3" (ngSubmit)="submit()" novalidate>
+        <!-- PASO 1: correo -->
+        @if (paso === 1) {
+        <form class="row g-3" (ngSubmit)="enviarCodigo()" novalidate>
             <div class="col-12">
                 <label class="form-label small fw-semibold">Correo electrónico</label>
                 <input class="form-control" name="email" [(ngModel)]="form.email" placeholder="tu@gmail.com"
-                    [class.is-invalid]="submitted && (!form.email.trim() || !isEmailValid(form.email))">
+                    [class.is-invalid]="submitted && !isEmailValid(form.email)">
                 @if (submitted && !form.email.trim()) {
                 <div class="invalid-feedback d-block">El correo es obligatorio.</div>
                 }
@@ -30,24 +40,50 @@
                 <div class="invalid-feedback d-block">Ingresa un correo válido.</div>
                 }
             </div>
-
-            <div class="col-12">
-                <label class="form-label small fw-semibold">Número telefónico</label>
-                <input class="form-control" name="telefono" [(ngModel)]="form.telefono" placeholder="987654321"
-                    maxlength="9" inputmode="numeric"
-                    [class.is-invalid]="submitted && (!form.telefono.trim() || !isPhoneValid(form.telefono))">
-                @if (submitted && !form.telefono.trim()) {
-                <div class="invalid-feedback d-block">El teléfono es obligatorio.</div>
-                }
-                @if (submitted && form.telefono.trim() && !isPhoneValid(form.telefono)) {
-                <div class="invalid-feedback d-block">El teléfono debe tener 9 dígitos.</div>
-                }
+            <div class="col-12 d-flex gap-2 justify-content-end">
+                <a routerLink="/ingresar" class="btn btn-outline-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-success px-4" [disabled]="sending">
+                    @if (sending) {
+                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Enviando...
+                    } @else { Enviar código }
+                </button>
             </div>
+        </form>
+        }
 
+        <!-- PASO 2: código -->
+        @if (paso === 2) {
+        <form class="row g-3" (ngSubmit)="verificarCodigo()" novalidate>
+            <div class="col-12">
+                <label class="form-label small fw-semibold">Código de verificación</label>
+                <input class="form-control text-center fs-4" name="codigo" [(ngModel)]="form.codigo"
+                    placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="one-time-code"
+                    [class.is-invalid]="submitted && !isCodeValid(form.codigo)">
+                @if (submitted && !isCodeValid(form.codigo)) {
+                <div class="invalid-feedback d-block">El código debe tener 6 dígitos.</div>
+                }
+                <div class="form-text">Revisa también la carpeta de spam. El código vence en 10 minutos.</div>
+            </div>
+            <div class="col-12 d-flex gap-2 justify-content-between">
+                <button type="button" class="btn btn-link text-secondary px-0" (click)="volverAlCorreo()">
+                    Cambiar correo / reenviar
+                </button>
+                <button type="submit" class="btn btn-success px-4" [disabled]="sending">
+                    @if (sending) {
+                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Verificando...
+                    } @else { Verificar código }
+                </button>
+            </div>
+        </form>
+        }
+
+        <!-- PASO 3: nueva contraseña -->
+        @if (paso === 3) {
+        <form class="row g-3" (ngSubmit)="cambiarContrasena()" novalidate>
             <div class="col-md-6">
                 <label class="form-label small fw-semibold">Nueva contraseña</label>
                 <input type="password" class="form-control" name="password" [(ngModel)]="form.password"
-                    [class.is-invalid]="submitted && (!form.password || !isPasswordStrong(form.password))">
+                    [class.is-invalid]="submitted && !isPasswordStrong(form.password)">
                 @if (submitted && !form.password) {
                 <div class="invalid-feedback d-block">La contraseña es obligatoria.</div>
                 }
@@ -55,7 +91,6 @@
                 <div class="invalid-feedback d-block">Debe tener 8 caracteres, una letra y un número.</div>
                 }
             </div>
-
             <div class="col-md-6">
                 <label class="form-label small fw-semibold">Confirmar contraseña</label>
                 <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="form.confirmPassword"
@@ -64,18 +99,15 @@
                 <div class="invalid-feedback d-block">Las contraseñas no coinciden.</div>
                 }
             </div>
-
             <div class="col-12 d-flex gap-2 justify-content-end">
                 <a routerLink="/ingresar" class="btn btn-outline-secondary">Cancelar</a>
-                <button type="submit" class="btn btn-success px-4" [disabled]="sending">
+                <button type="submit" class="btn btn-success px-4" [disabled]="sending || success">
                     @if (sending) {
-                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-                    Guardando...
-                    } @else {
-                    Actualizar contraseña
-                    }
+                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Guardando...
+                    } @else { Actualizar contraseña }
                 </button>
             </div>
         </form>
+        }
     </div>
 </div>
