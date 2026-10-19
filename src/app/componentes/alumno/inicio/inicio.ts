@@ -20,7 +20,7 @@ export class InicioAlumno implements OnInit {
   readonly stats = [
     { label: 'Estudiantes activos', value: '320+', icon: 'bi-people-fill', tone: 'green' },
     { label: 'Talleres realizados', value: '28+', icon: 'bi-calendar2-check-fill', tone: 'blue' },
-    { label: 'Tutores capacitados', value: '15,000+', icon: 'bi-award-fill', tone: 'yellow' }
+    { label: 'Tutores capacitados', value: '30+', icon: 'bi-award-fill', tone: 'yellow' }
   ];
 
   constructor(public auth: AuthService, private alumno: AlumnoService) { }
