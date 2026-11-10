@@ -381,7 +381,8 @@
       <div class="row g-2 mb-1 mt-1">
         <div class="col-6">
           <label class="form-label small fw-medium">Fecha <span class="text-danger">*</span></label>
-          <input type="date" class="form-control form-control-sm" [(ngModel)]="form.fecha" [attr.min]="fechaMinima"
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="form.fecha"
+            (ngModelChange)="onFechaChange($event)" [attr.min]="fechaMinima"
             [class.is-invalid]="submitted && errores['fecha']">
           @if (submitted && errores['fecha']) { <div class="invalid-feedback d-block">{{ errores['fecha'] }}</div> }
         </div>
@@ -402,7 +403,7 @@
             Tipo de evento <span class="text-danger">*</span>
             <i class="bi bi-info-circle text-muted" title="Seminario es solo 1 sesión"></i>
           </label>
-          <select class="form-select form-select-sm" [(ngModel)]="form.idTipo"
+          <select class="form-select form-select-sm" [(ngModel)]="form.idTipo" (ngModelChange)="onTipoEventoChange()"
             [class.is-invalid]="submitted && errores['idTipo']">
             <option [ngValue]="null">seleccionar</option>
             @for (te of tiposEvento; track te.id_tipo) { <option [ngValue]="te.id_tipo">{{ te.nombre }}</option> }
@@ -421,13 +422,16 @@
       @if (!esSeminario) {
       <label class="form-label small fw-medium mt-1">
         Día <span class="text-danger">*</span>
-        <span class="text-muted fw-normal">(puedes seleccionar 1 hasta 3 máx.)</span>
+        <span class="text-muted fw-normal">(el día de la fecha inicial se marca automáticamente; puedes agregar hasta
+          otros 2)</span>
       </label>
       <div class="d-flex flex-wrap column-gap-3 row-gap-1 mb-1">
         @for (d of diasSemana; track d) {
         <div class="form-check">
           <input class="form-check-input" type="checkbox" [id]="'dia-' + d" [checked]="form.dias.includes(d)"
-            [disabled]="!form.dias.includes(d) && form.dias.length >= 3" (change)="toggleDia(d)">
+            [disabled]="d === diaFechaInicio || (!form.dias.includes(d) && form.dias.length >= 3)"
+            [attr.title]="d === diaFechaInicio ? 'Corresponde a la fecha inicial y no se puede desmarcar' : null"
+            (change)="toggleDia(d)">
           <label class="form-check-label small" [for]="'dia-' + d">{{ d }}</label>
         </div>
         }

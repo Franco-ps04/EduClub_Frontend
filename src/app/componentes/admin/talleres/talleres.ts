@@ -84,6 +84,10 @@ export class Talleres implements OnInit {
   tallerObservado: Taller | null = null;
 
   readonly diasSemana = DIAS_SEMANA;
+  /** Día de la semana que corresponde a la fecha inicial; queda marcado y bloqueado. */
+  diaFechaInicio: string | null = null;
+  /** Días adicionales elegidos manualmente (además del día de inicio). */
+  private diasAdicionales: string[] = [];
   readonly horaMin = HORA_MIN;
   readonly horaMax = HORA_MAX;
   readonly capacidadMax = CAPACIDAD_MAX;
@@ -365,6 +369,8 @@ export class Talleres implements OnInit {
 
   abrirNuevoTaller(): void {
     this.form = formVacio();
+    this.diaFechaInicio = null;
+    this.diasAdicionales = [];
     this.submitted = false;
     this.errorGeneral = '';
 
@@ -377,6 +383,13 @@ export class Talleres implements OnInit {
   }
 
   abrirEditarTaller(t: Taller): void {
+    const diaBase = this.diaSemanaDesdeFecha(t.fecha);
+    const diasGuardados = (t.dias_semana ?? []).slice();
+    this.diaFechaInicio = this.esTipoSeminario(t.id_tipo) ? null : diaBase;
+    this.diasAdicionales = this.diaFechaInicio
+      ? diasGuardados.filter(d => d !== this.diaFechaInicio)
+      : [];
+
     this.form = {
       id_taller: t.id_taller,
       nombre: t.nombre,
@@ -392,7 +405,9 @@ export class Talleres implements OnInit {
       longitud: t.longitud,
       institucion: this.auth.isDocente() ? (this.auth.currentUser?.institucion ?? t.institucion) : t.institucion,
       requisitos: (t.requisitos ?? []).join('\n'),
-      dias: (t.dias_semana ?? []).slice(),
+      dias: this.esTipoSeminario(t.id_tipo)
+        ? []
+        : [...new Set([...(this.diaFechaInicio ? [this.diaFechaInicio] : []), ...this.diasAdicionales])],
       imagen: null,
       imagenPreview: t.imagen_url
     };
@@ -437,13 +452,67 @@ export class Talleres implements OnInit {
     return this.tipoEventoSeleccionadoNombre.toLowerCase().startsWith('semin');
   }
 
-  toggleDia(dia: string): void {
-    const idx = this.form.dias.indexOf(dia);
-    if (idx >= 0) {
-      this.form.dias.splice(idx, 1);
-    } else if (this.form.dias.length < 3) {
-      this.form.dias.push(dia);
+  private esTipoSeminario(idTipo: number | null): boolean {
+    return (this.tiposEvento.find(t => t.id_tipo === idTipo)?.nombre ?? '')
+      .toLowerCase().startsWith('semin');
+  }
+
+  /** Convierte YYYY-MM-DD al día local usando componentes UTC para evitar desfases horarios. */
+  private diaSemanaDesdeFecha(fecha: string): string | null {
+    if (!fecha) return null;
+    const [anio, mes, dia] = fecha.slice(0, 10).split('-').map(Number);
+    if (!anio || !mes || !dia) return null;
+    const dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    return dias[new Date(Date.UTC(anio, mes - 1, dia)).getUTCDay()] ?? null;
+  }
+
+  /** Al cambiar la fecha, el día que le corresponde queda seleccionado y bloqueado. */
+  onFechaChange(fecha: string): void {
+    if (this.esSeminario) {
+      this.diaFechaInicio = null;
+      this.diasAdicionales = [];
+      this.form.dias = [];
+      return;
     }
+
+    const nuevoDiaBase = this.diaSemanaDesdeFecha(fecha);
+    this.diaFechaInicio = nuevoDiaBase;
+    if (nuevoDiaBase) {
+      // Si el nuevo día ya estaba seleccionado manualmente, pasa a ser el día fijo.
+      this.diasAdicionales = this.diasAdicionales.filter(d => d !== nuevoDiaBase);
+    }
+    this.sincronizarDias();
+  }
+
+  /** El formato controla si el día de inicio debe fijarse o no. */
+  onTipoEventoChange(): void {
+    if (this.esSeminario) {
+      this.diaFechaInicio = null;
+      this.diasAdicionales = [];
+      this.form.dias = [];
+      return;
+    }
+    this.onFechaChange(this.form.fecha);
+  }
+
+  private sincronizarDias(): void {
+    this.form.dias = [...new Set([
+      ...(this.diaFechaInicio ? [this.diaFechaInicio] : []),
+      ...this.diasAdicionales
+    ])];
+  }
+
+  toggleDia(dia: string): void {
+    // El día que corresponde a la fecha inicial no se puede desmarcar.
+    if (dia === this.diaFechaInicio) return;
+
+    const idx = this.diasAdicionales.indexOf(dia);
+    if (idx >= 0) {
+      this.diasAdicionales.splice(idx, 1);
+    } else if (this.form.dias.length < 3) {
+      this.diasAdicionales.push(dia);
+    }
+    this.sincronizarDias();
   }
 
   guardarTaller(): void {
