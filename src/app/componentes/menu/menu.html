@@ -46,6 +46,8 @@
         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-1" style="border-radius:12px;min-width:190px">
           @if (isStaff()) { <li><a routerLink="/admin/talleres" class="dropdown-item py-2"><i
                 class="bi bi-speedometer2 me-2"></i>Panel de administración</a></li> }
+          @if (isAlumno()) { <li><button type="button" class="dropdown-item py-2" (click)="abrirPerfil()"><i
+                class="bi bi-person-circle me-2"></i>Perfil</button></li> }
           @if (isAlumno()) { <li><a routerLink="/alumno/dashboard" class="dropdown-item py-2"><i
                 class="bi bi-grid me-2"></i>Mis eventos</a></li> }
           <li><button class="dropdown-item d-flex align-items-center gap-2 py-2 text-danger" (click)="logout()"><i
@@ -81,6 +83,11 @@
       } @else {
       @if (isStaff()) { <a routerLink="/admin/talleres" (click)="closeMenu()" class="btn btn-outline-success">Panel de
         administración</a> }
+      @if (isAlumno()) {
+      <button type="button" class="btn btn-light border d-flex align-items-center gap-2" (click)="abrirPerfil()">
+        <i class="bi bi-person-circle"></i>Perfil
+      </button>
+      }
       <button class="btn d-flex align-items-center justify-content-center gap-2 fw-medium"
         style="background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;border-radius:10px" (click)="logout()"><i
           class="bi bi-box-arrow-right"></i>Cerrar sesión</button>
@@ -89,3 +96,83 @@
   </div>
   }
 </header>
+
+@if (perfilAbierto && isAlumno()) {
+<div class="et-profile-backdrop" (click)="cerrarPerfil()">
+  <section class="et-profile-dialog" role="dialog" aria-modal="true" aria-labelledby="student-profile-title"
+    (click)="$event.stopPropagation()">
+    <header class="et-profile-heading">
+      <div class="et-profile-avatar"><i class="bi bi-person-fill"></i></div>
+      <div class="min-w-0">
+        <h2 id="student-profile-title" class="h5 fw-bold mb-1">Mi perfil</h2>
+        <p class="small text-muted mb-0">Consulta y actualiza tus datos.</p>
+      </div>
+      <button type="button" class="btn-close ms-auto" aria-label="Cerrar perfil" (click)="cerrarPerfil()"></button>
+    </header>
+
+    <div class="et-profile-content">
+      @if (perfilCargando) {
+      <div class="text-center text-muted py-4">
+        <span class="spinner-border spinner-border-sm text-success me-2" aria-hidden="true"></span>
+        Cargando perfil...
+      </div>
+      } @else {
+      @if (perfilError) {
+      <div class="alert alert-danger small py-2" role="alert">{{ perfilError }}</div>
+      }
+
+      <section class="et-profile-section">
+        <h3 class="h6 fw-bold mb-3">Datos personales</h3>
+        <div class="et-profile-readonly">
+          <div><span>Correo electrónico</span><strong>{{ perfil?.email || user?.email }}</strong></div>
+          <div><span>Tipo de cuenta</span><strong>{{ getRolLabel() }}</strong></div>
+          @if (perfil?.institucion) {
+          <div><span>Institución</span><strong>{{ perfil?.institucion }}</strong></div>
+          }
+        </div>
+        <form (ngSubmit)="guardarPerfil()" #perfilNgForm="ngForm" novalidate>
+          <label for="profile-name" class="form-label small fw-semibold">Nombre completo</label>
+          <input id="profile-name" name="nombres" class="form-control mb-3" [(ngModel)]="perfilForm.nombres"
+            autocomplete="name" required>
+          <label for="profile-phone" class="form-label small fw-semibold">Teléfono</label>
+          <input id="profile-phone" name="telefono" class="form-control mb-3" [(ngModel)]="perfilForm.telefono"
+            inputmode="numeric" autocomplete="tel" maxlength="15" required>
+          @if (perfilExito) {
+          <div class="alert alert-success small py-2" role="status">{{ perfilExito }}</div>
+          }
+          <button type="submit" class="btn btn-success w-100" [disabled]="perfilGuardando">
+            @if (perfilGuardando) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }
+            Guardar datos
+          </button>
+        </form>
+      </section>
+
+      <section class="et-profile-section">
+        <h3 class="h6 fw-bold mb-3">Cambiar contraseña</h3>
+        @if (contrasenaError) {
+        <div class="alert alert-danger small py-2" role="alert">{{ contrasenaError }}</div>
+        }
+        <form (ngSubmit)="cambiarContrasena()" #passwordNgForm="ngForm" novalidate>
+          <label for="profile-current-password" class="form-label small fw-semibold">Contraseña actual</label>
+          <input id="profile-current-password" name="contrasenaActual" type="password" class="form-control mb-3"
+            [(ngModel)]="contrasenaForm.actual" autocomplete="current-password" required>
+          <label for="profile-new-password" class="form-label small fw-semibold">Nueva contraseña</label>
+          <input id="profile-new-password" name="nuevaContrasena" type="password" class="form-control mb-3"
+            [(ngModel)]="contrasenaForm.nueva" autocomplete="new-password" required>
+          <label for="profile-confirm-password" class="form-label small fw-semibold">Confirmar nueva contraseña</label>
+          <input id="profile-confirm-password" name="confirmarContrasena" type="password" class="form-control mb-3"
+            [(ngModel)]="contrasenaForm.confirmar" autocomplete="new-password" required>
+          @if (contrasenaExito) {
+          <div class="alert alert-success small py-2" role="status">{{ contrasenaExito }}</div>
+          }
+          <button type="submit" class="btn btn-outline-success w-100" [disabled]="contrasenaGuardando">
+            @if (contrasenaGuardando) { <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> }
+            Actualizar contraseña
+          </button>
+        </form>
+      </section>
+      }
+    </div>
+  </section>
+</div>
+}

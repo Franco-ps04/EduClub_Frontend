@@ -62,6 +62,16 @@ export interface SesionRecursosAlumno {
   recursos: RecursoSesionAlumno[];
 }
 
+export interface PerfilUsuarioAlumno {
+  id_usuario: number;
+  nombres: string;
+  email: string;
+  telefono: string;
+  rol: string;
+  activo: boolean;
+  institucion?: string | null;
+}
+
 export interface InscripcionAlumno {
   id_inscripcion: number;
   estado_inscripcion: string;
@@ -257,11 +267,29 @@ export class AlumnoService {
     return this.http.get(`${this.base}/diplomas/talleres/${idTaller}/pdf`, { responseType: 'blob' });
   }
 
-  perfil(): Observable<any> {
-    return this.http.get<any>(`${this.base}/usuarios/mi-perfil`);
+  perfil(): Observable<PerfilUsuarioAlumno> {
+    return this.http.get<PerfilUsuarioAlumno>(`${this.base}/usuarios/mi-perfil`);
   }
 
-  actualizarPerfil(data: { nombres: string; telefono: string }): Observable<any> {
-    return this.http.patch<any>(`${this.base}/usuarios/mi-perfil`, data);
+  actualizarPerfil(data: { nombres: string; telefono: string }): Observable<{
+    ok: boolean;
+    message: string;
+    perfil: PerfilUsuarioAlumno;
+  }> {
+    return this.http.patch<{
+      ok: boolean;
+      message: string;
+      perfil: PerfilUsuarioAlumno;
+    }>(`${this.base}/usuarios/mi-perfil`, data);
+  }
+
+  cambiarContrasena(data: { contrasenaActual: string; nuevaContrasena: string }): Observable<{
+    ok: boolean;
+    message: string;
+  }> {
+    return this.http.patch<{ ok: boolean; message: string }>(
+      `${this.base}/usuarios/mi-perfil/contrasena`,
+      data
+    );
   }
 }
